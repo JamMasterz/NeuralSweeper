@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import com.jam.game.model.Board;
 import com.jam.game.model.Coord;
+import com.jam.game.model.TagResult;
 import com.jam.game.model.UncoverResult;
 
 public class Game {
@@ -29,7 +30,7 @@ public class Game {
 	}
 	
 	public void rightClickField(Coord coord){
-		//TODO: Add right clicking to board
+		TagResult result = board.tagSingleField(coord);
 	}
 	
 	public void setAutomatic(boolean automatic){
