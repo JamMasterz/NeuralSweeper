@@ -29,4 +29,8 @@ public class Game {
 	public boolean isAutomatic(){
 		return this.automatic;
 	}
+	
+	public Board getBoard(){
+		return this.board;
+	}
 }

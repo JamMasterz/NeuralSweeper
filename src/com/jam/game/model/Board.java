@@ -104,8 +104,12 @@ public class Board {
 		return bombs;
 	}
 	
-	private Field getField(Coord coord){
+	public Field getField(Coord coord){
 		return board[coord.getX()][coord.getY()];
+	}
+	
+	public Field getField(int x, int y){
+		return board[x][y];
 	}
 	
 	private void setField(Coord coord, Field field){
@@ -180,5 +184,9 @@ public class Board {
 	
 	private boolean isWithinBoard(Coord coord){
 		return coord.getX() >= 0 && coord.getY() >= 0 && coord.getX() < size && coord.getY() < size;
+	}
+	
+	public int getSize(){
+		return this.size;
 	}
 }

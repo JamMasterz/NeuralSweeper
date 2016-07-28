@@ -20,6 +20,7 @@ public class JMineField extends JButton{
 	}
 	
 	public void setFieldType(Field field){
+		this.field = field;
 		switch (field){
 			case EMPTY:
 			case ONE:
