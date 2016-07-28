@@ -22,6 +22,7 @@ public class Board {
 	private long timeEnded;
 	private int leftToUncover;
 	private int bombsToTag;
+	private boolean debug = true;
 	
 	public Board(int size, int amountBombs){
 		if (size < SECTOR_SIZE + 1){
@@ -47,6 +48,18 @@ public class Board {
 		initEmptyBoardArray();
 	}
 	
+	private void initDebugBoardArray(int index){
+		//Bombs surrounding 2x2 in upper left corner
+		if (index == 0){
+			setField(new Coord(0, 2), Field.COVERED_MINE);
+			setField(new Coord(1, 2), Field.COVERED_MINE);
+			setField(new Coord(3, 2), Field.COVERED_MINE);
+			setField(new Coord(2, 0), Field.COVERED_MINE);
+			setField(new Coord(2, 1), Field.COVERED_MINE);
+		}
+		this.generated = true;
+	}
+	
 	private void initEmptyBoardArray(){
 		for (int i = 0; i < size; i++){
 			for (int j = 0; j < size; j++){
@@ -59,6 +72,10 @@ public class Board {
 		switch (getField(coord)){
 			case COVERED_EMPTY:
 				setField(coord, Field.TAGGED_EMPTY);
+				bombsToTag--;
+				return TagResult.TAGGED;
+			case COVERED_MINE:
+				setField(coord, Field.TAGGED_MINE);
 				bombsToTag--;
 				return TagResult.TAGGED;
 			case EMPTY:
@@ -86,7 +103,11 @@ public class Board {
 	public UncoverResult uncoverSingle(Coord coord){
 		if (!isWithinBoard(coord)) throw new IllegalArgumentException("The coordinate is not within the board");
 		if (!generated){
-			generate(coord);
+			if (debug){
+				initDebugBoardArray(0);
+			} else {
+				generate(coord);
+			}
 			state = GameState.PLAYING;
 		}
 		if (state != GameState.PLAYING) return UncoverResult.FAILED;
@@ -112,8 +133,10 @@ public class Board {
 			case EIGHT:
 			case TAGGED_EMPTY:
 			case TAGGED_MINE:
-				return UncoverResult.FAILED;
 			case MINE:
+				return UncoverResult.FAILED;
+			case COVERED_MINE:
+				setField(coord, Field.MINE);
 				state = GameState.LOSE;
 				timeEnded = System.currentTimeMillis();
 				return UncoverResult.MINE;
@@ -129,17 +152,20 @@ public class Board {
 	 */
 	//TODO: Change name to signify that it also turns some fields into number indicators
 	private void uncoverRecursively(Coord coord){
+		System.out.println("Uncover res " + coord.toString());
 		Coord[] sector = getSectorCoords(coord);
-		int bombs = countBombs(sector);
+		int bombsAround = countBombsSector(sector);
 		
-		if (bombs == 0){
+		setField(coord, Field.EMPTY);
+		if (bombsAround == 0){
 			//Run this function for all fields in the sector except the source
 			for (int i = 0; i < sector.length; i++){
-				if (sector[i].equals(coord)) continue;
-				if (!isUncovered(coord)) uncoverRecursively(sector[i]);
+				Coord c = sector[i];
+				if (c.equals(coord)) continue;
+				if (!isUncovered(c)) uncoverRecursively(c);
 			}
 		} else {
-			setField(coord, Field.fromOrdinal(bombs));
+			setField(coord, Field.fromOrdinal(bombsAround));
 			leftToUncover--;
 		}
 	}
@@ -159,15 +185,15 @@ public class Board {
 		
 		for (int i = 0; i < amountBombs; i++){
 			int bombIndex = rand.nextInt(available.size());
-			setField(available.get(bombIndex), Field.MINE);
+			setField(available.get(bombIndex), Field.COVERED_MINE);
 		}
 	}
 	
-	private int countBombs(Coord[] coords){
+	private int countBombsSector(Coord[] coords){
 		int bombs = 0;
 		
 		for (int i = 0; i < coords.length; i++){
-			if (getField(coords[i]) == Field.MINE) bombs++;
+			if (getField(coords[i]) == Field.COVERED_MINE || getField(coords[i]) == Field.MINE) bombs++;
 		}
 		
 		return bombs;
