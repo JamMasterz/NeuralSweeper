@@ -187,6 +187,8 @@ public class Board {
 			int bombIndex = rand.nextInt(available.size());
 			setField(available.get(bombIndex), Field.COVERED_MINE);
 		}
+		
+		generated = true;
 	}
 	
 	private int countBombsSector(Coord[] coords){
