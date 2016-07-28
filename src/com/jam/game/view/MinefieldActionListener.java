@@ -27,15 +27,7 @@ public class MinefieldActionListener extends MouseAdapter{
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		Coord coord = getEventCoord(e.getSource());
-		System.out.println(coord.toString());
-		if (SwingUtilities.isLeftMouseButton(e)){
-			game.leftClickField(coord);
-		} else if (SwingUtilities.isRightMouseButton(e)){
-			game.rightClickField(coord);
-		}
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {}
@@ -47,5 +39,14 @@ public class MinefieldActionListener extends MouseAdapter{
 	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {
+		Coord coord = getEventCoord(e.getSource());
+		if (SwingUtilities.isLeftMouseButton(e)){
+			System.out.println("Left at " + coord.toString());
+			game.leftClickField(coord);
+		} else if (SwingUtilities.isRightMouseButton(e)){
+			System.out.println("Right at " + coord.toString());
+			game.rightClickField(coord);
+		}
+	}
 }
