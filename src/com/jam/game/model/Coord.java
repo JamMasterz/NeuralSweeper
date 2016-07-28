@@ -67,4 +67,8 @@ public class Coord {
 		}
 		return false;
 	}
+	@Override
+	public String toString() {
+		return "X = " + x + ", Y = " + y;
+	}
 }

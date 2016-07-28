@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -12,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.jam.game.controller.Game;
@@ -31,6 +32,7 @@ public class MinesweeperGUI {
 	private Game game;
 	private JPanel panel;
 	private ArrayList<JMineField> fields;
+	private MinefieldActionListener listener;
 	
 	private JLabel bombsLeft;
 	private JLabel elapsedTime;
@@ -38,10 +40,13 @@ public class MinesweeperGUI {
 	
 	public MinesweeperGUI(Game game){
 		this.game = game;
+		this.fields = new ArrayList<JMineField>();
 	}
 	
 	public JPanel getGUI(){
 		if (panel == null){
+			listener = new MinefieldActionListener(fields, game);
+			
 			panel = new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 			panel.add(getTopPanel());
@@ -61,12 +66,14 @@ public class MinesweeperGUI {
 		bombsLeft.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
 		bombsLeft.setFont(font);
 		bombsLeft.setForeground(Color.RED);
+		bombsLeft.setBackground(Color.LIGHT_GRAY);
 		bombsLeft.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
 		elapsedTime = new JLabel("0");
 		elapsedTime.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
 		elapsedTime.setFont(font);
 		elapsedTime.setForeground(Color.RED);
+		elapsedTime.setBackground(Color.LIGHT_GRAY);
 		elapsedTime.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
 		resetButton = new JButton(RESET);
@@ -74,6 +81,13 @@ public class MinesweeperGUI {
 		resetButton.setFont(font);
 		resetButton.setHorizontalAlignment(SwingConstants.CENTER);
 		resetButton.setVerticalTextPosition(SwingConstants.CENTER);
+		resetButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.getBoard().restartGame();
+				updateBoard();
+			}
+		});
 		
 		top.add(bombsLeft);
 		top.add(resetButton);
@@ -85,12 +99,12 @@ public class MinesweeperGUI {
 	private JPanel getGridPanel(){
 		Board board = game.getBoard();
 		JPanel grid = new JPanel(new GridLayout(board.getSize(), board.getSize()));
-		fields = new ArrayList<JMineField>();
 		
 		for (int i = 0; i < board.getSize(); i++){
 			for (int j = 0; j < board.getSize(); j++){
 				JMineField field = new JMineField(board.getField(i, j));
 				field.setHorizontalAlignment(JMineField.CENTER);
+				field.addMouseListener(listener);
 				
 				fields.add(field);
 				grid.add(field);
