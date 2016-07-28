@@ -122,7 +122,6 @@ public class MinesweeperGUI {
 			field = board.getField(Coord.getCoord(i, game.getSize()));
 			if (!fields.get(i).equals(field)){
 				fields.get(i).setFieldType(field);
-				//probably isnt gonna sync automatically
 			}
 		}
 		panel.repaint();
