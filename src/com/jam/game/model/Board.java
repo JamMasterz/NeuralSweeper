@@ -17,8 +17,12 @@ public class Board {
 	private int size;
 	private int amountBombs;
 	private int amountFields;
-	private boolean generated = false;
-	private boolean lost = false;
+	private boolean generated;
+	private GameState state;
+	private long timeStarted;
+	private long timeEnded;
+	private int leftToUncover;
+	private int bombsToTag;
 	
 	public Board(int size, int amountBombs){
 		if (size < SECTOR_SIZE + 1){
@@ -28,18 +32,29 @@ public class Board {
 		} else {
 			this.size = size;
 			this.amountBombs = amountBombs;
-			this.amountFields = size * size;
-			this.board = new Field[size][size];
-
-			Arrays.fill(board, Field.EMPTY);
+			
+			restartGame();
 		}
+	}
+	
+	public void restartGame(){
+		this.generated = false;
+		this.state = GameState.FROZEN;
+		this.bombsToTag = amountBombs;
+		this.amountFields = size * size;
+		this.board = new Field[size][size];
+		this.leftToUncover = amountFields - amountBombs;
+
+		Arrays.fill(board, Field.EMPTY);
 	}
 	
 	public TagResult tagSingleField(Coord coord){
 		switch (getField(coord)){
-			case EMPTY:
+			case COVERED_EMPTY:
 				setField(coord, Field.TAGGED_EMPTY);
+				bombsToTag--;
 				return TagResult.TAGGED;
+			case EMPTY:
 			case ONE:
 			case TWO:
 			case THREE:
@@ -53,6 +68,7 @@ public class Board {
 			case TAGGED_EMPTY:
 			case TAGGED_MINE:
 				setField(coord, Field.EMPTY);
+				bombsToTag++;
 				return TagResult.UNTAGGED;
 			default:
 				//this will never happen
@@ -62,13 +78,23 @@ public class Board {
 	
 	public UncoverResult uncoverSingle(Coord coord){
 		if (!isWithinBoard(coord)) throw new IllegalArgumentException("The coordinate is not within the board");
-		if (!generated) generate(coord);
-		if (lost) return UncoverResult.FAILED;
+		if (!generated){
+			generate(coord);
+			state = GameState.PLAYING;
+		}
+		if (state != GameState.PLAYING) return UncoverResult.FAILED;
 		
+		timeStarted = System.currentTimeMillis();
 		switch (getField(coord)){
-			case EMPTY:
+			case COVERED_EMPTY:
 				uncoverRecursively(coord);
+				if (isVictory()){
+					state = GameState.WIN;
+					timeEnded = System.currentTimeMillis();
+					return UncoverResult.VICTORY;
+				}
 				return UncoverResult.SUCCESS;
+			case EMPTY:
 			case ONE:
 			case TWO:
 			case THREE:
@@ -81,7 +107,8 @@ public class Board {
 			case TAGGED_MINE:
 				return UncoverResult.FAILED;
 			case MINE:
-				lost = true;
+				state = GameState.LOSE;
+				timeEnded = System.currentTimeMillis();
 				return UncoverResult.MINE;
 			default:
 				//This will never happen
@@ -102,11 +129,21 @@ public class Board {
 			//Run this function for all fields in the sector except the source
 			for (int i = 0; i < sector.length; i++){
 				if (sector[i].equals(coord)) continue;
-				uncoverRecursively(sector[i]);
+				if (!isUncovered(coord)) uncoverRecursively(sector[i]);
 			}
 		} else {
 			setField(coord, Field.fromOrdinal(bombs));
+			leftToUncover--;
 		}
+	}
+	
+	private boolean isVictory(){
+		return leftToUncover == 0;
+	}
+	
+	private boolean isUncovered(Coord coord){
+		Field field = getField(coord);
+		return field != Field.TAGGED_EMPTY && field != Field.TAGGED_MINE && field != Field.MINE && field != Field.COVERED_EMPTY;
 	}
 	
 	private void generate(Coord coord){
@@ -213,5 +250,19 @@ public class Board {
 	
 	public int getSize(){
 		return this.size;
+	}
+	
+	public int getSecondsElapsed(){
+		if (state == GameState.PLAYING){
+			return (int) ((System.currentTimeMillis() - timeStarted) / 1000);
+		} else if (state == GameState.FROZEN){
+			return 0;
+		} else {
+			return (int) (timeEnded - timeStarted) / 1000;
+		}
+	}
+	
+	public int getBombsLeft(){
+		return this.bombsToTag;
 	}
 }
