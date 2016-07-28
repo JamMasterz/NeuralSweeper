@@ -11,6 +11,7 @@ public enum Field {
 	SEVEN("7"),
 	EIGHT("8"),
 	MINE("\uD83D\uDCA3"),
+	COVERED_MINE(""),
 	COVERED_EMPTY(""),
 	TAGGED_MINE("\u2691"),
 	TAGGED_EMPTY("\u2691");

@@ -125,6 +125,8 @@ public class MinesweeperGUI {
 				//probably isnt gonna sync automatically
 			}
 		}
+		panel.repaint();
+		panel.revalidate();
 		
 		bombsLeft.setText(Integer.toString(game.getBoard().getBombsLeft()));
 	}
