@@ -6,9 +6,9 @@ import java.awt.Font;
 import javax.swing.JButton;
 
 import com.jam.game.model.Field;
-import com.jam.game.model.UncoverResult;
 
 public class JMineField extends JButton{
+	private static final long serialVersionUID = -9053196072545355717L;
 	public static final int FIELD_SIZE = 25;
 	public static final int FONT_SIZE = 10;
 	private Field field;
