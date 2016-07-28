@@ -53,11 +53,10 @@ public class Game {
 	public void leftClickField(Coord coord){
 		UncoverResult result = board.uncoverSingle(coord);
 		if (gui != null){
-			if (result == UncoverResult.SUCCESS){
+			if (result != UncoverResult.FAILED){
 				gui.updateBoard();
-			} else if (result == UncoverResult.FAILED){
-				return;
-			} else {
+			} 
+			if (result == UncoverResult.VICTORY || result == UncoverResult.MINE){
 				gui.displayGameState(result);
 			}
 		}
