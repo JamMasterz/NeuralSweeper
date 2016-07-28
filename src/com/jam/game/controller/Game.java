@@ -38,9 +38,10 @@ public class Game {
 		}
 	}
 	
-	public void addGUI(JPanel parent){
-		if (gui != null) return;
-		gui = new MinesweeperGUI(this);
+	public JPanel getGUI(){
+		if (gui == null) gui = new MinesweeperGUI(this);
+		
+		return gui.getGUI();
 	}
 	
 	public void disconnectGUI(){
