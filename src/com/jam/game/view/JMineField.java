@@ -15,7 +15,7 @@ public class JMineField extends JButton{
 	
 	public JMineField(Field field){
 		setPreferredSize(new Dimension(FIELD_SIZE, FIELD_SIZE));
-		setFont(new Font("Helvetica", Font.BOLD, FONT_SIZE));
+		setFont(new Font("Segoe UI Symbol", Font.BOLD, FONT_SIZE));
 		setMargin(new Insets(0, 0, 0, 0));
 	}
 	
@@ -71,6 +71,10 @@ public class JMineField extends JButton{
 			case TAGGED_EMPTY:
 			case TAGGED_MINE:
 				color = "black";
+				
+				setContentAreaFilled(true);
+				setFocusPainted(true);
+				break;
 			case COVERED_EMPTY:
 			case COVERED_MINE:
 				setContentAreaFilled(true);
