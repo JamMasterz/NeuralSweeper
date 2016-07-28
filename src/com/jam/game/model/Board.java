@@ -22,7 +22,7 @@ public class Board {
 	private long timeEnded;
 	private int leftToUncover;
 	private int bombsToTag;
-	private boolean debug = true;
+	private boolean debug = false;
 	
 	public Board(int size, int amountBombs){
 		if (size < SECTOR_SIZE + 1){
@@ -53,7 +53,7 @@ public class Board {
 		if (index == 0){
 			setField(new Coord(0, 2), Field.COVERED_MINE);
 			setField(new Coord(1, 2), Field.COVERED_MINE);
-			setField(new Coord(3, 2), Field.COVERED_MINE);
+			setField(new Coord(2, 2), Field.COVERED_MINE);
 			setField(new Coord(2, 0), Field.COVERED_MINE);
 			setField(new Coord(2, 1), Field.COVERED_MINE);
 		}
