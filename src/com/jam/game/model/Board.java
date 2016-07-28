@@ -35,6 +35,31 @@ public class Board {
 		}
 	}
 	
+	public TagResult tagSingleField(Coord coord){
+		switch (getField(coord)){
+			case EMPTY:
+				setField(coord, Field.TAGGED_EMPTY);
+				return TagResult.TAGGED;
+			case ONE:
+			case TWO:
+			case THREE:
+			case FOUR:
+			case FIVE:
+			case SIX:
+			case SEVEN:
+			case EIGHT:
+			case MINE:
+				return TagResult.FAILED;
+			case TAGGED_EMPTY:
+			case TAGGED_MINE:
+				setField(coord, Field.EMPTY);
+				return TagResult.UNTAGGED;
+			default:
+				//this will never happen
+				return TagResult.FAILED;
+		}
+	}
+	
 	public UncoverResult uncoverSingle(Coord coord){
 		if (!isWithinBoard(coord)) throw new IllegalArgumentException("The coordinate is not within the board");
 		if (!generated) generate(coord);
