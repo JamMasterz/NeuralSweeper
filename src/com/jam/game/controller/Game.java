@@ -6,6 +6,7 @@ import com.jam.game.model.Board;
 import com.jam.game.model.Coord;
 import com.jam.game.model.TagResult;
 import com.jam.game.model.UncoverResult;
+import com.jam.game.view.MinesweeperGUI;
 
 public class Game {
 	public static final int NOOB_SIZE = 9;
@@ -16,6 +17,7 @@ public class Game {
 	public static final int EXPERT_BOMBS = 100;
 	
 	private Board board;
+	private MinesweeperGUI gui;
 	private boolean automatic = false;
 	
 	public Game(int size, int bombs){
@@ -37,7 +39,8 @@ public class Game {
 	}
 	
 	public void addGUI(JPanel parent){
-		
+		if (gui != null) return;
+		gui = new MinesweeperGUI(this);
 	}
 	
 	public void disconnectGUI(){
@@ -48,10 +51,26 @@ public class Game {
 	
 	public void leftClickField(Coord coord){
 		UncoverResult result = board.uncoverSingle(coord);
+		if (gui != null){
+			if (result == UncoverResult.SUCCESS){
+				gui.updateBoard();
+			} else if (result == UncoverResult.FAILED){
+				return;
+			} else {
+				gui.displayGameState(result);
+			}
+		}
 	}
 	
 	public void rightClickField(Coord coord){
 		TagResult result = board.tagSingleField(coord);
+		if (gui != null){
+			if (result == TagResult.FAILED){
+				return;
+			} else {
+				gui.updateBoard();
+			}
+		}
 	}
 	
 	public void setAutomatic(boolean automatic){

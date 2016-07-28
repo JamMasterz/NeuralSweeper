@@ -8,11 +8,15 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.jam.game.controller.Game;
 import com.jam.game.model.Board;
+import com.jam.game.model.Coord;
+import com.jam.game.model.Field;
+import com.jam.game.model.UncoverResult;
 
 public class MinesweeperGUI {
 	public static final String RESET = "\u263A";
@@ -86,5 +90,25 @@ public class MinesweeperGUI {
 		}
 		
 		return grid;
+	}
+	
+	public void updateBoard(){
+		Field field;
+		Board board = game.getBoard();
+		for (int i = 0; i < fields.size(); i++){
+			field = board.getField(Coord.getCoord(i, game.getSize()));
+			if (!fields.get(i).equals(field)){
+				fields.get(i).setFieldType(field);
+				//probably isnt gonna sync automatically
+			}
+		}
+	}
+	
+	public void displayGameState(UncoverResult res){
+		if (res == UncoverResult.MINE){
+			JOptionPane.showMessageDialog(panel, "You lost!");
+		} else if (res == UncoverResult.VICTORY){
+			JOptionPane.showMessageDialog(panel, "You won!");
+		}
 	}
 }
