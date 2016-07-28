@@ -8,11 +8,32 @@ import com.jam.game.model.TagResult;
 import com.jam.game.model.UncoverResult;
 
 public class Game {
+	public static final int NOOB_SIZE = 9;
+	public static final int INTERMEDIATE_SIZE = 16;
+	public static final int EXPERT_SIZE = 22;
+	public static final int NOOB_BOMBS = 9;
+	public static final int INTERMEDIATE_BOMBS = 40;
+	public static final int EXPERT_BOMBS = 100;
+	
 	private Board board;
 	private boolean automatic = false;
 	
 	public Game(int size, int bombs){
 		this.board = new Board(size, bombs);
+	}
+	
+	public Game(DefaultGamePreference pref){
+		switch (pref){
+			case NOOB:
+				this.board = new Board(NOOB_SIZE, NOOB_BOMBS);
+				break;
+			case INTERMEDIATE:
+				this.board = new Board(INTERMEDIATE_SIZE, INTERMEDIATE_BOMBS);
+				break;
+			case EXPERT:
+				this.board = new Board(EXPERT_SIZE, EXPERT_BOMBS);
+				break;
+		}
 	}
 	
 	public void addGUI(JPanel parent){
