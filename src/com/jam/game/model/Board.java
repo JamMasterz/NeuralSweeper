@@ -194,8 +194,8 @@ public class Board {
 		int index = 0;
 		
 		Coord c = new Coord();
-		for (int dx = -1; dx < 1; dx++){
-			for (int dy = -1; dy < 1; dy++){
+		for (int dx = -1; dx <= 1; dx++){
+			for (int dy = -1; dy <= 1; dy++){
 				c.set(coord.getX() + dx, coord.getY() + dy);
 				if (isWithinBoard(c)){
 					coords[index++] = new Coord(c);
