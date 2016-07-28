@@ -24,37 +24,37 @@ public class JMineField extends JButton{
 		switch (field){
 			case EMPTY:
 			case ONE:
-				color = "cyan";
+				color = "#3333FF";
 				setContentAreaFilled(false);
 				setFocusPainted(false);
 				break;
 			case TWO:
-				color = "green";
+				color = "#009933";
 				setContentAreaFilled(false);
 				setFocusPainted(false);
 				break;
 			case THREE:
-				color = "magenta";
+				color = "#FF0000";
 				setContentAreaFilled(false);
 				setFocusPainted(false);
 				break;
 			case FOUR:
-				color = "blue";
+				color = "#000099";
 				setContentAreaFilled(false);
 				setFocusPainted(false);
 				break;
 			case FIVE:
-				color = "red";
+				color = "#663300";
 				setContentAreaFilled(false);
 				setFocusPainted(false);
 				break;
 			case SIX:
-				color = "orange";
+				color = "#336699";
 				setContentAreaFilled(false);
 				setFocusPainted(false);
 				break;
 			case SEVEN:
-				color = "pink";
+				color = "black";
 				setContentAreaFilled(false);
 				setFocusPainted(false);
 				break;
