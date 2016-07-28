@@ -78,6 +78,7 @@ public class MinesweeperGUI {
 	private JPanel getGridPanel(){
 		Board board = game.getBoard();
 		JPanel grid = new JPanel(new GridLayout(board.getSize(), board.getSize()));
+		fields = new ArrayList<JMineField>();
 		
 		for (int i = 0; i < board.getSize(); i++){
 			for (int j = 0; j < board.getSize(); j++){
