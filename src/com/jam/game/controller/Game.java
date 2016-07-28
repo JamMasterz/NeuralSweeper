@@ -3,6 +3,8 @@ package com.jam.game.controller;
 import javax.swing.JPanel;
 
 import com.jam.game.model.Board;
+import com.jam.game.model.Coord;
+import com.jam.game.model.UncoverResult;
 
 public class Game {
 	private Board board;
@@ -22,6 +24,14 @@ public class Game {
 		setAutomatic(true); //Maybe not
 	}
 	
+	public void leftClickField(Coord coord){
+		UncoverResult result = board.uncoverSingle(coord);
+	}
+	
+	public void rightClickField(Coord coord){
+		//TODO: Add right clicking to board
+	}
+	
 	public void setAutomatic(boolean automatic){
 		this.automatic = automatic;
 	}
@@ -32,5 +42,9 @@ public class Game {
 	
 	public Board getBoard(){
 		return this.board;
+	}
+	
+	public int getSize(){
+		return board.getSize();
 	}
 }
