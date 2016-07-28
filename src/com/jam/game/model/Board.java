@@ -45,7 +45,15 @@ public class Board {
 		this.board = new Field[size][size];
 		this.leftToUncover = amountFields - amountBombs;
 
-		Arrays.fill(board, Field.EMPTY);
+		initEmptyBoardArray();
+	}
+	
+	private void initEmptyBoardArray(){
+		for (int i = 0; i < size; i++){
+			for (int j = 0; j < size; j++){
+				board[i][j] = Field.EMPTY;
+			}
+		}
 	}
 	
 	public TagResult tagSingleField(Coord coord){
