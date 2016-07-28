@@ -37,6 +37,7 @@ public class MinesweeperGUI {
 	private JLabel bombsLeft;
 	private JLabel elapsedTime;
 	private JButton resetButton;
+	private boolean debug = false;
 	
 	public MinesweeperGUI(Game game){
 		this.game = game;
@@ -54,6 +55,10 @@ public class MinesweeperGUI {
 		}
 		
 		return panel;
+	}
+	
+	public void setDebug(boolean debug){
+		this.debug = debug;
 	}
 	
 	private JPanel getTopPanel(){
