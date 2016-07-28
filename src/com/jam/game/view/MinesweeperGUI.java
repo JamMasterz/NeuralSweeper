@@ -1,5 +1,6 @@
 package com.jam.game.view;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -8,9 +9,11 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.jam.game.controller.Game;
 import com.jam.game.model.Board;
@@ -23,13 +26,14 @@ public class MinesweeperGUI {
 	private static final int DISPLAY_HEIGHT = 20;
 	private static final int DISPLAY_WIDTH = 50;
 	private static final int RESET_SIZE = 40;
+	private static final int FONT_SIZE = 30;
 	
 	private Game game;
 	private JPanel panel;
 	private ArrayList<JMineField> fields;
 	
-	private JTextField bombsLeft;
-	private JTextField elapsedTime;
+	private JLabel bombsLeft;
+	private JLabel elapsedTime;
 	private JButton resetButton;
 	
 	public MinesweeperGUI(Game game){
@@ -48,25 +52,28 @@ public class MinesweeperGUI {
 	}
 	
 	private JPanel getTopPanel(){
-		Font font = new Font("Arial Black", Font.BOLD, JMineField.FONT_SIZE);
+		Font font = new Font("Arial Black", Font.BOLD, FONT_SIZE);
 		
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
 		
-		bombsLeft = new JTextField();
+		bombsLeft = new JLabel(Integer.toString(game.getBoard().getBombsLeft()));
 		bombsLeft.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
 		bombsLeft.setFont(font);
-		bombsLeft.setAlignmentX(Component.LEFT_ALIGNMENT);
+		bombsLeft.setForeground(Color.RED);
+		bombsLeft.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
-		elapsedTime = new JTextField();
+		elapsedTime = new JLabel("0");
 		elapsedTime.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
 		elapsedTime.setFont(font);
+		elapsedTime.setForeground(Color.RED);
 		elapsedTime.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
 		resetButton = new JButton(RESET);
 		resetButton.setPreferredSize(new Dimension(RESET_SIZE, RESET_SIZE));
 		resetButton.setFont(font);
-		resetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		resetButton.setHorizontalAlignment(SwingConstants.CENTER);
+		resetButton.setVerticalTextPosition(SwingConstants.CENTER);
 		
 		top.add(bombsLeft);
 		top.add(resetButton);
@@ -96,6 +103,7 @@ public class MinesweeperGUI {
 	public void updateBoard(){
 		Field field;
 		Board board = game.getBoard();
+		
 		for (int i = 0; i < fields.size(); i++){
 			field = board.getField(Coord.getCoord(i, game.getSize()));
 			if (!fields.get(i).equals(field)){
@@ -103,6 +111,8 @@ public class MinesweeperGUI {
 				//probably isnt gonna sync automatically
 			}
 		}
+		
+		bombsLeft.setText(Integer.toString(game.getBoard().getBombsLeft()));
 	}
 	
 	public void displayGameState(UncoverResult res){
