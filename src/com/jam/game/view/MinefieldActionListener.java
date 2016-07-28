@@ -42,10 +42,8 @@ public class MinefieldActionListener extends MouseAdapter{
 	public void mouseReleased(MouseEvent e) {
 		Coord coord = getEventCoord(e.getSource());
 		if (SwingUtilities.isLeftMouseButton(e)){
-			System.out.println("Left at " + coord.toString());
 			game.leftClickField(coord);
 		} else if (SwingUtilities.isRightMouseButton(e)){
-			System.out.println("Right at " + coord.toString());
 			game.rightClickField(coord);
 		}
 	}

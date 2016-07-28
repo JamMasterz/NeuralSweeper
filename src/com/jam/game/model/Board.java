@@ -109,10 +109,10 @@ public class Board {
 				generate(coord);
 			}
 			state = GameState.PLAYING;
+			timeStarted = System.currentTimeMillis();
 		}
 		if (state != GameState.PLAYING) return UncoverResult.FAILED;
 		
-		timeStarted = System.currentTimeMillis();
 		switch (getField(coord)){
 			case COVERED_EMPTY:
 				uncoverRecursively(coord);
@@ -152,11 +152,11 @@ public class Board {
 	 */
 	//TODO: Change name to signify that it also turns some fields into number indicators
 	private void uncoverRecursively(Coord coord){
-		System.out.println("Uncover res " + coord.toString());
 		Coord[] sector = getSectorCoords(coord);
 		int bombsAround = countBombsSector(sector);
 		
-		setField(coord, Field.EMPTY);
+		setField(coord, Field.fromOrdinal(bombsAround));
+		leftToUncover--;
 		if (bombsAround == 0){
 			//Run this function for all fields in the sector except the source
 			for (int i = 0; i < sector.length; i++){
@@ -164,9 +164,6 @@ public class Board {
 				if (c.equals(coord)) continue;
 				if (!isUncovered(c)) uncoverRecursively(c);
 			}
-		} else {
-			setField(coord, Field.fromOrdinal(bombsAround));
-			leftToUncover--;
 		}
 	}
 	
@@ -195,7 +192,7 @@ public class Board {
 		int bombs = 0;
 		
 		for (int i = 0; i < coords.length; i++){
-			if (getField(coords[i]) == Field.COVERED_MINE || getField(coords[i]) == Field.MINE) bombs++;
+			if (getField(coords[i]) == Field.COVERED_MINE || getField(coords[i]) == Field.MINE || getField(coords[i]) == Field.TAGGED_MINE) bombs++;
 		}
 		
 		return bombs;
