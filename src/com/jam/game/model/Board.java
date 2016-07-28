@@ -50,7 +50,7 @@ public class Board {
 	private void initEmptyBoardArray(){
 		for (int i = 0; i < size; i++){
 			for (int j = 0; j < size; j++){
-				board[i][j] = Field.EMPTY;
+				board[i][j] = Field.COVERED_EMPTY;
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package com.jam.game.view;
 
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import com.jam.game.controller.Game;
 import com.jam.game.model.Coord;
 
-public class MinefieldActionListener implements MouseListener{
+public class MinefieldActionListener extends MouseAdapter{
 	private ArrayList<JMineField> fields = new ArrayList<JMineField>();
 	private Game game;
 	
@@ -29,6 +29,7 @@ public class MinefieldActionListener implements MouseListener{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Coord coord = getEventCoord(e.getSource());
+		System.out.println(coord.toString());
 		if (SwingUtilities.isLeftMouseButton(e)){
 			game.leftClickField(coord);
 		} else if (SwingUtilities.isRightMouseButton(e)){
