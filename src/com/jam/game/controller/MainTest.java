@@ -11,6 +11,7 @@ public class MainTest {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.add(game.getGUI());
+		frame.setResizable(false);
 		
 		frame.pack();
 		frame.setVisible(true);
