@@ -22,7 +22,7 @@ public class Board {
 	private long timeEnded;
 	private int leftToUncover;
 	private int bombsToTag;
-	private boolean debug = false;
+	private boolean debug;
 	
 	public Board(int size, int amountBombs){
 		if (size < SECTOR_SIZE + 1){
@@ -69,6 +69,8 @@ public class Board {
 	}
 	
 	public TagResult tagSingleField(Coord coord){
+		if (state != GameState.PLAYING) return TagResult.FAILED;
+		
 		switch (getField(coord)){
 			case COVERED_EMPTY:
 				setField(coord, Field.TAGGED_EMPTY);
@@ -100,6 +102,10 @@ public class Board {
 		}
 	}
 	
+	public void setDebug(boolean debug){
+		this.debug = debug;
+	}
+	
 	public UncoverResult uncoverSingle(Coord coord){
 		if (!isWithinBoard(coord)) throw new IllegalArgumentException("The coordinate is not within the board");
 		if (!generated){
@@ -122,7 +128,6 @@ public class Board {
 					return UncoverResult.VICTORY;
 				}
 				return UncoverResult.SUCCESS;
-			case EMPTY:
 			case ONE:
 			case TWO:
 			case THREE:
@@ -131,6 +136,8 @@ public class Board {
 			case SIX:
 			case SEVEN:
 			case EIGHT:
+				return uncoverSector(coord);
+			case EMPTY:
 			case TAGGED_EMPTY:
 			case TAGGED_MINE:
 			case MINE:
@@ -144,6 +151,35 @@ public class Board {
 				//This will never happen
 				return UncoverResult.FAILED;
 		}
+	}
+	
+	/**
+	 * If an uncovered number is clicked, and an there are equally many flags within a sector, it will uncover all covered fields as if user clicked on them
+	 * @param coord Coordinate of the center of the sector
+	 */
+	public UncoverResult uncoverSector(Coord coord){
+		int left = leftToUncover;
+		int number = getField(coord).ordinal();
+		Coord[] sector = getSectorCoords(coord);
+		
+		UncoverResult result = UncoverResult.FAILED;
+		if (number == countTaggedFields(sector)){
+			for (int i = 0; i < sector.length; i++){
+				if (getField(sector[i]) == Field.COVERED_EMPTY || getField(sector[i]) == Field.COVERED_MINE){
+					UncoverResult res = uncoverSingle(sector[i]);
+					if (res == UncoverResult.VICTORY){
+						return res;
+					} else if (result == UncoverResult.FAILED && res == UncoverResult.SUCCESS){
+						result = UncoverResult.SUCCESS;
+					} else if (res == UncoverResult.MINE){
+						return UncoverResult.MINE;
+					}
+				}
+			}
+		}
+		System.out.println("Uncovered :" + (left - leftToUncover));
+		
+		return result;
 	}
 	
 	/**
@@ -182,7 +218,11 @@ public class Board {
 		
 		for (int i = 0; i < amountBombs; i++){
 			int bombIndex = rand.nextInt(available.size());
-			setField(available.get(bombIndex), Field.COVERED_MINE);
+			if (!debug){
+				setField(available.remove(bombIndex), Field.COVERED_MINE);
+			} else {
+				setField(available.remove(bombIndex), Field.TAGGED_MINE);
+			}
 		}
 		
 		generated = true;
@@ -196,6 +236,16 @@ public class Board {
 		}
 		
 		return bombs;
+	}
+	
+	private int countTaggedFields(Coord[] coords){
+		int tagged = 0;
+		
+		for (int i = 0; i < coords.length; i++){
+			if (getField(coords[i]) == Field.TAGGED_EMPTY || getField(coords[i]) == Field.TAGGED_MINE) tagged++;
+		}
+		
+		return tagged;
 	}
 	
 	public Field getField(Coord coord){

@@ -19,9 +19,11 @@ public class Game {
 	private Board board;
 	private MinesweeperGUI gui;
 	private boolean automatic = false;
+	private boolean debug = false;
 	
 	public Game(int size, int bombs){
 		this.board = new Board(size, bombs);
+		board.setDebug(debug);
 	}
 	
 	public Game(DefaultGamePreference pref){
@@ -36,10 +38,12 @@ public class Game {
 				this.board = new Board(EXPERT_SIZE, EXPERT_BOMBS);
 				break;
 		}
+		board.setDebug(debug);
 	}
 	
 	public JPanel getGUI(){
 		if (gui == null) gui = new MinesweeperGUI(this);
+		gui.setDebug(debug);
 		
 		return gui.getGUI();
 	}
