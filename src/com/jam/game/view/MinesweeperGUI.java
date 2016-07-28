@@ -79,7 +79,7 @@ public class MinesweeperGUI {
 			for (int j = 0; j < board.getSize(); j++){
 				JMineField field = new JMineField(board.getField(i, j));
 				field.setHorizontalAlignment(JMineField.CENTER);
-				
+					
 				fields.add(field);
 				grid.add(field);
 			}
