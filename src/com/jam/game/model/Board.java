@@ -114,7 +114,7 @@ public class Board {
 	
 	/**
 	 * @param Coordinate
-	 * @return Array containing indices of fields in a 3x3 area centered on coord
+	 * @return Array containing Coords of fields in a 3x3 area centered on coord. Handles cases when there arent fields in some spots
 	 */
 	private Coord[] getSectorCoords(Coord coord){
 		Coord[] coords = new Coord[getSectorSize(coord)];
@@ -135,8 +135,8 @@ public class Board {
 	
 	/**
 	 * 
-	 * @param exclusions Indices where no mines can be generated
-	 * @return Array of indices where mines can be generated
+	 * @param exclusions Coords where no mines can be generated
+	 * @return Array of coords where mines can be generated
 	 */
 	private ArrayList<Coord> createAvailabilityArray(Coord[] exclusions){
 		int availableSize = amountFields - exclusions.length;
@@ -154,7 +154,7 @@ public class Board {
 	}
 	
 	/**
-	 * Returns the number of fields in a 3x3 area centered on coord. This can be different when coord is on the edege or in the corner.
+	 * Returns the number of fields in a 3x3 area centered on coord. This can be different when coord is on the edge or in the corner.
 	 * @param coord Coordinate
 	 * @return Number of fields in a 3x3 area centered on coord
 	 */
