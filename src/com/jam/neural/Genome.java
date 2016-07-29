@@ -8,12 +8,14 @@ import com.jam.util.Util;
 public class Genome {
 	private NodeLayer outputLayer;
 	private NodeLayer[] hiddenLayers;
+	private int fitness;
 	
 	public Genome(int numInputs, int numHiddenLayers, int numNodesPerHiddenLayer, int numOutputNodes){
-		if (numInputs < 1) throw new IllegalArgumentException("Number of inputs must be greater than 0");
-		if (numOutputNodes < 1) throw new IllegalArgumentException("Number of output nodes must be greater than 0");
-		if (numNodesPerHiddenLayer < 1) throw new IllegalArgumentException("Number of nodes in hidden layers must be greater than 0");
-		int hidden = (numHiddenLayers < 1) ? 0 : numHiddenLayers;
+		if (numInputs < 0) throw new IllegalArgumentException("Number of inputs must be greater than 0");
+		if (numOutputNodes < 0) throw new IllegalArgumentException("Number of output nodes must be greater than 0");
+		if (numNodesPerHiddenLayer < 0) throw new IllegalArgumentException("Number of nodes in hidden layers must be greater than 0");
+		int hidden = (numHiddenLayers < 0) ? 0 : numHiddenLayers;
+		fitness = 0;
 		
 		if (hidden > 0){
 			hiddenLayers = new NodeLayer[hidden];
@@ -101,6 +103,7 @@ public class Genome {
 	}
 	
 	protected void setChromosome(float[] chromosome){
+		fitness = 0;
 		int outputLayerIndex = 0;
 		for (int i = 0; i < hiddenLayers.length; i++) {
 			int geneLayerSize = hiddenLayers[i].getGenesSize();
@@ -120,6 +123,14 @@ public class Genome {
 		size += outputLayer.getGenesSize();
 		
 		return size;
+	}
+	
+	protected void setFitness(int fitness){
+		this.fitness = fitness;
+	}
+	
+	public int getFitness(){
+		return fitness;
 	}
 	
 	@Override

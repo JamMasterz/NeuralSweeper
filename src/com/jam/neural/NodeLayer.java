@@ -5,7 +5,7 @@ public class NodeLayer {
 	private int numInputsPerNode;
 	
 	public NodeLayer(int numNodes, int numInputsPerNode){
-		if (numNodes < 1) throw new IllegalArgumentException("The number of nodes in a layer must be greater than 0");
+		if (numNodes < 0) throw new IllegalArgumentException("The number of nodes in a layer must be greater than 0");
 		this.numInputsPerNode = numInputsPerNode;
 		
 		for (int i = 0; i < numNodes; i++){
