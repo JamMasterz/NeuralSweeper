@@ -52,6 +52,7 @@ public class MinefieldActionListener extends MouseAdapter{
 			} 
 			if (result == UncoverResult.VICTORY || result == UncoverResult.MINE){
 				gui.displayGameState(result);
+				gui.stopTimerThread();
 			}
 		} else if (SwingUtilities.isRightMouseButton(e)){
 			TagResult result = game.rightClickField(coord);
