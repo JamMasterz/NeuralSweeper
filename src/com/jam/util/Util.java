@@ -1,5 +1,7 @@
 package com.jam.util;
 
+import java.util.Random;
+
 import com.jam.game.model.Coord;
 
 public class Util {
@@ -9,5 +11,18 @@ public class Util {
 		}
 		
 		return false;
+	}
+	
+	public static float getRandomFloat(Random r, float low, float high){
+		if (r == null){
+			r = new Random();
+		}
+		float interval = Math.abs(low) + Math.abs(high);
+		
+		return r.nextFloat() * interval + low;
+	}
+	
+	public static float sigmond(float val){
+		return (float) (1 / (1 + Math.exp(-val)));
 	}
 }

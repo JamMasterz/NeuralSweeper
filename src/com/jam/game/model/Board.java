@@ -158,7 +158,6 @@ public class Board {
 	 * @param coord Coordinate of the center of the sector
 	 */
 	public UncoverResult uncoverSector(Coord coord){
-		int left = leftToUncover;
 		int number = getField(coord).ordinal();
 		Coord[] sector = getSectorCoords(coord);
 		
@@ -177,7 +176,6 @@ public class Board {
 				}
 			}
 		}
-		System.out.println("Uncovered :" + (left - leftToUncover));
 		
 		return result;
 	}
