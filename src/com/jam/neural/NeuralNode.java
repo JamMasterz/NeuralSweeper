@@ -11,7 +11,7 @@ public class NeuralNode {
 	
 	
 	public NeuralNode(int numInputs){
-		if (numInputs == 0) throw new IllegalArgumentException("Number of inputs to a node must be greater than 0");
+		if (numInputs < 1) throw new IllegalArgumentException("Number of inputs to a node must be greater than 0");
 		
 		Random r = new Random();
 		
@@ -61,7 +61,23 @@ public class NeuralNode {
 		return builder.toString();
 	}
 	
-	protected float evaluateNode(float[] inputs){
+	/**
+	 * @return Array of all the weights and the threshold at the end
+	 */
+	protected float[] getGene(){
+		float[] output = new float[getGeneSize()];
+		
+		System.arraycopy(weights, 0, output, 0, weights.length);
+		output[output.length - 1] = threshold;
+		
+		return output;
+	}
+	
+	protected int getGeneSize(){
+		return weights.length + 1;
+	}
+	
+	protected float evaluateNode(float[] inputs, boolean binary){
 		if (inputs.length != weights.length) throw new IllegalArgumentException("The size of input doesnt match the amount of weights");
 		
 		float sum = 0;
@@ -69,7 +85,12 @@ public class NeuralNode {
 			sum += inputs[i] * weights[i];
 		}
 		sum -= threshold;
-	
-		return Util.sigmond(sum);
+		
+		//If the sum of all inputs is greater than the threshold, output binary 1
+		if (binary){
+			return (sum > 0) ? 1 : 0;
+		} else {
+			return Util.sigmond(sum);
+		}
 	}
 }
