@@ -23,7 +23,7 @@ public class NeuralNode {
 	}
 	
 	public NeuralNode(float[] weights, float threshold){
-		if (weights.length == 0) throw new IllegalArgumentException("Number of inputs must be greater than 0");
+		if (weights.length < 0) throw new IllegalArgumentException("Number of inputs must be greater than 0");
 		
 		this.weights = weights;
 		this.threshold = threshold;
