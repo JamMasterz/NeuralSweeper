@@ -48,6 +48,12 @@ public class NodeLayer {
 		return layerGenes;
 	}
 	
+	protected void setLayerGenes(float[] chromosome, int start){
+		for (int i = 0; i < nodes.length; i++){
+			nodes[i].setGene(chromosome, start + i * nodes[i].getGeneSize());
+		}
+	}
+	
 	protected int getGenesSize(){
 		return nodes.length * (numInputsPerNode + 1);
 	}

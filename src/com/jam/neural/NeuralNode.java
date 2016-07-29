@@ -73,6 +73,11 @@ public class NeuralNode {
 		return output;
 	}
 	
+	protected void setGene(float[] chromosome, int start){
+		System.arraycopy(chromosome, start, weights, 0, weights.length);
+		threshold = chromosome[start + weights.length];
+	}
+	
 	protected int getGeneSize(){
 		return weights.length + 1;
 	}
