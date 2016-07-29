@@ -51,8 +51,21 @@ public class Genome {
 			System.arraycopy(layerGenes, 0, chromosome, nextIndex, layerGenes.length);
 			nextIndex += layerGenes.length;
 		}
+		float[] outputLayerGenes = outputLayer.getLayerGenes();
+		System.arraycopy(outputLayerGenes, 0, chromosome, nextIndex, outputLayerGenes.length);
 		
 		return chromosome;
+	}
+	
+	protected void setChromosome(float[] chromosome){
+		int outputLayerIndex = 0;
+		for (int i = 0; i < hiddenLayers.length; i++) {
+			int geneLayerSize = hiddenLayers[i].getGenesSize();
+			hiddenLayers[i].setLayerGenes(chromosome, i * geneLayerSize);
+			outputLayerIndex += geneLayerSize;
+		}
+		
+		outputLayer.setLayerGenes(chromosome, outputLayerIndex);
 	}
 	
 	protected int getChromosomeSize(){
