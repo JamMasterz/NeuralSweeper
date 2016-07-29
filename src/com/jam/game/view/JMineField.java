@@ -13,9 +13,9 @@ public class JMineField extends JButton{
 	public static final int FIELD_SIZE = 30;
 	public static final int FONT_SIZE = 20;
 	
-	public JMineField(Field field){
-		setPreferredSize(new Dimension(FIELD_SIZE, FIELD_SIZE));
-		setFont(new Font("Segoe UI Symbol", Font.BOLD, FONT_SIZE));
+	public JMineField(Field field, double scale){
+		setPreferredSize(new Dimension((int) (FIELD_SIZE * scale), (int) (FIELD_SIZE * scale)));
+		setFont(new Font("Segoe UI Symbol", Font.BOLD, (int) (FONT_SIZE * scale)));
 		setMargin(new Insets(0, 0, 0, 0));
 	}
 	

@@ -8,6 +8,7 @@ import com.jam.game.model.TagResult;
 import com.jam.game.model.UncoverResult;
 import com.jam.game.view.MinesweeperGUI;
 
+//TODO: On defeat, show all the mines, color the killing mine red, put an X over bad flags
 public class Game {
 	public static final int NOOB_SIZE = 9;
 	public static final int INTERMEDIATE_SIZE = 16;
@@ -41,8 +42,8 @@ public class Game {
 		board.setDebug(debug);
 	}
 	
-	public JPanel getGUI(){
-		if (gui == null) gui = new MinesweeperGUI(this);
+	public JPanel getGUI(double scale){
+		if (gui == null) gui = new MinesweeperGUI(this, scale);
 		gui.setDebug(debug);
 		
 		return gui.getGUI();

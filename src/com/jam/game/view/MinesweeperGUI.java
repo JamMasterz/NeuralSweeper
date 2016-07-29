@@ -40,10 +40,12 @@ public class MinesweeperGUI {
 	private JButton resetButton;
 	@SuppressWarnings("unused")
 	private boolean debug = false;
+	private double scale;
 	
-	public MinesweeperGUI(Game game){
+	public MinesweeperGUI(Game game, double scale){
 		this.game = game;
 		this.fields = new ArrayList<JMineField>();
+		this.scale = scale;
 		this.timer = new TimerThread(this);
 		timer.start();
 	}
@@ -66,27 +68,27 @@ public class MinesweeperGUI {
 	}
 	
 	private JPanel getTopPanel(){
-		Font font = new Font("Arial Black", Font.BOLD, FONT_SIZE);
+		Font font = new Font("Arial Black", Font.BOLD, (int) (FONT_SIZE * scale));
 		
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
 		
 		bombsLeft = new JLabel(Integer.toString(game.getBoard().getBombsLeft()));
-		bombsLeft.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
+		bombsLeft.setPreferredSize(new Dimension((int) (DISPLAY_WIDTH * scale), (int) (DISPLAY_HEIGHT * scale)));
 		bombsLeft.setFont(font);
 		bombsLeft.setForeground(Color.RED);
 		bombsLeft.setBackground(Color.LIGHT_GRAY);
 		bombsLeft.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
 		elapsedTime = new JLabel("0");
-		elapsedTime.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
+		elapsedTime.setPreferredSize(new Dimension((int) (DISPLAY_WIDTH * scale), (int) (DISPLAY_HEIGHT * scale)));
 		elapsedTime.setFont(font);
 		elapsedTime.setForeground(Color.RED);
 		elapsedTime.setBackground(Color.LIGHT_GRAY);
 		elapsedTime.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
 		resetButton = new JButton(RESET);
-		resetButton.setPreferredSize(new Dimension(RESET_SIZE, RESET_SIZE));
+		resetButton.setPreferredSize(new Dimension((int) (RESET_SIZE * scale), (int) (RESET_SIZE * scale)));
 		resetButton.setFont(font);
 		resetButton.setHorizontalAlignment(SwingConstants.CENTER);
 		resetButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -111,7 +113,7 @@ public class MinesweeperGUI {
 		
 		for (int i = 0; i < board.getSize(); i++){
 			for (int j = 0; j < board.getSize(); j++){
-				JMineField field = new JMineField(board.getField(i, j));
+				JMineField field = new JMineField(board.getField(i, j), scale);
 				field.setHorizontalAlignment(JMineField.CENTER);
 				field.addMouseListener(listener);
 				
