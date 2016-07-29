@@ -13,10 +13,7 @@ public class TimerThread extends Thread{
 			gui.updateTime();
 			try {
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				System.err.println("TimerThread interrupted!");
-				e.printStackTrace();
-			}
+			} catch (InterruptedException e) {}
 		}
 	}
 }

@@ -96,6 +96,7 @@ public class MinesweeperGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				game.getBoard().restartGame();
+				restartTimerThread();
 				updateBoard();
 			}
 		});
@@ -152,6 +153,19 @@ public class MinesweeperGUI {
 	public void updateTime(){
 		if (elapsedTime != null){
 			elapsedTime.setText(Integer.toString(game.getBoard().getSecondsElapsed()));
+		}
+	}
+	
+	protected void stopTimerThread(){
+		if (!timer.isInterrupted()){
+			timer.interrupt();
+		}
+	}
+	
+	protected void restartTimerThread(){
+		if (timer.isInterrupted()){
+			timer = new TimerThread(this);
+			timer.start();
 		}
 	}
 }
