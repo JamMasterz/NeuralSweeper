@@ -1,5 +1,10 @@
 package com.jam.neural;
 
+import java.util.Arrays;
+import java.util.Random;
+
+import com.jam.util.Util;
+
 public class Genome {
 	private NodeLayer outputLayer;
 	private NodeLayer[] hiddenLayers;
@@ -55,6 +60,44 @@ public class Genome {
 		System.arraycopy(outputLayerGenes, 0, chromosome, nextIndex, outputLayerGenes.length);
 		
 		return chromosome;
+	}
+	
+	public float[] getOffspringChromosome(Genome another){
+		Random r = new Random();
+		float[] parent1 = this.getChromosome();
+		float[] parent2 = another.getChromosome();
+		float[] offspring;
+		
+		if (!Util.randomDecision(NetworkSettings.CROSSOVER_RATE, r) || Arrays.equals(parent1, parent2)){
+			offspring = new float[parent1.length];
+			System.arraycopy(parent1, 0, offspring, 0, parent1.length);
+		} else {
+			offspring = crossoverChromosomes(parent1, parent2);
+		}
+		mutateChromosome(offspring);
+		
+		return offspring;
+	}
+	
+	private void mutateChromosome(float[] chromosome){
+		Random r = new Random();
+		
+		for (int i = 0; i < chromosome.length; i++) {
+			if (Util.randomDecision(NetworkSettings.MUTATION_RATE, r)){
+				chromosome[i] += Util.getRandomFloat(r, -NetworkSettings.MAX_BASE_PAIR_CHANGE, NetworkSettings.MAX_BASE_PAIR_CHANGE);
+			}
+		}
+	}
+	
+	private float[] crossoverChromosomes(float[] one, float[] two){
+		if (one.length != two.length) throw new IllegalArgumentException("The two genomes are not the same and cant be crossed");
+		
+		int crossoverIndex = new Random().nextInt(one.length - 1) + 1; //Exluding the 1st and last index which would result in nothing happening
+		float[] result = new float[one.length];
+		System.arraycopy(one, 0, result, 0, crossoverIndex);
+		System.arraycopy(two, crossoverIndex, result, crossoverIndex, two.length - crossoverIndex);
+		
+		return result;
 	}
 	
 	protected void setChromosome(float[] chromosome){

@@ -25,4 +25,10 @@ public class Util {
 	public static float sigmond(float val){
 		return (float) (1 / (1 + Math.exp(-val)));
 	}
+	
+	public static boolean randomDecision(float probability, Random r){
+		if (r == null) r = new Random();
+		
+		return (r.nextFloat() <= probability) ? true : false;
+	}
 }
