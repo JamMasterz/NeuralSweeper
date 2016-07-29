@@ -92,6 +92,9 @@ public class Board {
 			case MINE:
 				return TagResult.FAILED;
 			case TAGGED_EMPTY:
+				setField(coord, Field.COVERED_EMPTY);
+				bombsToTag++;
+				return TagResult.UNTAGGED;
 			case TAGGED_MINE:
 				setField(coord, Field.COVERED_MINE);
 				bombsToTag++;
