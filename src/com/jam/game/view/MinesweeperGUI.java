@@ -33,6 +33,7 @@ public class MinesweeperGUI {
 	private JPanel panel;
 	private ArrayList<JMineField> fields;
 	private MinefieldActionListener listener;
+	private TimerThread timer;
 	
 	private JLabel bombsLeft;
 	private JLabel elapsedTime;
@@ -43,6 +44,8 @@ public class MinesweeperGUI {
 	public MinesweeperGUI(Game game){
 		this.game = game;
 		this.fields = new ArrayList<JMineField>();
+		this.timer = new TimerThread(this);
+		timer.start();
 	}
 	
 	public JPanel getGUI(){
@@ -141,6 +144,12 @@ public class MinesweeperGUI {
 			JOptionPane.showMessageDialog(panel, "You lost!");
 		} else if (res == UncoverResult.VICTORY){
 			JOptionPane.showMessageDialog(panel, "You won!");
+		}
+	}
+	
+	public void updateTime(){
+		if (elapsedTime != null){
+			elapsedTime.setText(Integer.toString(game.getBoard().getSecondsElapsed()));
 		}
 	}
 }
