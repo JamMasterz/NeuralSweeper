@@ -37,6 +37,7 @@ public class MinesweeperGUI {
 	private JLabel bombsLeft;
 	private JLabel elapsedTime;
 	private JButton resetButton;
+	@SuppressWarnings("unused")
 	private boolean debug = false;
 	
 	public MinesweeperGUI(Game game){
@@ -46,7 +47,7 @@ public class MinesweeperGUI {
 	
 	public JPanel getGUI(){
 		if (panel == null){
-			listener = new MinefieldActionListener(fields, game);
+			listener = new MinefieldActionListener(fields, game, this);
 			
 			panel = new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
