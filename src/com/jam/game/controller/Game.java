@@ -54,27 +54,12 @@ public class Game {
 		setAutomatic(true); //Maybe not
 	}
 	
-	public void leftClickField(Coord coord){
-		UncoverResult result = board.uncoverSingle(coord);
-		if (gui != null){
-			if (result != UncoverResult.FAILED){
-				gui.updateBoard();
-			} 
-			if (result == UncoverResult.VICTORY || result == UncoverResult.MINE){
-				gui.displayGameState(result);
-			}
-		}
+	public UncoverResult leftClickField(Coord coord){
+		return board.uncoverSingle(coord);
 	}
 	
-	public void rightClickField(Coord coord){
-		TagResult result = board.tagSingleField(coord);
-		if (gui != null){
-			if (result == TagResult.FAILED){
-				return;
-			} else {
-				gui.updateBoard();
-			}
-		}
+	public TagResult rightClickField(Coord coord){
+		return board.tagSingleField(coord);
 	}
 	
 	public void setAutomatic(boolean automatic){

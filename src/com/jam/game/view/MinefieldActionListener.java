@@ -8,14 +8,18 @@ import javax.swing.SwingUtilities;
 
 import com.jam.game.controller.Game;
 import com.jam.game.model.Coord;
+import com.jam.game.model.TagResult;
+import com.jam.game.model.UncoverResult;
 
 public class MinefieldActionListener extends MouseAdapter{
 	private ArrayList<JMineField> fields = new ArrayList<JMineField>();
+	private MinesweeperGUI gui;
 	private Game game;
 	
-	public MinefieldActionListener(ArrayList<JMineField> fields, Game game) {
+	public MinefieldActionListener(ArrayList<JMineField> fields, Game game, MinesweeperGUI gui) {
 		this.fields = fields;
 		this.game = game;
+		this.gui = gui;
 	}
 	
 	private Coord getEventCoord(Object src){
@@ -42,9 +46,20 @@ public class MinefieldActionListener extends MouseAdapter{
 	public void mouseReleased(MouseEvent e) {
 		Coord coord = getEventCoord(e.getSource());
 		if (SwingUtilities.isLeftMouseButton(e)){
-			game.leftClickField(coord);
+			UncoverResult result = game.leftClickField(coord);
+			if (result != UncoverResult.FAILED){
+				gui.updateBoard();
+			} 
+			if (result == UncoverResult.VICTORY || result == UncoverResult.MINE){
+				gui.displayGameState(result);
+			}
 		} else if (SwingUtilities.isRightMouseButton(e)){
-			game.rightClickField(coord);
+			TagResult result = game.rightClickField(coord);
+			if (result == TagResult.FAILED){
+				return;
+			} else {
+				gui.updateBoard();
+			}
 		}
 	}
 }
