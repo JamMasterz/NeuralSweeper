@@ -1,6 +1,7 @@
 package com.jam.main;
 
 import java.awt.Component;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -11,30 +12,39 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
+
+import com.jam.game.controller.DefaultGamePreference;
+
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+
 import java.awt.Color;
 import java.awt.Font;
 
-public class MainPanel extends JPanel {
+public class MainFrame extends JFrame {
 	private static final long serialVersionUID = -2928806346426112279L;
 	protected final ButtonGroup evolutionRadios = new ButtonGroup();
 	protected final ButtonGroup gameDifficultyRadios = new ButtonGroup();
 	protected JSpinner tpsSpinner, threadsSpinner, generationsSpinner, hiddenLayersSpinner, nodesHiddenLayerSpinner, specimensSpinner;
 	protected JButton attachGUIButton, startButton, stopButton, showGraphsButton;
 	protected JLabel indicatorLabel, generationLabel;
+	protected JRadioButton radioEasyDiff, radioMediumDiff, radioHardDiff;
 
 	/**
 	 * Create the panel.
 	 */
-	public MainPanel() {
-		setLayout(null);
+	public MainFrame() {
+		setTitle("Minesweeper Neural Network");
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null);
 		
 		JPanel normalEvoPanel = new JPanel();
 		normalEvoPanel.setBorder(new TitledBorder(null, "Normal Evolution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		normalEvoPanel.setBounds(10, 37, 318, 206);
-		add(normalEvoPanel);
+		getContentPane().add(normalEvoPanel);
 		SpringLayout sl_normalEvoPanel = new SpringLayout();
 		normalEvoPanel.setLayout(sl_normalEvoPanel);
 		
@@ -64,7 +74,7 @@ public class MainPanel extends JPanel {
 		JPanel acceleratedEvoPanel = new JPanel();
 		acceleratedEvoPanel.setBorder(new TitledBorder(null, "Accelerated Evolution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		acceleratedEvoPanel.setBounds(338, 37, 318, 206);
-		add(acceleratedEvoPanel);
+		getContentPane().add(acceleratedEvoPanel);
 		SpringLayout sl_AcceleratedEvoPanel = new SpringLayout();
 		acceleratedEvoPanel.setLayout(sl_AcceleratedEvoPanel);
 		
@@ -142,15 +152,15 @@ public class MainPanel extends JPanel {
 		evolutionRadios.add(radioNormal);
 		evolutionRadios.add(radioAccelerated);
 		
-		add(radioNormal);
-		add(radioAccelerated);
+		getContentPane().add(radioNormal);
+		getContentPane().add(radioAccelerated);
 
 		setEnabledPanel(acceleratedEvoPanel, false);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "General Settings", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(10, 254, 318, 157);
-		add(panel);
+		getContentPane().add(panel);
 		SpringLayout sl_panel = new SpringLayout();
 		panel.setLayout(sl_panel);
 		
@@ -158,7 +168,7 @@ public class MainPanel extends JPanel {
 		sl_panel.putConstraint(SpringLayout.WEST, lblGameDifficulty, 10, SpringLayout.WEST, panel);
 		panel.add(lblGameDifficulty);
 		
-		JRadioButton radioEasyDiff = new JRadioButton("Easy");
+		radioEasyDiff = new JRadioButton("Easy");
 		radioEasyDiff.setSelected(true);
 		gameDifficultyRadios.add(radioEasyDiff);
 		sl_panel.putConstraint(SpringLayout.NORTH, radioEasyDiff, 10, SpringLayout.NORTH, panel);
@@ -166,14 +176,14 @@ public class MainPanel extends JPanel {
 		sl_panel.putConstraint(SpringLayout.EAST, radioEasyDiff, -132, SpringLayout.EAST, panel);
 		panel.add(radioEasyDiff);
 		
-		JRadioButton radioMediumDiff = new JRadioButton("Medium");
+		radioMediumDiff = new JRadioButton("Medium");
 		gameDifficultyRadios.add(radioMediumDiff);
 		sl_panel.putConstraint(SpringLayout.NORTH, radioMediumDiff, 10, SpringLayout.NORTH, panel);
 		sl_panel.putConstraint(SpringLayout.WEST, radioMediumDiff, 6, SpringLayout.EAST, radioEasyDiff);
 		sl_panel.putConstraint(SpringLayout.EAST, radioMediumDiff, -65, SpringLayout.EAST, panel);
 		panel.add(radioMediumDiff);
 		
-		JRadioButton radioHardDiff = new JRadioButton("Hard");
+		radioHardDiff = new JRadioButton("Hard");
 		gameDifficultyRadios.add(radioHardDiff);
 		sl_panel.putConstraint(SpringLayout.NORTH, radioHardDiff, 10, SpringLayout.NORTH, panel);
 		sl_panel.putConstraint(SpringLayout.WEST, radioHardDiff, 6, SpringLayout.EAST, radioMediumDiff);
@@ -219,7 +229,7 @@ public class MainPanel extends JPanel {
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Controls", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setBounds(338, 254, 318, 157);
-		add(panel_1);
+		getContentPane().add(panel_1);
 		SpringLayout sl_panel_1 = new SpringLayout();
 		panel_1.setLayout(sl_panel_1);
 		
@@ -276,5 +286,53 @@ public class MainPanel extends JPanel {
 	
 	public void setGenerationNumber(int generation){
 		generationLabel.setText(Integer.toString(generation));
+	}
+	
+	public int getTPS(){
+		return (int) tpsSpinner.getValue();
+	}
+	
+	public int getNumThreads(){
+		return (int) threadsSpinner.getValue();
+	}
+	
+	public int getGensToRun(){
+		return (int) generationsSpinner.getValue();
+	}
+	
+	public DefaultGamePreference getGamePref(){
+		if (radioEasyDiff.isSelected()) return DefaultGamePreference.NOOB;
+		if (radioMediumDiff.isSelected()) return DefaultGamePreference.INTERMEDIATE;
+		if (radioHardDiff.isSelected()) return DefaultGamePreference.EXPERT;
+		
+		return null;
+	}
+	
+	public int getNumSpecimens(){
+		return (int) specimensSpinner.getValue();
+	}
+	
+	public int getNumHiddenLayers(){
+		return (int) hiddenLayersSpinner.getValue();
+	}
+	
+	public int getNodesPerLayer(){
+		return (int) nodesHiddenLayerSpinner.getValue();
+	}
+	
+	public void setStartActionListener(ActionListener listener){
+		startButton.addActionListener(listener);
+	}
+	
+	public void setStopActionListener(ActionListener listener){
+		startButton.addActionListener(listener);
+	}
+	
+	public void setShowGraphsActionListener(ActionListener listener){
+		startButton.addActionListener(listener);
+	}
+	
+	public void setAttachActionListener(ActionListener listener){
+		startButton.addActionListener(listener);
 	}
 }
