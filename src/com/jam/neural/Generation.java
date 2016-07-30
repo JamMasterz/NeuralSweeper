@@ -2,23 +2,22 @@ package com.jam.neural;
 
 import java.util.Random;
 
-public class Generation<T extends NeuralTask> {
+public class Generation{
 	private Genome[] genomes;
-	private T[] tasks;
+	private NeuralTask[] tasks;
 	private int generationNumber;
 	private int ticksLeft;
 	
-	@SuppressWarnings("unchecked")
-	public Generation(int numGenomes, int maxTicksPerGen, int numHiddenLayers, int numNodesPerHiddenLayer){
+	public Generation(NeuralTask[] tasks, int numGenomes, int maxTicksPerGen, int numHiddenLayers, int numNodesPerHiddenLayer){
 		if (numGenomes < 1) throw new IllegalArgumentException("The number of genomes must be greater than 1");
+		if (tasks.length != numGenomes) throw new IllegalArgumentException("The amount of NeuralTasks has to be the same as number of genomes");
 		
 		this.generationNumber = 1;
 		this.ticksLeft = maxTicksPerGen;
 		this.genomes = new Genome[numGenomes];
-		this.tasks = (T[]) new Object[numGenomes];
+		this.tasks = tasks;
 		
 		for (int i = 0; i < numGenomes; i++){
-			tasks[i] = (T) NeuralTask.getInstance();
 			genomes[i] = new Genome(tasks[i].getNumInputs(), numHiddenLayers, numNodesPerHiddenLayer, tasks[i].getNumOutputs());
 		}
 	}
@@ -49,13 +48,12 @@ public class Generation<T extends NeuralTask> {
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void initNewGeneration(){
 		generationNumber++;
 		
 		populateWithChildren();
 		for (int i = 0; i < tasks.length; i++){
-			tasks[i] = (T) NeuralTask.getInstance();
+			tasks[i].reset();
 		}
 	}
 	
