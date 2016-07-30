@@ -348,4 +348,12 @@ public class Board {
 	public int getBombsLeft(){
 		return this.bombsToTag;
 	}
+	
+	public GameState getState(){
+		return this.state;
+	}
+	
+	public int getLeftToUncover(){
+		return this.leftToUncover;
+	}
 }

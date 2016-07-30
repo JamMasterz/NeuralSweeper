@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import com.jam.game.model.Board;
 import com.jam.game.model.Coord;
+import com.jam.game.model.GameState;
 import com.jam.game.model.TagResult;
 import com.jam.game.model.UncoverResult;
 import com.jam.game.view.MinesweeperGUI;
@@ -21,9 +22,11 @@ public class Game {
 	private MinesweeperGUI gui;
 	private boolean automatic = false;
 	private boolean debug = false;
+	private int bombs;
 	
 	public Game(int size, int bombs){
 		this.board = new Board(size, bombs);
+		this.bombs = bombs;
 		board.setDebug(debug);
 	}
 	
@@ -77,5 +80,13 @@ public class Game {
 	
 	public int getSize(){
 		return board.getSize();
+	}
+	
+	public GameState getGameState(){
+		return board.getState();
+	}
+	
+	public int getBombsInitial(){
+		return bombs;
 	}
 }
