@@ -9,7 +9,7 @@ public class Generation<T extends NeuralTask> {
 	private int ticksLeft;
 	
 	@SuppressWarnings("unchecked")
-	public Generation(int numGenomes, int maxTicksPerGen){
+	public Generation(int numGenomes, int maxTicksPerGen, int numHiddenLayers, int numNodesPerHiddenLayer){
 		if (numGenomes < 1) throw new IllegalArgumentException("The number of genomes must be greater than 1");
 		
 		this.generationNumber = 1;
@@ -19,7 +19,7 @@ public class Generation<T extends NeuralTask> {
 		
 		for (int i = 0; i < numGenomes; i++){
 			tasks[i] = (T) NeuralTask.getInstance();
-			genomes[i] = new Genome(tasks[i].getNumInputs(), NetworkSettings.NUM_HIDDEN_LAYERS, NetworkSettings.NUM_NODES_PER_HIDDEN_LAYER, tasks[i].getNumOutputs());
+			genomes[i] = new Genome(tasks[i].getNumInputs(), numHiddenLayers, numNodesPerHiddenLayer, tasks[i].getNumOutputs());
 		}
 	}
 	

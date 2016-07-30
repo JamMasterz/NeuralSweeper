@@ -49,10 +49,6 @@ public class Coord {
 		this.y = y;
 	}
 	
-	public static boolean isWithinBoard(int size, int x, int y){
-		return x >= 0 && y >= 0 && x < size && y < size;
-	}
-	
 	public static Coord getCoord(int index1D, int size){
 		int col = index1D % size;
 		int row = index1D / size;
