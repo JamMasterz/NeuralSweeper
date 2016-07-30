@@ -208,7 +208,7 @@ public class Board {
 		return leftToUncover == 0;
 	}
 	
-	private boolean isUncovered(Coord coord){
+	public boolean isUncovered(Coord coord){
 		Field field = getField(coord);
 		return field != Field.TAGGED_EMPTY && field != Field.TAGGED_MINE && field != Field.MINE && field != Field.COVERED_EMPTY;
 	}
@@ -327,7 +327,7 @@ public class Board {
 		return (coord.getX() == 0 || coord.getX() == last) ^ (coord.getY() == 0 || coord.getY() == last);
 	}
 	
-	private boolean isWithinBoard(Coord coord){
+	public boolean isWithinBoard(Coord coord){
 		return coord.getX() >= 0 && coord.getY() >= 0 && coord.getX() < size && coord.getY() < size;
 	}
 	
