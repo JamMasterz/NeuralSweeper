@@ -161,4 +161,9 @@ public class NeuralMinesweeper implements NeuralTask{
 	public boolean isBinary() {
 		return true;
 	}
+
+	@Override
+	public void reset() {
+		game.resetGame();
+	}
 }

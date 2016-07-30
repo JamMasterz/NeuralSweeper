@@ -89,4 +89,12 @@ public class Game {
 	public int getBombsInitial(){
 		return bombs;
 	}
+	
+	public void resetGame(){
+		board.restartGame();
+		if (gui != null){
+			gui.updateBoard();
+			gui.updateTime();
+		}
+	}
 }

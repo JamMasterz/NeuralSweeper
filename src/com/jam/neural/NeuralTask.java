@@ -4,10 +4,8 @@ package com.jam.neural;
  *	The task (or in this case the game) that the neural network is going to be processing, has to implement this
  */
 public interface NeuralTask {
-	static NeuralTask getInstance() {
-		return null;
-	}
 	float[] getInputs();
+	void reset();
 	void setOutputs(float[] outputs);
 	int getNumOutputs();
 	int getNumInputs();
