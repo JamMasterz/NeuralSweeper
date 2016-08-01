@@ -147,7 +147,7 @@ public class Board {
 				return UncoverResult.FAILED;
 			case COVERED_MINE:
 				setField(coord, Field.MINE);
-				leftToUncover--;
+				//leftToUncover--;
 				state = GameState.LOSE;
 				timeEnded = System.currentTimeMillis();
 				return UncoverResult.MINE;
@@ -188,7 +188,6 @@ public class Board {
 	 * This will uncover the specified field and all other fields that should be uncovered around coord
 	 * @param coord Coordinate of the field being uncovered
 	 */
-	//TODO: Change name to signify that it also turns some fields into number indicators
 	private void uncoverRecursively(Coord coord){
 		Coord[] sector = getSectorCoords(coord);
 		int bombsAround = countBombsSector(sector);

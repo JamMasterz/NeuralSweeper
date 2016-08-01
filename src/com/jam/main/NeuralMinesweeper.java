@@ -118,7 +118,8 @@ public class NeuralMinesweeper implements NeuralTask{
 	}
 	
 	private Coord[] getCoveredFields(){
-		Coord[] res = new Coord[game.getBoard().getLeftToUncover() + game.getBombsInitial() - 1];
+		//TODO: This for some reason gets the wrong dimensions sometimes
+		Coord[] res = new Coord[game.getBoard().getLeftToUncover() + game.getBombsInitial()];
 		
 		int index = 0;
 		for (int i = 0; i < game.getSize() * game.getSize(); i++) {
