@@ -13,19 +13,28 @@ import com.jam.neural.TaskState;
 
 public class NeuralMinesweeper implements NeuralTask{
 	private Game game;
-	private int visibleSquareSize;
+	private final int visibleSquareSize;
 	private Coord pos;
+	private Coord spawnPos;
 	private Coord[] visibleCoords;
 	private TaskState state;
 	private final int fieldsToUncoverInitial;
 	
 	public NeuralMinesweeper(int visibleSquareSize, int xSpawn, int ySpawn, DefaultGamePreference pref){
-		this.state = TaskState.PROCESSING;
 		this.game = new Game(pref);
 		this.visibleSquareSize = visibleSquareSize;
-		this.pos = new Coord(xSpawn, ySpawn);
-		this.visibleCoords = new Coord[visibleSquareSize * visibleSquareSize];
+		this.spawnPos = new Coord(xSpawn, ySpawn);
 		this.fieldsToUncoverInitial = game.getSize() * game.getSize() - game.getBombsInitial();
+		
+		reset();
+	}
+
+	@Override
+	public void reset() {
+		game.resetGame();
+		state = TaskState.PROCESSING;
+		pos = new Coord(spawnPos);
+		visibleCoords = new Coord[visibleSquareSize * visibleSquareSize];
 	}
 	
 	/**
@@ -109,12 +118,13 @@ public class NeuralMinesweeper implements NeuralTask{
 	}
 	
 	private Coord[] getCoveredFields(){
-		Coord[] res = new Coord[game.getBoard().getLeftToUncover()];
+		Coord[] res = new Coord[game.getBoard().getLeftToUncover() + game.getBombsInitial() - 1];
 		
+		int index = 0;
 		for (int i = 0; i < game.getSize() * game.getSize(); i++) {
 			Coord c = Coord.getCoord(i, game.getSize());
 			if (!game.getBoard().isUncovered(c)){
-				res[i] = c;
+				res[index++] = c;
 			}
 		}
 		
@@ -160,10 +170,5 @@ public class NeuralMinesweeper implements NeuralTask{
 	@Override
 	public boolean isBinary() {
 		return true;
-	}
-
-	@Override
-	public void reset() {
-		game.resetGame();
 	}
 }

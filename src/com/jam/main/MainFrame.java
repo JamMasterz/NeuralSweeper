@@ -325,14 +325,14 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void setStopActionListener(ActionListener listener){
-		startButton.addActionListener(listener);
+		stopButton.addActionListener(listener);
 	}
 	
 	public void setShowGraphsActionListener(ActionListener listener){
-		startButton.addActionListener(listener);
+		showGraphsButton.addActionListener(listener);
 	}
 	
 	public void setAttachActionListener(ActionListener listener){
-		startButton.addActionListener(listener);
+		attachGUIButton.addActionListener(listener);
 	}
 }

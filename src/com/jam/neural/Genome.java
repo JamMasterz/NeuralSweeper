@@ -20,24 +20,20 @@ public class Genome {
 		if (numNodesPerHiddenLayer < 0) throw new IllegalArgumentException("Number of nodes in hidden layers must be greater than 0");
 		int hidden = (numHiddenLayers < 0) ? 0 : numHiddenLayers;
 		fitness = 0;
-		
-		if (chromosome == null){
-			if (hidden > 0){
-				hiddenLayers = new NodeLayer[hidden];
-				
-				//First layer is different
-				hiddenLayers[0] = new NodeLayer(numNodesPerHiddenLayer, numInputs);
-				for (int i = 1; i < hidden; i++){
-					hiddenLayers[i] = new NodeLayer(numNodesPerHiddenLayer, numNodesPerHiddenLayer);
-				}
-			} else {
-				hiddenLayers = null;
+
+		outputLayer = new NodeLayer(numOutputNodes, (hidden == 0) ? numInputs : numNodesPerHiddenLayer);
+		if (hidden > 0){
+			hiddenLayers = new NodeLayer[hidden];
+
+			//First layer is different
+			hiddenLayers[0] = new NodeLayer(numNodesPerHiddenLayer, numInputs);
+			for (int i = 1; i < hidden; i++){
+				hiddenLayers[i] = new NodeLayer(numNodesPerHiddenLayer, numNodesPerHiddenLayer);
 			}
-			
-			outputLayer = new NodeLayer(numOutputNodes, (hidden == 0) ? numInputs : numNodesPerHiddenLayer);
 		} else {
-			setChromosome(chromosome);
+			hiddenLayers = null;
 		}
+		if (chromosome != null) setChromosome(chromosome);
 	}
 	
 	/**
@@ -145,13 +141,13 @@ public class Genome {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append("Network: \n\n");
+		builder.append("\nNetwork:\n");
 		for (int i = 0; i < hiddenLayers.length; i++){
 			builder.append("Hidden layer " + i + '\n');
 			builder.append(hiddenLayers[i].toString());
 			builder.append('\n');
 		}
-		builder.append("Output layer ");
+		builder.append("Output layer\n");
 		builder.append(outputLayer.toString());
 		
 		return builder.toString();

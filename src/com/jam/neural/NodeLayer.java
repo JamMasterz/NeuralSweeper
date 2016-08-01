@@ -60,7 +60,7 @@ public class NodeLayer {
 		float[] layerGenes = new float[getGenesSize()];
 		
 		int nextIndex = 0;
-		for (int i = 0; i < layerGenes.length; i++){
+		for (int i = 0; i < nodes.length; i++){
 			float[] nodeGene = nodes[i].getGene();
 			System.arraycopy(nodeGene, 0, layerGenes, nextIndex, nodeGene.length);
 			nextIndex += nodeGene.length;
