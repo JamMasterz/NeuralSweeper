@@ -147,6 +147,7 @@ public class Board {
 				return UncoverResult.FAILED;
 			case COVERED_MINE:
 				setField(coord, Field.MINE);
+				leftToUncover--;
 				state = GameState.LOSE;
 				timeEnded = System.currentTimeMillis();
 				return UncoverResult.MINE;
@@ -210,7 +211,7 @@ public class Board {
 	
 	public boolean isUncovered(Coord coord){
 		Field field = getField(coord);
-		return field != Field.TAGGED_EMPTY && field != Field.TAGGED_MINE && field != Field.MINE && field != Field.COVERED_EMPTY;
+		return field != Field.TAGGED_EMPTY && field != Field.TAGGED_MINE && field != Field.COVERED_MINE && field != Field.COVERED_EMPTY;
 	}
 	
 	private void generate(Coord coord){
@@ -355,5 +356,21 @@ public class Board {
 	
 	public int getLeftToUncover(){
 		return this.leftToUncover;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("Board :\n");
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				builder.append(board[i][j].toString() + ", ");
+			}
+			builder.deleteCharAt(builder.length() - 1);
+			builder.append("\n");
+		}
+		
+		return builder.toString();
 	}
 }

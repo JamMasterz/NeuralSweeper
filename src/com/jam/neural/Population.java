@@ -60,6 +60,7 @@ public class Population{
 	private void populateWithChildren(){
 		Genome[] children = new Genome[genomes.length];
 		
+		System.out.println("fitness : " + getTotalFitness());
 		int[] probabilityArray = new int[getTotalFitness()];
 		Random r = new Random();
 		int nextIndex = 0;

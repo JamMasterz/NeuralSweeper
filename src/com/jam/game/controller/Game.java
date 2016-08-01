@@ -34,12 +34,15 @@ public class Game {
 		switch (pref){
 			case NOOB:
 				this.board = new Board(NOOB_SIZE, NOOB_BOMBS);
+				this.bombs = NOOB_BOMBS;
 				break;
 			case INTERMEDIATE:
 				this.board = new Board(INTERMEDIATE_SIZE, INTERMEDIATE_BOMBS);
+				this.bombs = INTERMEDIATE_BOMBS;
 				break;
 			case EXPERT:
 				this.board = new Board(EXPERT_SIZE, EXPERT_BOMBS);
+				this.bombs = EXPERT_BOMBS;
 				break;
 		}
 		board.setDebug(debug);
