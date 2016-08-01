@@ -2,13 +2,13 @@ package com.jam.neural;
 
 import java.util.Random;
 
-public class Generation{
+public class Population{
 	private Genome[] genomes;
 	private NeuralTask[] tasks;
 	private int generationNumber;
 	private int ticksLeft;
 	
-	public Generation(NeuralTask[] tasks, int numGenomes, int maxTicksPerGen, int numHiddenLayers, int numNodesPerHiddenLayer){
+	public Population(NeuralTask[] tasks, int numGenomes, int maxTicksPerGen, int numHiddenLayers, int numNodesPerHiddenLayer){
 		if (numGenomes < 1) throw new IllegalArgumentException("The number of genomes must be greater than 1");
 		if (tasks.length != numGenomes) throw new IllegalArgumentException("The amount of NeuralTasks has to be the same as number of genomes");
 		
@@ -58,7 +58,7 @@ public class Generation{
 	}
 	
 	private void populateWithChildren(){
-		Genome[] children = genomes;
+		Genome[] children = new Genome[genomes.length];
 		
 		int[] probabilityArray = new int[getTotalFitness()];
 		Random r = new Random();
@@ -71,7 +71,7 @@ public class Generation{
 		for (int i = 0; i < children.length; i++) {
 			Genome parent1 = genomes[probabilityArray[r.nextInt(probabilityArray.length)]];
 			Genome parent2 = genomes[probabilityArray[r.nextInt(probabilityArray.length)]];
-			children[i].setChromosome(parent1.getOffspringChromosome(parent2));
+			children[i] = parent1.getOffspringGenome(parent2);
 		}
 	}
 	
