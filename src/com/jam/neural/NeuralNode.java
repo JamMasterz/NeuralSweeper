@@ -11,7 +11,7 @@ public class NeuralNode {
 	
 	
 	public NeuralNode(int numInputs){
-		if (numInputs < 1) throw new IllegalArgumentException("Number of inputs to a node must be greater than 0");
+		if (numInputs < 0) throw new IllegalArgumentException("Number of inputs to a node must be greater than 0");
 		
 		Random r = new Random();
 		
@@ -28,6 +28,13 @@ public class NeuralNode {
 		this.weights = weights;
 		this.threshold = threshold;
 		this.numInputs = weights.length;
+	}
+	
+	public NeuralNode(float[] chromosome, int start, int numInputs){
+		this.numInputs = numInputs;
+		this.weights = new float[numInputs];
+		
+		setGene(chromosome, start);
 	}
 	
 	public NeuralNode(NeuralNode node){

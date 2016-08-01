@@ -11,25 +11,33 @@ public class Genome {
 	private int fitness;
 	
 	public Genome(int numInputs, int numHiddenLayers, int numNodesPerHiddenLayer, int numOutputNodes){
+		this(null, numInputs, numHiddenLayers, numNodesPerHiddenLayer, numOutputNodes);
+	}
+	
+	public Genome(float[] chromosome, int numInputs, int numHiddenLayers, int numNodesPerHiddenLayer, int numOutputNodes){
 		if (numInputs < 0) throw new IllegalArgumentException("Number of inputs must be greater than 0");
 		if (numOutputNodes < 0) throw new IllegalArgumentException("Number of output nodes must be greater than 0");
 		if (numNodesPerHiddenLayer < 0) throw new IllegalArgumentException("Number of nodes in hidden layers must be greater than 0");
 		int hidden = (numHiddenLayers < 0) ? 0 : numHiddenLayers;
 		fitness = 0;
 		
-		if (hidden > 0){
-			hiddenLayers = new NodeLayer[hidden];
-			//first hidden layer has different amount of inputs
-			hiddenLayers[0] = new NodeLayer(numNodesPerHiddenLayer, numInputs);
-			
-			for (int i = 1; i < hidden; i++){
-				hiddenLayers[i] = new NodeLayer(numNodesPerHiddenLayer, numNodesPerHiddenLayer);
+		if (chromosome == null){
+			if (hidden > 0){
+				hiddenLayers = new NodeLayer[hidden];
+				
+				//First layer is different
+				hiddenLayers[0] = new NodeLayer(numNodesPerHiddenLayer, numInputs);
+				for (int i = 1; i < hidden; i++){
+					hiddenLayers[i] = new NodeLayer(numNodesPerHiddenLayer, numNodesPerHiddenLayer);
+				}
+			} else {
+				hiddenLayers = null;
 			}
+			
+			outputLayer = new NodeLayer(numOutputNodes, (hidden == 0) ? numInputs : numNodesPerHiddenLayer);
 		} else {
-			hiddenLayers = null;
+			setChromosome(chromosome);
 		}
-		
-		outputLayer = new NodeLayer(numOutputNodes, (hidden == 0) ? numInputs : numNodesPerHiddenLayer);
 	}
 	
 	/**
@@ -64,7 +72,7 @@ public class Genome {
 		return chromosome;
 	}
 	
-	public float[] getOffspringChromosome(Genome another){
+	public Genome getOffspringGenome(Genome another){
 		Random r = new Random();
 		float[] parent1 = this.getChromosome();
 		float[] parent2 = another.getChromosome();
@@ -78,7 +86,7 @@ public class Genome {
 		}
 		mutateChromosome(offspring);
 		
-		return offspring;
+		return new Genome(offspring, hiddenLayers[0].getNumInputsPerNode(),hiddenLayers.length, hiddenLayers[0].size(), outputLayer.size());
 	}
 	
 	private void mutateChromosome(float[] chromosome){
@@ -102,7 +110,7 @@ public class Genome {
 		return result;
 	}
 	
-	protected void setChromosome(float[] chromosome){
+	private void setChromosome(float[] chromosome){
 		fitness = 0;
 		int outputLayerIndex = 0;
 		for (int i = 0; i < hiddenLayers.length; i++) {
@@ -114,7 +122,7 @@ public class Genome {
 		outputLayer.setLayerGenes(chromosome, outputLayerIndex);
 	}
 	
-	protected int getChromosomeSize(){
+	private int getChromosomeSize(){
 		int size = 0;
 		
 		for (NodeLayer layer : hiddenLayers){
