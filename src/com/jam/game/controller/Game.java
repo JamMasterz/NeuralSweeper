@@ -56,7 +56,7 @@ public class Game {
 	}
 	
 	public void disconnectGUI(){
-		//TODO: disconnect gui
+		gui = null;
 		
 		setAutomatic(true); //Maybe not
 	}
