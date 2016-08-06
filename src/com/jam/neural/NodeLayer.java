@@ -37,7 +37,7 @@ public class NodeLayer {
 	 * @return Output values from every node in this layer. Can be used as inputs to next layer
 	 */
 	protected float[] evaluateLayer(float[] inputs, boolean binary){
-		if (numInputsPerNode != inputs.length) throw new IllegalArgumentException("The amount of inputs don't match this layers node configuration");
+		if (numInputsPerNode != inputs.length) throw new IllegalArgumentException("The amount of inputs(" + inputs.length + ") don't match this layers node configuration(" + numInputsPerNode + ")");
 		
 		float[] output = new float[nodes.length];
 		
