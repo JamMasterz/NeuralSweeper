@@ -10,6 +10,7 @@ public class Genome {
 	private NodeLayer[] hiddenLayers;
 	private float[] previousOutput;
 	private int fitness;
+	private boolean isRepeating = false;
 	
 	public Genome(int numInputs, int numHiddenLayers, int numNodesPerHiddenLayer, int numOutputNodes){
 		this(null, numInputs, numHiddenLayers, numNodesPerHiddenLayer, numOutputNodes);
@@ -50,7 +51,15 @@ public class Genome {
 			nextLayerInput = hiddenLayers[i].evaluateLayer(nextLayerInput, binary);
 		}
 		
-		previousOutput = outputLayer.evaluateLayer(nextLayerInput, binary);
+		float[] newOutput = outputLayer.evaluateLayer(nextLayerInput, binary);
+		
+		if (Util.equals(newOutput, previousOutput)){
+			isRepeating = true;
+		} else {
+			isRepeating = false;
+		}
+		previousOutput = newOutput;
+		
 		return previousOutput;
 	}
 	
@@ -143,6 +152,14 @@ public class Genome {
 	
 	public float[] getPrevOutput(){
 		return previousOutput;
+	}
+	
+	/**
+	 * 
+	 * @return Whether the last ticks output was the same as the output before that.
+	 */
+	public boolean isRepeating(){
+		return isRepeating;
 	}
 	
 	@Override
