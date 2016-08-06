@@ -31,4 +31,18 @@ public class Util {
 		
 		return (r.nextFloat() <= probability) ? true : false;
 	}
+	
+	public static void printFloatArr(float[] arr){
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("[");
+		for (int i = 0; i < arr.length; i++) {
+			builder.append(arr[i]);
+			builder.append(", ");
+		}
+		builder.deleteCharAt(builder.length() - 1);
+		builder.append("]");
+		
+		System.out.println(builder.toString());
+	}
 }
