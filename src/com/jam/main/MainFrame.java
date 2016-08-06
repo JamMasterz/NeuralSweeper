@@ -288,6 +288,10 @@ public class MainFrame extends JFrame {
 		generationLabel.setText(Integer.toString(generation));
 	}
 	
+	public void bumpGenerationNumber(){
+		generationLabel.setText(Integer.toString(Integer.parseInt(generationLabel.getText()) + 1)); 
+	}
+	
 	public int getTPS(){
 		return (int) tpsSpinner.getValue();
 	}
