@@ -25,21 +25,35 @@ public class Population{
 	/**
 	 * Uses the neural network to progress in the task 1 step
 	 */
-	public void tickGeneration(){
+	public void tickGeneration(boolean allowRepeating){
+		int ticking = 0;
 		for (int i = 0; i < genomes.length; i++){
 			TaskState state = tasks[i].getTaskState();
 			if (state == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
-				tasks[i].setOutputs(genomes[i].evalutateNetwork(tasks[i].getInputs(), tasks[i].isBinary()));
+				float[] outputs = genomes[i].evalutateNetwork(tasks[i].getInputs(), tasks[i].isBinary());
+				
+				if (!allowRepeating && genomes[i].isRepeating()){
+					System.out.println("Killing braindead genome");
+					tasks[i].setTaskState(TaskState.FAILED);
+					continue;
+				}
+				
+				ticking++;
+				tasks[i].setOutputs(outputs);
 			}
 		}
 		ticksLeft--;
+		
+		System.out.println("Still ticking: " + ticking);
 	}
 	
 	/**
 	 * @return Whether the generation is done processing. They either succeeded, failed or have been running for too long
 	 */
 	public boolean isGenerationDone(){
-		if (ticksLeft <= 0) return true;
+		if (ticksLeft <= 0){
+			return true;
+		}
 		for (NeuralTask task: tasks){
 			if (task.getTaskState() == TaskState.PROCESSING){
 				return false;
@@ -61,6 +75,7 @@ public class Population{
 		Genome[] children = new Genome[genomes.length];
 		
 		System.out.println("fitness : " + getTotalFitness());
+		//TODO: For some reason fitness == 0 sometimes. The total fitness is then 0 and its ridic slow
 		int[] probabilityArray = new int[getTotalFitness()];
 		Random r = new Random();
 		int nextIndex = 0;

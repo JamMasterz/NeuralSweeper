@@ -43,12 +43,13 @@ public class Main {
 					timer = new Timer();
 					timer.scheduleAtFixedRate(new TimerTask() {
 						@Override
-						public void run() {
+						public void run() { //TODO: Move this inside Population class, and have just 1 method for all this stuff
 							if (!population.isGenerationDone()){
-								population.tickGeneration();
+								population.tickGeneration(false);
 							} else {
 								System.out.println("repop");
 								population.initNewGeneration();
+								mainFrame.bumpGenerationNumber();
 							}
 						}
 					}, 0, interval);
