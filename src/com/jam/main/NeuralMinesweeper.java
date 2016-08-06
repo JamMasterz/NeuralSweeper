@@ -118,7 +118,6 @@ public class NeuralMinesweeper implements NeuralTask{
 	}
 	
 	private Coord[] getCoveredFields(){
-		//TODO: This for some reason gets the wrong dimensions sometimes
 		Coord[] res = new Coord[game.getBoard().getLeftToUncover() + game.getBombsInitial()];
 		
 		int index = 0;
@@ -137,14 +136,23 @@ public class NeuralMinesweeper implements NeuralTask{
 		for (int i = 0; i < outputs.length - 1; i++) {
 			if (outputs[i] == 1 && game.getBoard().isWithinBoard(visibleCoords[i])){
 				UncoverResult res = game.leftClickField(visibleCoords[i]);
-				if (res == UncoverResult.MINE) state = TaskState.FAILED;
-				if (res == UncoverResult.VICTORY) state = TaskState.SUCCEEDED;
+				if (res == UncoverResult.MINE){
+					state = TaskState.FAILED;
+					return;
+				}
+				if (res == UncoverResult.VICTORY){
+					state = TaskState.SUCCEEDED;
+					return;
+				}
 			}
 		}
 		if (outputs[outputs.length - 1] == 1){
 			Random r  = new Random();
 			Coord[] coords = getCoveredFields();
 			pos = coords[r.nextInt(coords.length)];
+			if (pos == null){
+				System.out.println("OMOMGOMGOMGOGM");
+			}
 		}
 	}
 
@@ -171,5 +179,10 @@ public class NeuralMinesweeper implements NeuralTask{
 	@Override
 	public boolean isBinary() {
 		return true;
+	}
+
+	@Override
+	public void setTaskState(TaskState state) {
+		this.state = state;
 	}
 }
