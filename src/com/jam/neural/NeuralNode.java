@@ -15,6 +15,7 @@ public class NeuralNode {
 		
 		Random r = new Random();
 		
+		this.numInputs = numInputs;
 		threshold = Util.getRandomFloat(r, -1, 1);
 		weights = new float[numInputs];
 		for (int i = 0; i < numInputs; i++){
