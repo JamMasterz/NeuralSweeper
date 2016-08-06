@@ -2,6 +2,8 @@ package com.jam.neural;
 
 import java.util.Random;
 
+import com.jam.util.Util;
+
 public class Population{
 	private Genome[] genomes;
 	private NeuralTask[] tasks;
@@ -34,6 +36,7 @@ public class Population{
 				
 				if (!allowRepeating && genomes[i].isRepeating()){
 					System.out.println("Killing braindead genome");
+					Util.printFloatArr(outputs);
 					tasks[i].setTaskState(TaskState.FAILED);
 					continue;
 				}
@@ -74,7 +77,8 @@ public class Population{
 	private void populateWithChildren(){
 		Genome[] children = new Genome[genomes.length];
 		
-		System.out.println("fitness : " + getTotalFitness());
+		int totalFitness = getTotalFitness();
+		System.out.println("fitness : " + totalFitness);
 		//TODO: For some reason fitness == 0 sometimes. The total fitness is then 0 and its ridic slow
 		int[] probabilityArray = new int[getTotalFitness()];
 		Random r = new Random();
@@ -89,6 +93,8 @@ public class Population{
 			Genome parent2 = genomes[probabilityArray[r.nextInt(probabilityArray.length)]];
 			children[i] = parent1.getOffspringGenome(parent2);
 		}
+		
+		genomes = children;
 	}
 	
 	public int getTotalFitness(){
