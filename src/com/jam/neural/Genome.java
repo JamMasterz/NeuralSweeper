@@ -95,7 +95,7 @@ public class Genome {
 		}
 		mutateChromosome(offspring);
 		
-		return new Genome(offspring, hiddenLayers[0].getNumInputsPerNode(),hiddenLayers.length, hiddenLayers[0].size(), outputLayer.size());
+		return new Genome(offspring, hiddenLayers[0].getNumInputsPerNode(), hiddenLayers.length, hiddenLayers[0].size(), outputLayer.size());
 	}
 	
 	private void mutateChromosome(float[] chromosome){

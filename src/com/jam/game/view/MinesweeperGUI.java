@@ -40,19 +40,25 @@ public class MinesweeperGUI {
 	private JButton resetButton;
 	@SuppressWarnings("unused")
 	private boolean debug = false;
+	private boolean controllable;
 	private double scale;
 	
-	public MinesweeperGUI(Game game, double scale){
+	public MinesweeperGUI(Game game, double scale, boolean controllable){
 		this.game = game;
 		this.fields = new ArrayList<JMineField>();
 		this.scale = scale;
+		this.controllable = controllable;
 		this.timer = new TimerThread(this);
 		timer.start();
 	}
 	
 	public JPanel getGUI(){
 		if (panel == null){
-			listener = new MinefieldActionListener(fields, game, this);
+			if (controllable){
+				listener = new MinefieldActionListener(fields, game, this);
+			} else {
+				listener = null;
+			}
 			
 			panel = new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

@@ -20,36 +20,40 @@ public class Game {
 	
 	private Board board;
 	private MinesweeperGUI gui;
-	private boolean automatic = false;
+	private boolean controllable;
 	private boolean debug = false;
 	private int bombs;
 	
-	public Game(int size, int bombs){
-		this.board = new Board(size, bombs);
-		this.bombs = bombs;
-		board.setDebug(debug);
+	public Game(int size, int bombs, boolean controllable){
+		constructor(size, bombs, controllable);
 	}
 	
-	public Game(DefaultGamePreference pref){
+	public Game(DefaultGamePreference pref, boolean controllable){
 		switch (pref){
 			case NOOB:
-				this.board = new Board(NOOB_SIZE, NOOB_BOMBS);
-				this.bombs = NOOB_BOMBS;
+				constructor(NOOB_SIZE, NOOB_BOMBS, controllable);
 				break;
 			case INTERMEDIATE:
-				this.board = new Board(INTERMEDIATE_SIZE, INTERMEDIATE_BOMBS);
-				this.bombs = INTERMEDIATE_BOMBS;
+				constructor(INTERMEDIATE_SIZE, INTERMEDIATE_BOMBS, controllable);
 				break;
 			case EXPERT:
-				this.board = new Board(EXPERT_SIZE, EXPERT_BOMBS);
-				this.bombs = EXPERT_BOMBS;
+				constructor(EXPERT_SIZE, EXPERT_BOMBS, controllable);
 				break;
 		}
+	}
+	
+	/**
+	 * Because java is stiupid
+	 */
+	private void constructor(int size, int bombs, boolean controllable){
+		this.board = new Board(size, bombs);
+		this.bombs = bombs;
+		this.controllable = controllable;
 		board.setDebug(debug);
 	}
 	
 	public JPanel getGUI(double scale){
-		if (gui == null) gui = new MinesweeperGUI(this, scale);
+		if (gui == null) gui = new MinesweeperGUI(this, scale, controllable);
 		gui.setDebug(debug);
 		
 		return gui.getGUI();
@@ -57,8 +61,6 @@ public class Game {
 	
 	public void disconnectGUI(){
 		gui = null;
-		
-		setAutomatic(true); //Maybe not
 	}
 	
 	public UncoverResult leftClickField(Coord coord){
@@ -67,14 +69,6 @@ public class Game {
 	
 	public TagResult rightClickField(Coord coord){
 		return board.tagSingleField(coord);
-	}
-	
-	public void setAutomatic(boolean automatic){
-		this.automatic = automatic;
-	}
-	
-	public boolean isAutomatic(){
-		return this.automatic;
 	}
 	
 	public Board getBoard(){
