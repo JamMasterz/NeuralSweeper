@@ -64,11 +64,25 @@ public class Game {
 	}
 	
 	public UncoverResult leftClickField(Coord coord){
-		return board.uncoverSingle(coord);
+		UncoverResult r = board.uncoverSingle(coord);
+		
+		if (!controllable && gui != null){
+			gui.updateBoard();
+			gui.updateTime();
+		}
+		
+		return r;
 	}
 	
 	public TagResult rightClickField(Coord coord){
-		return board.tagSingleField(coord);
+		TagResult r = board.tagSingleField(coord);
+		
+		if (!controllable && gui != null){
+			gui.updateBoard();
+			gui.updateTime();
+		}
+		
+		return r;
 	}
 	
 	public Board getBoard(){

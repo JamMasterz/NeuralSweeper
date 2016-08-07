@@ -100,14 +100,16 @@ public class MinesweeperGUI {
 		resetButton.setFont(font);
 		resetButton.setHorizontalAlignment(SwingConstants.CENTER);
 		resetButton.setVerticalTextPosition(SwingConstants.CENTER);
-		resetButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				game.getBoard().restartGame();
-				restartTimerThread();
-				updateBoard();
-			}
-		});
+		if (controllable){
+			resetButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					game.getBoard().restartGame();
+					restartTimerThread();
+					updateBoard();
+				}
+			});
+		}
 		
 		top.add(bombsLeft);
 		top.add(resetButton);

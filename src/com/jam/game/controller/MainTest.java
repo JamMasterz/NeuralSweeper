@@ -1,6 +1,6 @@
 package com.jam.game.controller;
 
-import com.jam.main.BoardFrame;
+import com.jam.main.GameArrayFrame;
 
 public class MainTest {
 	
@@ -10,6 +10,6 @@ public class MainTest {
 			games[i] = new Game(DefaultGamePreference.NOOB, true);
 		}
 		
-		new BoardFrame(games, games.length);
+		new GameArrayFrame(games, 3, 3, 1);
 	}
 }
