@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -64,6 +65,7 @@ public class MinesweeperGUI {
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 			panel.add(getTopPanel());
 			panel.add(getGridPanel());
+			panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		}
 		
 		return panel;

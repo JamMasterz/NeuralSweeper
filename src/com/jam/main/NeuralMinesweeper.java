@@ -185,4 +185,8 @@ public class NeuralMinesweeper implements NeuralTask{
 	public void setTaskState(TaskState state) {
 		this.state = state;
 	}
+	
+	public Game getGame(){
+		return game;
+	}
 }

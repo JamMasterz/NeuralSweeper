@@ -1,33 +1,33 @@
 package com.jam.main;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 
 import com.jam.game.controller.DefaultGamePreference;
-
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-
-import java.awt.Color;
-import java.awt.Font;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = -2928806346426112279L;
 	protected final ButtonGroup evolutionRadios = new ButtonGroup();
 	protected final ButtonGroup gameDifficultyRadios = new ButtonGroup();
 	protected JSpinner tpsSpinner, threadsSpinner, generationsSpinner, hiddenLayersSpinner, nodesHiddenLayerSpinner, specimensSpinner;
+	protected JSpinner gamesVertSpinner, gamesHorSpinner, gameScaleSpinner;
 	protected JButton attachGUIButton, startButton, stopButton, showGraphsButton;
 	protected JLabel indicatorLabel, generationLabel;
 	protected JRadioButton radioEasyDiff, radioMediumDiff, radioHardDiff;
@@ -70,6 +70,52 @@ public class MainFrame extends JFrame {
 		sl_normalEvoPanel.putConstraint(SpringLayout.WEST, attachGUIButton, 0, SpringLayout.WEST, tpsSpinner);
 		sl_normalEvoPanel.putConstraint(SpringLayout.EAST, attachGUIButton, 0, SpringLayout.EAST, tpsSpinner);
 		normalEvoPanel.add(attachGUIButton);
+		
+		JPanel panel_2 = new JPanel();
+		sl_normalEvoPanel.putConstraint(SpringLayout.NORTH, panel_2, 6, SpringLayout.SOUTH, lblAttach);
+		sl_normalEvoPanel.putConstraint(SpringLayout.WEST, panel_2, 0, SpringLayout.WEST, lblTickssecond);
+		sl_normalEvoPanel.putConstraint(SpringLayout.SOUTH, panel_2, 98, SpringLayout.SOUTH, attachGUIButton);
+		sl_normalEvoPanel.putConstraint(SpringLayout.EAST, panel_2, 0, SpringLayout.EAST, tpsSpinner);
+		panel_2.setBorder(new TitledBorder(null, "GUI Settings", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		normalEvoPanel.add(panel_2);
+		SpringLayout sl_panel_2 = new SpringLayout();
+		panel_2.setLayout(sl_panel_2);
+		
+		JLabel lblGamesVertically = new JLabel("Games vertically");
+		sl_panel_2.putConstraint(SpringLayout.WEST, lblGamesVertically, 10, SpringLayout.WEST, panel_2);
+		panel_2.add(lblGamesVertically);
+		
+		gamesVertSpinner = new JSpinner();
+		gamesVertSpinner.setModel(new SpinnerNumberModel(3, 1, 30, 1));
+		sl_panel_2.putConstraint(SpringLayout.NORTH, lblGamesVertically, 3, SpringLayout.NORTH, gamesVertSpinner);
+		sl_panel_2.putConstraint(SpringLayout.NORTH, gamesVertSpinner, 0, SpringLayout.NORTH, panel_2);
+		sl_panel_2.putConstraint(SpringLayout.WEST, gamesVertSpinner, -88, SpringLayout.EAST, panel_2);
+		sl_panel_2.putConstraint(SpringLayout.EAST, gamesVertSpinner, -10, SpringLayout.EAST, panel_2);
+		panel_2.add(gamesVertSpinner);
+		
+		JLabel lblGamesHorizontally = new JLabel("Games horizontally");
+		sl_panel_2.putConstraint(SpringLayout.WEST, lblGamesHorizontally, 0, SpringLayout.WEST, lblGamesVertically);
+		panel_2.add(lblGamesHorizontally);
+		
+		gamesHorSpinner = new JSpinner();
+		gamesHorSpinner.setModel(new SpinnerNumberModel(5, 1, 60, 1));
+		sl_panel_2.putConstraint(SpringLayout.NORTH, lblGamesHorizontally, 3, SpringLayout.NORTH, gamesHorSpinner);
+		sl_panel_2.putConstraint(SpringLayout.NORTH, gamesHorSpinner, 6, SpringLayout.SOUTH, gamesVertSpinner);
+		sl_panel_2.putConstraint(SpringLayout.WEST, gamesHorSpinner, 0, SpringLayout.WEST, gamesVertSpinner);
+		sl_panel_2.putConstraint(SpringLayout.EAST, gamesHorSpinner, 0, SpringLayout.EAST, gamesVertSpinner);
+		panel_2.add(gamesHorSpinner);
+		
+		JLabel lblNewLabel = new JLabel("Game scale");
+		sl_panel_2.putConstraint(SpringLayout.WEST, lblNewLabel, 0, SpringLayout.WEST, lblGamesVertically);
+		panel_2.add(lblNewLabel);
+		
+		gameScaleSpinner = new JSpinner();
+		gameScaleSpinner.setModel(new SpinnerListModel(new String[] {"0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0"}));
+		sl_panel_2.putConstraint(SpringLayout.NORTH, lblNewLabel, 3, SpringLayout.NORTH, gameScaleSpinner);
+		sl_panel_2.putConstraint(SpringLayout.NORTH, gameScaleSpinner, 8, SpringLayout.SOUTH, gamesHorSpinner);
+		sl_panel_2.putConstraint(SpringLayout.WEST, gameScaleSpinner, 0, SpringLayout.WEST, gamesVertSpinner);
+		sl_panel_2.putConstraint(SpringLayout.EAST, gameScaleSpinner, 0, SpringLayout.EAST, gamesVertSpinner);
+		panel_2.add(gameScaleSpinner);
 		
 		JPanel acceleratedEvoPanel = new JPanel();
 		acceleratedEvoPanel.setBorder(new TitledBorder(null, "Accelerated Evolution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -276,7 +322,12 @@ public class MainFrame extends JFrame {
 	private void setEnabledPanel(JPanel panel, boolean enabled){
 		//System.out.println("Setting " + ((TitledBorder) panel.getBorder()).getTitle() + ", " + enabled);
 		for (Component c : panel.getComponents()){
-			c.setEnabled(enabled);
+			if (c instanceof JPanel){
+				JPanel cont = (JPanel) c;
+				setEnabledPanel(cont, enabled);
+			} else {
+				c.setEnabled(enabled);
+			}
 		}
 	}
 	
@@ -322,6 +373,18 @@ public class MainFrame extends JFrame {
 	
 	public int getNodesPerLayer(){
 		return (int) nodesHiddenLayerSpinner.getValue();
+	}
+	
+	public int getGamesVertically(){
+		return (int) gamesVertSpinner.getValue();
+	}
+	
+	public int getGamesHorizontally(){
+		return (int) gamesHorSpinner.getValue();
+	}
+	
+	public float getGamesScale(){
+		return (float) gameScaleSpinner.getValue();
 	}
 	
 	public void setStartActionListener(ActionListener listener){
