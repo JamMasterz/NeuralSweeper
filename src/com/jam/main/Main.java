@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.jam.game.controller.DefaultGamePreference;
+import com.jam.game.controller.Game;
 import com.jam.neural.Population;
 
 public class Main {
@@ -13,13 +14,20 @@ public class Main {
 	static final int VISIBLE_SQUARE_SIZE = 7;
 	static final int SPAWN_X = 4;
 	static final int SPAWN_Y = 5;
+	
 	static boolean generated = false;
 	static boolean running = false;
+	static boolean guiAttached = false;
+	
 	static Population population;
 	static Timer timer;
+	static NeuralMinesweeper[] sweepers;
+	
+	static MainFrame mainFrame;
+	static GameArrayFrame guiFrame;
 
 	public static void main(String[] args) {
-		MainFrame mainFrame = new MainFrame();
+		mainFrame = new MainFrame();
 		mainFrame.setSize(670, 450);
 		mainFrame.setVisible(true);
 		
@@ -27,7 +35,7 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!generated){
-					NeuralMinesweeper[] sweepers = new NeuralMinesweeper[mainFrame.getNumSpecimens()];
+					sweepers = new NeuralMinesweeper[mainFrame.getNumSpecimens()];
 					for (int i = 0; i < sweepers.length; i++) {
 						sweepers[i] = new NeuralMinesweeper(VISIBLE_SQUARE_SIZE, SPAWN_X, SPAWN_Y, DefaultGamePreference.NOOB);
 					}
@@ -71,7 +79,18 @@ public class Main {
 		mainFrame.setAttachActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO: Attach GUI
+				if (!guiAttached && running){
+					Game[] games = new Game[sweepers.length];
+					for (int i = 0; i < sweepers.length; i++) {
+						games[i] = sweepers[i].getGame();
+					}
+					
+					int width = mainFrame.getGamesHorizontally();
+					int height = mainFrame.getGamesVertically();
+					float scale = mainFrame.getGamesScale();
+					
+					guiFrame = new GameArrayFrame(games, width, height, scale);
+				}
 			}
 		});
 		mainFrame.setShowGraphsActionListener(new ActionListener() {

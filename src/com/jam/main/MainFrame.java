@@ -86,7 +86,7 @@ public class MainFrame extends JFrame {
 		panel_2.add(lblGamesVertically);
 		
 		gamesVertSpinner = new JSpinner();
-		gamesVertSpinner.setModel(new SpinnerNumberModel(3, 1, 30, 1));
+		gamesVertSpinner.setModel(new SpinnerNumberModel(4, 1, 30, 1));
 		sl_panel_2.putConstraint(SpringLayout.NORTH, lblGamesVertically, 3, SpringLayout.NORTH, gamesVertSpinner);
 		sl_panel_2.putConstraint(SpringLayout.NORTH, gamesVertSpinner, 0, SpringLayout.NORTH, panel_2);
 		sl_panel_2.putConstraint(SpringLayout.WEST, gamesVertSpinner, -88, SpringLayout.EAST, panel_2);
@@ -110,7 +110,7 @@ public class MainFrame extends JFrame {
 		panel_2.add(lblNewLabel);
 		
 		gameScaleSpinner = new JSpinner();
-		gameScaleSpinner.setModel(new SpinnerListModel(new String[] {"0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0"}));
+		gameScaleSpinner.setModel(new SpinnerListModel(new String[] {"1.5", "1.4", "1.3", "1.2", "1.1", "1.0", "0.9", "0.8", "0.7", "0.6", "0.5", "0.4"}));
 		sl_panel_2.putConstraint(SpringLayout.NORTH, lblNewLabel, 3, SpringLayout.NORTH, gameScaleSpinner);
 		sl_panel_2.putConstraint(SpringLayout.NORTH, gameScaleSpinner, 8, SpringLayout.SOUTH, gamesHorSpinner);
 		sl_panel_2.putConstraint(SpringLayout.WEST, gameScaleSpinner, 0, SpringLayout.WEST, gamesVertSpinner);
@@ -384,7 +384,7 @@ public class MainFrame extends JFrame {
 	}
 	
 	public float getGamesScale(){
-		return (float) gameScaleSpinner.getValue();
+		return Float.parseFloat((String) gameScaleSpinner.getValue());
 	}
 	
 	public void setStartActionListener(ActionListener listener){
