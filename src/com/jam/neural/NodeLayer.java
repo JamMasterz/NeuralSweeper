@@ -53,7 +53,7 @@ public class NodeLayer {
 	}
 	
 	public int getNumInputsPerNode(){
-		return nodes[0].getNumInputs();
+		return numInputsPerNode;
 	}
 	
 	protected float[] getLayerGenes(){

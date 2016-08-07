@@ -11,7 +11,7 @@ public class MainTest {
 	public static void main(String[] args) {
 		Game[] games = new Game[1];
 		for (int i = 0; i < games.length; i++){
-			games[i] = new Game(DefaultGamePreference.NOOB);
+			games[i] = new Game(DefaultGamePreference.NOOB, true);
 		}
 		
 		JFrame frame = new JFrame("Minesweeper test");
