@@ -20,8 +20,8 @@ public class NeuralMinesweeper implements NeuralTask{
 	private TaskState state;
 	private final int fieldsToUncoverInitial;
 	
-	public NeuralMinesweeper(int visibleSquareSize, int xSpawn, int ySpawn, DefaultGamePreference pref){
-		this.game = new Game(pref, false);
+	public NeuralMinesweeper(int visibleSquareSize, int xSpawn, int ySpawn, Long seed, DefaultGamePreference pref){
+		this.game = new Game(pref, seed, false);
 		this.visibleSquareSize = visibleSquareSize;
 		this.spawnPos = new Coord(xSpawn, ySpawn);
 		this.fieldsToUncoverInitial = game.getSize() * game.getSize() - game.getBombsInitial();

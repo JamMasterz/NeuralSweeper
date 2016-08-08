@@ -2,6 +2,7 @@ package com.jam.main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,8 +37,9 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				if (!generated){
 					sweepers = new NeuralMinesweeper[mainFrame.getNumSpecimens()];
+					long seed = new Random().nextLong();
 					for (int i = 0; i < sweepers.length; i++) {
-						sweepers[i] = new NeuralMinesweeper(VISIBLE_SQUARE_SIZE, SPAWN_X, SPAWN_Y, DefaultGamePreference.NOOB);
+						sweepers[i] = new NeuralMinesweeper(VISIBLE_SQUARE_SIZE, SPAWN_X, SPAWN_Y, seed, DefaultGamePreference.NOOB);
 					}
 					population = new Population(sweepers, mainFrame.getNumSpecimens(), MAX_MOVES_TO_SOLVE_EASY, mainFrame.getNumHiddenLayers(), mainFrame.getNodesPerLayer());
 					

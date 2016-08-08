@@ -2,8 +2,6 @@ package com.jam.neural;
 
 import java.util.Random;
 
-import com.jam.util.Util;
-
 public class Population{
 	private Genome[] genomes;
 	private NeuralTask[] tasks;
@@ -36,7 +34,7 @@ public class Population{
 				
 				if (!allowRepeating && genomes[i].isRepeating()){
 					System.out.println("Killing braindead genome");
-					Util.printFloatArr(outputs);
+					//Util.printFloatArr(outputs);
 					tasks[i].setTaskState(TaskState.FAILED);
 					continue;
 				}

@@ -24,20 +24,20 @@ public class Game {
 	private boolean debug = false;
 	private int bombs;
 	
-	public Game(int size, int bombs, boolean controllable){
-		constructor(size, bombs, controllable);
+	public Game(int size, int bombs, Long seed, boolean controllable){
+		constructor(size, bombs, seed, controllable);
 	}
 	
-	public Game(DefaultGamePreference pref, boolean controllable){
+	public Game(DefaultGamePreference pref, Long seed, boolean controllable){
 		switch (pref){
 			case NOOB:
-				constructor(NOOB_SIZE, NOOB_BOMBS, controllable);
+				constructor(NOOB_SIZE, NOOB_BOMBS, seed, controllable);
 				break;
 			case INTERMEDIATE:
-				constructor(INTERMEDIATE_SIZE, INTERMEDIATE_BOMBS, controllable);
+				constructor(INTERMEDIATE_SIZE, INTERMEDIATE_BOMBS, seed, controllable);
 				break;
 			case EXPERT:
-				constructor(EXPERT_SIZE, EXPERT_BOMBS, controllable);
+				constructor(EXPERT_SIZE, EXPERT_BOMBS, seed, controllable);
 				break;
 		}
 	}
@@ -45,8 +45,8 @@ public class Game {
 	/**
 	 * Because java is stiupid
 	 */
-	private void constructor(int size, int bombs, boolean controllable){
-		this.board = new Board(size, bombs);
+	private void constructor(int size, int bombs, Long seed, boolean controllable){
+		this.board = new Board(size, bombs, seed);
 		this.bombs = bombs;
 		this.controllable = controllable;
 		board.setDebug(debug);
