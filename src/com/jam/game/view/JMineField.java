@@ -64,14 +64,13 @@ public class JMineField extends JButton{
 				setFocusPainted(false);
 				break;
 			case MINE:
-				color = "black";
+				color = "red";
 				setContentAreaFilled(false);
 				setFocusPainted(false);
 				break;
 			case TAGGED_EMPTY:
 			case TAGGED_MINE:
 				color = "black";
-				
 				setContentAreaFilled(true);
 				setFocusPainted(true);
 				break;
