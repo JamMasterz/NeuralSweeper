@@ -171,6 +171,9 @@ public class NeuralMinesweeper implements NeuralTask{
 
 	@Override
 	public int getFitness() {
+		//TODO: Make this much more sensitive to fields that aren't uncovered recursively
+		//Right now, the genomes that actually do succeed with a click have pretty much the same chance of getting
+		//offspring as the retarded ones.
 		return fieldsToUncoverInitial - game.getBoard().getLeftToUncover();
 	}
 
