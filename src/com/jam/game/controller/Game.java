@@ -24,10 +24,21 @@ public class Game {
 	private boolean debug = false;
 	private int bombs;
 	
+	/**
+	 * @param size Amount of fields in 1 dimension. The board is square
+	 * @param bombs Amount of bombs
+	 * @param seed Seed to use when generating the board. Can be used to generate identical boards
+	 * @param controllable Whether the GUI is responsive to user actions
+	 */
 	public Game(int size, int bombs, Long seed, boolean controllable){
 		constructor(size, bombs, seed, controllable);
 	}
 	
+	/**
+	 * @param pref Game preset
+	 * @param seed Seed to use when generating the board. Can be used to generate identical boards
+	 * @param controllable Whether the GUI is responsive to user actions
+	 */
 	public Game(DefaultGamePreference pref, Long seed, boolean controllable){
 		switch (pref){
 			case NOOB:
@@ -52,6 +63,10 @@ public class Game {
 		board.setDebug(debug);
 	}
 	
+	/**
+	 * @param scale Scale of the GUI
+	 * @return Panel containing the GUI of the game. Can be used to stack multiple games in one window
+	 */
 	public JPanel getGUI(double scale){
 		if (gui == null) gui = new MinesweeperGUI(this, scale, controllable);
 		gui.setDebug(debug);
@@ -59,10 +74,18 @@ public class Game {
 		return gui.getGUI();
 	}
 	
+	/**
+	 * Removes GUI for this game
+	 */
 	public void disconnectGUI(){
 		gui = null;
 	}
 	
+	/**
+	 * Clicks on a specified field
+	 * @param coord Coordinate to click on
+	 * @return Result of the action
+	 */
 	public UncoverResult leftClickField(Coord coord){
 		UncoverResult r = board.uncoverSingle(coord);
 		
@@ -73,6 +96,11 @@ public class Game {
 		return r;
 	}
 	
+	/**
+	 * Tags a specified field
+	 * @param coord Coordinate to click on
+	 * @return Result of the action
+	 */
 	public TagResult rightClickField(Coord coord){
 		TagResult r = board.tagSingleField(coord);
 		
@@ -83,22 +111,38 @@ public class Game {
 		return r;
 	}
 	
+	/**
+	 * @return The game board
+	 */
 	public Board getBoard(){
 		return this.board;
 	}
 	
+	/**
+	 * @return Amount of fields in 1 dimension. The board is square
+	 */
 	public int getSize(){
 		return board.getSize();
 	}
 	
+	/**
+	 * @return Game state
+	 */
 	public GameState getGameState(){
 		return board.getState();
 	}
 	
+	/**
+	 * @return How many bombs there were at the start
+	 */
 	public int getBombsInitial(){
 		return bombs;
 	}
 	
+	/**
+	 * Resets the game so it can be played again
+	 * @param seed Seed to use when generating the board. Can be used to generate identical boards
+	 */
 	public void resetGame(Long seed){
 		board.restartGame(seed);
 		if (gui != null){

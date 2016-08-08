@@ -45,6 +45,7 @@ public class MinefieldActionListener extends MouseAdapter{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		Coord coord = getEventCoord(e.getSource());
+		
 		if (SwingUtilities.isLeftMouseButton(e)){
 			UncoverResult result = game.leftClickField(coord);
 			if (result != UncoverResult.FAILED){
