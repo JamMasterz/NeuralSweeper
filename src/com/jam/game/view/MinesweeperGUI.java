@@ -104,7 +104,7 @@ public class MinesweeperGUI {
 			resetButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					game.getBoard().restartGame();
+					game.getBoard().restartGame(null);
 					restartTimerThread();
 					updateBoard();
 				}

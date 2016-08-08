@@ -19,11 +19,13 @@ public class NeuralMinesweeper implements NeuralTask{
 	private Coord[] visibleCoords;
 	private TaskState state;
 	private final int fieldsToUncoverInitial;
+	private long seed;
 	
 	public NeuralMinesweeper(int visibleSquareSize, int xSpawn, int ySpawn, Long seed, DefaultGamePreference pref){
 		this.game = new Game(pref, seed, false);
 		this.visibleSquareSize = visibleSquareSize;
 		this.spawnPos = new Coord(xSpawn, ySpawn);
+		this.seed = seed;
 		this.fieldsToUncoverInitial = game.getSize() * game.getSize() - game.getBombsInitial();
 		
 		reset();
@@ -31,10 +33,14 @@ public class NeuralMinesweeper implements NeuralTask{
 
 	@Override
 	public void reset() {
-		game.resetGame();
+		seed = new Random(seed).nextLong();
+		game.resetGame(seed);
 		state = TaskState.PROCESSING;
 		pos = new Coord(spawnPos);
 		visibleCoords = new Coord[visibleSquareSize * visibleSquareSize];
+		
+		//Click on the spawn coords. This is an arbitrary action and it doesnt interfere with the neural network
+		game.leftClickField(pos);
 	}
 	
 	/**
@@ -150,9 +156,6 @@ public class NeuralMinesweeper implements NeuralTask{
 			Random r  = new Random();
 			Coord[] coords = getCoveredFields();
 			pos = coords[r.nextInt(coords.length)];
-			if (pos == null){
-				System.out.println("OMOMGOMGOMGOGM");
-			}
 		}
 	}
 

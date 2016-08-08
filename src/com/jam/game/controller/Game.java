@@ -99,8 +99,8 @@ public class Game {
 		return bombs;
 	}
 	
-	public void resetGame(){
-		board.restartGame();
+	public void resetGame(Long seed){
+		board.restartGame(seed);
 		if (gui != null){
 			gui.updateBoard();
 			gui.updateTime();

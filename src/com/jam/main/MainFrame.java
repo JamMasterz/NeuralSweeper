@@ -86,7 +86,7 @@ public class MainFrame extends JFrame {
 		panel_2.add(lblGamesVertically);
 		
 		gamesVertSpinner = new JSpinner();
-		gamesVertSpinner.setModel(new SpinnerNumberModel(4, 1, 30, 1));
+		gamesVertSpinner.setModel(new SpinnerNumberModel(3, 1, 30, 1));
 		sl_panel_2.putConstraint(SpringLayout.NORTH, lblGamesVertically, 3, SpringLayout.NORTH, gamesVertSpinner);
 		sl_panel_2.putConstraint(SpringLayout.NORTH, gamesVertSpinner, 0, SpringLayout.NORTH, panel_2);
 		sl_panel_2.putConstraint(SpringLayout.WEST, gamesVertSpinner, -88, SpringLayout.EAST, panel_2);
@@ -98,7 +98,7 @@ public class MainFrame extends JFrame {
 		panel_2.add(lblGamesHorizontally);
 		
 		gamesHorSpinner = new JSpinner();
-		gamesHorSpinner.setModel(new SpinnerNumberModel(5, 1, 60, 1));
+		gamesHorSpinner.setModel(new SpinnerNumberModel(7, 1, 60, 1));
 		sl_panel_2.putConstraint(SpringLayout.NORTH, lblGamesHorizontally, 3, SpringLayout.NORTH, gamesHorSpinner);
 		sl_panel_2.putConstraint(SpringLayout.NORTH, gamesHorSpinner, 6, SpringLayout.SOUTH, gamesVertSpinner);
 		sl_panel_2.putConstraint(SpringLayout.WEST, gamesHorSpinner, 0, SpringLayout.WEST, gamesVertSpinner);
