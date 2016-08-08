@@ -19,6 +19,7 @@ public class Main {
 	static boolean generated = false;
 	static boolean running = false;
 	static boolean guiAttached = false;
+	static boolean graphing = false;
 	
 	static Population population;
 	static Timer timer;
@@ -26,6 +27,7 @@ public class Main {
 	
 	static MainFrame mainFrame;
 	static GameArrayFrame guiFrame;
+	static FitnessGraph fitnessGraph;
 
 	public static void main(String[] args) {
 		mainFrame = new MainFrame();
@@ -57,7 +59,10 @@ public class Main {
 							if (!population.isGenerationDone()){
 								population.tickGeneration(false);
 							} else {
-								System.out.println("repop");
+								System.out.println("Repopulating");
+								if (graphing){
+									fitnessGraph.addFitness(population.getAverageFitness(), population.getBestFitness());
+								}
 								population.initNewGeneration();
 								mainFrame.bumpGenerationNumber();
 							}
@@ -98,7 +103,14 @@ public class Main {
 		mainFrame.setShowGraphsActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO: Show graphs
+				System.out.println(graphing);
+				if (!graphing && running){
+					if (fitnessGraph == null){
+						fitnessGraph = new FitnessGraph();
+					} else {
+						fitnessGraph.setVisible(true);
+					}
+				}
 			}
 		});
 	}

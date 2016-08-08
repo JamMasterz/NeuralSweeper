@@ -105,6 +105,21 @@ public class Population{
 		return fitness;
 	}
 	
+	public int getAverageFitness(){
+		return getTotalFitness() / tasks.length;
+	}
+	
+	public int getBestFitness(){
+		int best = -1;
+		
+		for (int i = 0; i < tasks.length; i++) {
+			int fitness = tasks[i].getFitness();
+			if (fitness > best) best = fitness;
+		}
+		
+		return best;
+	}
+	
 	public int getGeneration(){
 		return this.generationNumber;
 	}
