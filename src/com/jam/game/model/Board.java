@@ -16,20 +16,32 @@ public class Board {
 	private int size;
 	private int amountBombs;
 	private int amountFields;
-	private boolean generated;
-	private GameState state;
-	private long timeStarted;
-	private long timeEnded;
 	private int leftToUncover;
 	private int bombsToTag;
+	
+	private boolean generated;
+	private GameState state;
+	private long seed;
+	
+	private long timeStarted;
+	private long timeEnded;
+	
 	private boolean debug;
 	
-	public Board(int size, int amountBombs){
+	/**
+	 * 
+	 * @param size Side of the game board
+	 * @param amountBombs Amount of bombs
+	 * @param seed Seed to use when generating level. If same seed is used for multiple games, and the
+	 * user starts them by clicking on the same field, the boards will be identical. Use null if not using this feature.
+	 */
+	public Board(int size, int amountBombs, Long seed){
 		if (size < SECTOR_SIZE + 1){
 			throw new IllegalArgumentException("The size must be bigger or equal to 4");
 		} else if (amountBombs >= size * size / 3){
 			throw new IllegalArgumentException("The amount of bombs must be less than 1/3 of all the fields");
 		} else {
+			this.seed = (seed == null) ? new Random().nextLong() : seed;
 			this.size = size;
 			this.amountBombs = amountBombs;
 			
@@ -215,7 +227,7 @@ public class Board {
 	
 	private void generate(Coord coord){
 		ArrayList<Coord> available = createAvailabilityArray(getSectorCoords(coord));
-		Random rand = new Random();
+		Random rand = new Random(seed);
 		
 		for (int i = 0; i < amountBombs; i++){
 			int bombIndex = rand.nextInt(available.size());
