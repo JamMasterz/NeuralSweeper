@@ -4,6 +4,11 @@ public class NodeLayer {
 	private NeuralNode[] nodes;
 	private int numInputsPerNode;
 	
+	/**
+	 * Creates a layer of nodes. Each node on a layer has the same number of inputs
+	 * @param numNodes Number of nodes in this layer
+	 * @param numInputsPerNode Number of inputs for each node in this layer
+	 */
 	public NodeLayer(int numNodes, int numInputsPerNode){
 		if (numNodes < 0) throw new IllegalArgumentException("The number of nodes in a layer must be greater than 0");
 		this.numInputsPerNode = numInputsPerNode;
@@ -33,7 +38,7 @@ public class NodeLayer {
 	/**
 	 * Given some inputs, it will return outputs from all the nodes in this row.
 	 * Note that each single input is connected to every node.
-	 * @param inputs Inputs
+	 * @param inputs Inputs. These inputs are fed to each node in this layer
 	 * @return Output values from every node in this layer. Can be used as inputs to next layer
 	 */
 	protected float[] evaluateLayer(float[] inputs, boolean binary){
@@ -48,10 +53,16 @@ public class NodeLayer {
 		return output;
 	}
 	
+	/**
+	 * @return How many nodes there are in this layer
+	 */
 	public int size(){
 		return nodes.length;
 	}
 	
+	/**
+	 * @return How many inputs nodes in this layer have
+	 */
 	public int getNumInputsPerNode(){
 		return numInputsPerNode;
 	}
