@@ -41,15 +41,15 @@ public class Board {
 		} else if (amountBombs >= size * size / 3){
 			throw new IllegalArgumentException("The amount of bombs must be less than 1/3 of all the fields");
 		} else {
-			this.seed = (seed == null) ? new Random().nextLong() : seed;
 			this.size = size;
 			this.amountBombs = amountBombs;
 			
-			restartGame();
+			restartGame(seed);
 		}
 	}
 	
-	public void restartGame(){
+	public void restartGame(Long seed){
+		this.seed = (seed == null) ? new Random().nextLong() : seed;
 		this.generated = false;
 		this.state = GameState.FROZEN;
 		this.bombsToTag = amountBombs;

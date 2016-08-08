@@ -13,6 +13,6 @@ public class MainTest {
 			games[i] = new Game(DefaultGamePreference.NOOB, seed, true);
 		}
 		
-		new GameArrayFrame(games, 3, 3, 1);
+		new GameArrayFrame(games, 2, 3, 1);
 	}
 }
