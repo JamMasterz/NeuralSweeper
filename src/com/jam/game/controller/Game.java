@@ -68,7 +68,6 @@ public class Game {
 		
 		if (!controllable && gui != null){
 			gui.updateBoard();
-			gui.updateTime();
 		}
 		
 		return r;
@@ -79,7 +78,6 @@ public class Game {
 		
 		if (!controllable && gui != null){
 			gui.updateBoard();
-			gui.updateTime();
 		}
 		
 		return r;
