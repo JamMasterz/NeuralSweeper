@@ -7,6 +7,7 @@ public class Population{
 	private NeuralTask[] tasks;
 	private int generationNumber;
 	private int ticksLeft;
+	private final int maxTicksPerGen;
 	
 	public Population(NeuralTask[] tasks, int numGenomes, int maxTicksPerGen, int numHiddenLayers, int numNodesPerHiddenLayer){
 		if (numGenomes < 1) throw new IllegalArgumentException("The number of genomes must be greater than 1");
@@ -16,6 +17,7 @@ public class Population{
 		this.ticksLeft = maxTicksPerGen;
 		this.genomes = new Genome[numGenomes];
 		this.tasks = tasks;
+		this.maxTicksPerGen = maxTicksPerGen;
 		
 		for (int i = 0; i < numGenomes; i++){
 			genomes[i] = new Genome(tasks[i].getNumInputs(), numHiddenLayers, numNodesPerHiddenLayer, tasks[i].getNumOutputs());
@@ -65,6 +67,7 @@ public class Population{
 	
 	public void initNewGeneration(){
 		generationNumber++;
+		ticksLeft = maxTicksPerGen;
 		
 		populateWithChildren();
 		for (int i = 0; i < tasks.length; i++){
