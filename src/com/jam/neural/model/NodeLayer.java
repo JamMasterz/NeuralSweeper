@@ -1,4 +1,4 @@
-package com.jam.neural;
+package com.jam.neural.model;
 
 public class NodeLayer {
 	private NeuralNode[] nodes;

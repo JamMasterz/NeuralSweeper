@@ -1,4 +1,4 @@
-package com.jam.neural;
+package com.jam.neural.model;
 
 import java.util.Random;
 

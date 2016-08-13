@@ -1,4 +1,4 @@
-package com.jam.main;
+package com.jam.neural.controller;
 
 import java.util.Random;
 
@@ -8,8 +8,8 @@ import com.jam.game.model.Board;
 import com.jam.game.model.Coord;
 import com.jam.game.model.Field;
 import com.jam.game.model.UncoverResult;
-import com.jam.neural.NeuralTask;
-import com.jam.neural.TaskState;
+import com.jam.neural.model.NeuralTask;
+import com.jam.neural.model.TaskState;
 
 public class NeuralMinesweeper implements NeuralTask{
 	private Game game;
@@ -20,6 +20,10 @@ public class NeuralMinesweeper implements NeuralTask{
 	private TaskState state;
 	private final int fieldsToUncoverInitial;
 	private long seed;
+	
+	private int fitness;
+	private static final int FITNESS_CLICK_INCREMENT = 4;
+	private static final int FITNESS_VICTORY_BONUS = 30;
 	
 	public NeuralMinesweeper(int visibleSquareSize, int xSpawn, int ySpawn, Long seed, DefaultGamePreference pref){
 		this.game = new Game(pref, seed, false);
@@ -38,6 +42,7 @@ public class NeuralMinesweeper implements NeuralTask{
 		state = TaskState.PROCESSING;
 		pos = new Coord(spawnPos);
 		visibleCoords = new Coord[visibleSquareSize * visibleSquareSize];
+		fitness = 1;
 		
 		//Click on the spawn coords. This is an arbitrary action and it doesnt interfere with the neural network
 		game.leftClickField(pos);
@@ -145,10 +150,12 @@ public class NeuralMinesweeper implements NeuralTask{
 				if (res == UncoverResult.MINE){
 					state = TaskState.FAILED;
 					return;
-				}
-				if (res == UncoverResult.VICTORY){
+				} else if (res == UncoverResult.VICTORY){
 					state = TaskState.SUCCEEDED;
+					fitness += FITNESS_VICTORY_BONUS;
 					return;
+				} else if (res == UncoverResult.SUCCESS){
+					fitness += FITNESS_CLICK_INCREMENT;
 				}
 			}
 		}
@@ -174,7 +181,9 @@ public class NeuralMinesweeper implements NeuralTask{
 		//TODO: Make this much more sensitive to fields that aren't uncovered recursively
 		//Right now, the genomes that actually do succeed with a click have pretty much the same chance of getting
 		//offspring as the retarded ones.
-		return fieldsToUncoverInitial - game.getBoard().getLeftToUncover();
+		//return fieldsToUncoverInitial - game.getBoard().getLeftToUncover();
+		
+		return fitness;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.jam.game.controller;
 
 import java.util.Random;
 
-import com.jam.main.GameArrayFrame;
+import com.jam.neural.view.GameArrayFrame;
 
 public class MainTest {
 	
