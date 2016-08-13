@@ -1,4 +1,4 @@
-package com.jam.main;
+package com.jam.neural.view;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -40,10 +40,11 @@ public class MainFrame extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
+		setSize(1000, 450);
 		
 		JPanel normalEvoPanel = new JPanel();
 		normalEvoPanel.setBorder(new TitledBorder(null, "Normal Evolution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		normalEvoPanel.setBounds(10, 37, 318, 206);
+		normalEvoPanel.setBounds(10, 37, 318, 180);
 		getContentPane().add(normalEvoPanel);
 		SpringLayout sl_normalEvoPanel = new SpringLayout();
 		normalEvoPanel.setLayout(sl_normalEvoPanel);
@@ -119,7 +120,7 @@ public class MainFrame extends JFrame {
 		
 		JPanel acceleratedEvoPanel = new JPanel();
 		acceleratedEvoPanel.setBorder(new TitledBorder(null, "Accelerated Evolution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		acceleratedEvoPanel.setBounds(338, 37, 318, 206);
+		acceleratedEvoPanel.setBounds(338, 37, 318, 180);
 		getContentPane().add(acceleratedEvoPanel);
 		SpringLayout sl_AcceleratedEvoPanel = new SpringLayout();
 		acceleratedEvoPanel.setLayout(sl_AcceleratedEvoPanel);
@@ -205,7 +206,7 @@ public class MainFrame extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "General Settings", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 254, 318, 157);
+		panel.setBounds(666, 37, 318, 180);
 		getContentPane().add(panel);
 		SpringLayout sl_panel = new SpringLayout();
 		panel.setLayout(sl_panel);
@@ -274,7 +275,7 @@ public class MainFrame extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Controls", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(338, 254, 318, 157);
+		panel_1.setBounds(10, 227, 318, 157);
 		getContentPane().add(panel_1);
 		SpringLayout sl_panel_1 = new SpringLayout();
 		panel_1.setLayout(sl_panel_1);
@@ -317,6 +318,11 @@ public class MainFrame extends JFrame {
 		sl_panel_1.putConstraint(SpringLayout.WEST, generationLabel, 0, SpringLayout.WEST, stopButton);
 		sl_panel_1.putConstraint(SpringLayout.SOUTH, generationLabel, 0, SpringLayout.SOUTH, lblGeneration);
 		panel_1.add(generationLabel);
+		
+		JPanel taskPanel = new JPanel();
+		taskPanel.setBounds(338, 228, 646, 156);
+		getContentPane().add(taskPanel);
+		setVisible(true);
 	}
 	
 	private void setEnabledPanel(JPanel panel, boolean enabled){

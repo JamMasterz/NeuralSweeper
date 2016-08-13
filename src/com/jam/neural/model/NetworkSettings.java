@@ -1,4 +1,4 @@
-package com.jam.neural;
+package com.jam.neural.model;
 
 public class NetworkSettings {
 	public static final float CROSSOVER_RATE = 0.7f;

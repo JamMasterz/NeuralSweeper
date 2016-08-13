@@ -1,10 +1,11 @@
-package com.jam.neural;
+package com.jam.neural.model;
 
 import java.util.Random;
 
 public class Population{
 	private Genome[] genomes;
 	private NeuralTask[] tasks;
+	
 	private int generationNumber;
 	private int ticksLeft;
 	private final int maxTicksPerGen;
@@ -26,28 +27,38 @@ public class Population{
 	
 	/**
 	 * Uses the neural network to progress in the task 1 step
+	 * @return Whether this tick resulted in a repopulation
 	 */
-	public void tickGeneration(boolean allowRepeating){
-		int ticking = 0;
-		for (int i = 0; i < genomes.length; i++){
-			TaskState state = tasks[i].getTaskState();
-			if (state == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
-				float[] outputs = genomes[i].evalutateNetwork(tasks[i].getInputs(), tasks[i].isBinary());
-				
-				if (!allowRepeating && genomes[i].isRepeating()){
-					System.out.println("Killing braindead genome");
-					//Util.printFloatArr(outputs);
-					tasks[i].setTaskState(TaskState.FAILED);
-					continue;
+	public boolean tickGeneration(boolean allowRepeating){
+		if (!isGenerationDone()){
+			int ticking = 0;
+			for (int i = 0; i < genomes.length; i++){
+				TaskState state = tasks[i].getTaskState();
+				if (state == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
+					float[] outputs = genomes[i].evalutateNetwork(tasks[i].getInputs(), tasks[i].isBinary());
+
+					if (!allowRepeating && genomes[i].isRepeating()){
+						System.out.println("Killing braindead genome");
+						//Util.printFloatArr(outputs);
+						tasks[i].setTaskState(TaskState.FAILED);
+						continue;
+					}
+
+					ticking++;
+					tasks[i].setOutputs(outputs);
 				}
-				
-				ticking++;
-				tasks[i].setOutputs(outputs);
 			}
+			ticksLeft--;
+			
+			System.out.println("Still ticking: " + ticking);
+			
+			return false;
+		} else {
+			System.out.println("Repopulating");
+			initNewGeneration();
+			
+			return true;
 		}
-		ticksLeft--;
-		
-		System.out.println("Still ticking: " + ticking);
 	}
 	
 	/**

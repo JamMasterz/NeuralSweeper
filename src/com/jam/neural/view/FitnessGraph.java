@@ -1,8 +1,6 @@
-package com.jam.main;
+package com.jam.neural.view;
 
 import java.awt.BorderLayout;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -40,33 +38,6 @@ public class FitnessGraph extends JFrame{
         chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
         setContentPane(content);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new WindowListener() {
-			
-			@Override
-			public void windowOpened(WindowEvent e) {
-				Main.graphing = true;
-			}
-			
-			@Override
-			public void windowClosed(WindowEvent e) {
-				Main.graphing = false;
-			}
-			
-			@Override
-			public void windowIconified(WindowEvent e) {}
-			
-			@Override
-			public void windowDeiconified(WindowEvent e) {}
-			
-			@Override
-			public void windowDeactivated(WindowEvent e) {}
-			
-			@Override
-			public void windowClosing(WindowEvent e) {}
-			
-			@Override
-			public void windowActivated(WindowEvent e) {}
-		});
         
         pack();
         setVisible(true);
@@ -81,12 +52,11 @@ public class FitnessGraph extends JFrame{
         axis = plot.getRangeAxis();
         axis.setLowerBound(0);
         axis.setAutoRange(true);
-        //axis.setRange(0.0, 200.0); 
         
         return result;
     }
 	
-	protected void addFitness(int avg, int best){
+	public void addFitness(int avg, int best){
 		avgSeries.add(gen, avg);
 		bestSeries.add(gen++, best);
 	}
