@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import com.jam.game.controller.Game;
 
@@ -22,6 +23,7 @@ public class GameArrayFrame{
 		
 		frame.pack();
 		frame.setVisible(true);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 	
 	public void setWindowListener(WindowListener list){
