@@ -20,8 +20,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 
-import com.jam.game.controller.DefaultGamePreference;
-
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = -2928806346426112279L;
 	protected final ButtonGroup evolutionRadios = new ButtonGroup();
@@ -30,12 +28,12 @@ public class MainFrame extends JFrame {
 	protected JSpinner gamesVertSpinner, gamesHorSpinner, gameScaleSpinner;
 	protected JButton attachGUIButton, startButton, stopButton, showGraphsButton;
 	protected JLabel indicatorLabel, generationLabel;
-	protected JRadioButton radioEasyDiff, radioMediumDiff, radioHardDiff;
+	protected JPanel taskPanel;
 
 	/**
 	 * Create the panel.
 	 */
-	public MainFrame() {
+	public MainFrame(JPanel taskPanel) {
 		setTitle("Minesweeper Neural Network");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +42,7 @@ public class MainFrame extends JFrame {
 		
 		JPanel normalEvoPanel = new JPanel();
 		normalEvoPanel.setBorder(new TitledBorder(null, "Normal Evolution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		normalEvoPanel.setBounds(10, 37, 318, 180);
+		normalEvoPanel.setBounds(10, 37, 318, 205);
 		getContentPane().add(normalEvoPanel);
 		SpringLayout sl_normalEvoPanel = new SpringLayout();
 		normalEvoPanel.setLayout(sl_normalEvoPanel);
@@ -120,7 +118,7 @@ public class MainFrame extends JFrame {
 		
 		JPanel acceleratedEvoPanel = new JPanel();
 		acceleratedEvoPanel.setBorder(new TitledBorder(null, "Accelerated Evolution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		acceleratedEvoPanel.setBounds(338, 37, 318, 180);
+		acceleratedEvoPanel.setBounds(338, 37, 318, 205);
 		getContentPane().add(acceleratedEvoPanel);
 		SpringLayout sl_AcceleratedEvoPanel = new SpringLayout();
 		acceleratedEvoPanel.setLayout(sl_AcceleratedEvoPanel);
@@ -206,76 +204,50 @@ public class MainFrame extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "General Settings", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(666, 37, 318, 180);
+		panel.setBounds(666, 37, 318, 205);
 		getContentPane().add(panel);
 		SpringLayout sl_panel = new SpringLayout();
 		panel.setLayout(sl_panel);
 		
-		JLabel lblGameDifficulty = new JLabel("Game Difficulty :");
-		sl_panel.putConstraint(SpringLayout.WEST, lblGameDifficulty, 10, SpringLayout.WEST, panel);
-		panel.add(lblGameDifficulty);
-		
-		radioEasyDiff = new JRadioButton("Easy");
-		radioEasyDiff.setSelected(true);
-		gameDifficultyRadios.add(radioEasyDiff);
-		sl_panel.putConstraint(SpringLayout.NORTH, radioEasyDiff, 10, SpringLayout.NORTH, panel);
-		sl_panel.putConstraint(SpringLayout.NORTH, lblGameDifficulty, 4, SpringLayout.NORTH, radioEasyDiff);
-		sl_panel.putConstraint(SpringLayout.EAST, radioEasyDiff, -132, SpringLayout.EAST, panel);
-		panel.add(radioEasyDiff);
-		
-		radioMediumDiff = new JRadioButton("Medium");
-		gameDifficultyRadios.add(radioMediumDiff);
-		sl_panel.putConstraint(SpringLayout.NORTH, radioMediumDiff, 10, SpringLayout.NORTH, panel);
-		sl_panel.putConstraint(SpringLayout.WEST, radioMediumDiff, 6, SpringLayout.EAST, radioEasyDiff);
-		sl_panel.putConstraint(SpringLayout.EAST, radioMediumDiff, -65, SpringLayout.EAST, panel);
-		panel.add(radioMediumDiff);
-		
-		radioHardDiff = new JRadioButton("Hard");
-		gameDifficultyRadios.add(radioHardDiff);
-		sl_panel.putConstraint(SpringLayout.NORTH, radioHardDiff, 10, SpringLayout.NORTH, panel);
-		sl_panel.putConstraint(SpringLayout.WEST, radioHardDiff, 6, SpringLayout.EAST, radioMediumDiff);
-		sl_panel.putConstraint(SpringLayout.EAST, radioHardDiff, -10, SpringLayout.EAST, panel);
-		panel.add(radioHardDiff);
-		
 		JLabel lblHiddenNeuralLayers = new JLabel("Hidden Neural Layers :");
-		sl_panel.putConstraint(SpringLayout.WEST, lblHiddenNeuralLayers, 0, SpringLayout.WEST, lblGameDifficulty);
+		sl_panel.putConstraint(SpringLayout.WEST, lblHiddenNeuralLayers, 10, SpringLayout.WEST, panel);
 		panel.add(lblHiddenNeuralLayers);
 		
 		hiddenLayersSpinner = new JSpinner();
+		sl_panel.putConstraint(SpringLayout.NORTH, hiddenLayersSpinner, 10, SpringLayout.NORTH, panel);
+		sl_panel.putConstraint(SpringLayout.WEST, hiddenLayersSpinner, 98, SpringLayout.EAST, lblHiddenNeuralLayers);
+		sl_panel.putConstraint(SpringLayout.EAST, hiddenLayersSpinner, -10, SpringLayout.EAST, panel);
 		hiddenLayersSpinner.setModel(new SpinnerNumberModel(5, 0, 50, 1));
 		sl_panel.putConstraint(SpringLayout.NORTH, lblHiddenNeuralLayers, 3, SpringLayout.NORTH, hiddenLayersSpinner);
-		sl_panel.putConstraint(SpringLayout.NORTH, hiddenLayersSpinner, 6, SpringLayout.SOUTH, radioHardDiff);
-		sl_panel.putConstraint(SpringLayout.WEST, hiddenLayersSpinner, -79, SpringLayout.EAST, radioHardDiff);
-		sl_panel.putConstraint(SpringLayout.EAST, hiddenLayersSpinner, 0, SpringLayout.EAST, radioHardDiff);
 		panel.add(hiddenLayersSpinner);
 		
 		JLabel lblNodesPerHidden = new JLabel("Nodes per Hidden Neural Layer :");
-		sl_panel.putConstraint(SpringLayout.WEST, lblNodesPerHidden, 0, SpringLayout.WEST, lblGameDifficulty);
+		sl_panel.putConstraint(SpringLayout.WEST, lblNodesPerHidden, 10, SpringLayout.WEST, panel);
 		panel.add(lblNodesPerHidden);
 		
 		nodesHiddenLayerSpinner = new JSpinner();
+		sl_panel.putConstraint(SpringLayout.WEST, nodesHiddenLayerSpinner, 51, SpringLayout.EAST, lblNodesPerHidden);
+		sl_panel.putConstraint(SpringLayout.EAST, nodesHiddenLayerSpinner, -10, SpringLayout.EAST, panel);
 		nodesHiddenLayerSpinner.setModel(new SpinnerNumberModel(10, 1, 50, 1));
 		sl_panel.putConstraint(SpringLayout.NORTH, lblNodesPerHidden, 3, SpringLayout.NORTH, nodesHiddenLayerSpinner);
 		sl_panel.putConstraint(SpringLayout.NORTH, nodesHiddenLayerSpinner, 6, SpringLayout.SOUTH, hiddenLayersSpinner);
-		sl_panel.putConstraint(SpringLayout.WEST, nodesHiddenLayerSpinner, 0, SpringLayout.WEST, hiddenLayersSpinner);
-		sl_panel.putConstraint(SpringLayout.EAST, nodesHiddenLayerSpinner, 0, SpringLayout.EAST, radioHardDiff);
 		panel.add(nodesHiddenLayerSpinner);
 		
 		JLabel lblNumberOfSpecimens = new JLabel("Number of specimens");
-		sl_panel.putConstraint(SpringLayout.WEST, lblNumberOfSpecimens, 0, SpringLayout.WEST, lblGameDifficulty);
+		sl_panel.putConstraint(SpringLayout.WEST, lblNumberOfSpecimens, 10, SpringLayout.WEST, panel);
 		panel.add(lblNumberOfSpecimens);
 		
 		specimensSpinner = new JSpinner();
+		sl_panel.putConstraint(SpringLayout.WEST, specimensSpinner, 105, SpringLayout.EAST, lblNumberOfSpecimens);
+		sl_panel.putConstraint(SpringLayout.EAST, specimensSpinner, -10, SpringLayout.EAST, panel);
 		specimensSpinner.setModel(new SpinnerNumberModel(20, 2, 100, 1));
 		sl_panel.putConstraint(SpringLayout.NORTH, lblNumberOfSpecimens, 3, SpringLayout.NORTH, specimensSpinner);
 		sl_panel.putConstraint(SpringLayout.NORTH, specimensSpinner, 6, SpringLayout.SOUTH, nodesHiddenLayerSpinner);
-		sl_panel.putConstraint(SpringLayout.WEST, specimensSpinner, 0, SpringLayout.WEST, hiddenLayersSpinner);
-		sl_panel.putConstraint(SpringLayout.EAST, specimensSpinner, 0, SpringLayout.EAST, radioHardDiff);
 		panel.add(specimensSpinner);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Controls", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(10, 227, 318, 157);
+		panel_1.setBounds(10, 253, 318, 157);
 		getContentPane().add(panel_1);
 		SpringLayout sl_panel_1 = new SpringLayout();
 		panel_1.setLayout(sl_panel_1);
@@ -319,8 +291,7 @@ public class MainFrame extends JFrame {
 		sl_panel_1.putConstraint(SpringLayout.SOUTH, generationLabel, 0, SpringLayout.SOUTH, lblGeneration);
 		panel_1.add(generationLabel);
 		
-		JPanel taskPanel = new JPanel();
-		taskPanel.setBounds(338, 228, 646, 156);
+		taskPanel.setBounds(338, 254, 646, 156);
 		getContentPane().add(taskPanel);
 		setVisible(true);
 	}
@@ -359,14 +330,6 @@ public class MainFrame extends JFrame {
 	
 	public int getGensToRun(){
 		return (int) generationsSpinner.getValue();
-	}
-	
-	public DefaultGamePreference getGamePref(){
-		if (radioEasyDiff.isSelected()) return DefaultGamePreference.NOOB;
-		if (radioMediumDiff.isSelected()) return DefaultGamePreference.INTERMEDIATE;
-		if (radioHardDiff.isSelected()) return DefaultGamePreference.EXPERT;
-		
-		return null;
 	}
 	
 	public int getNumSpecimens(){

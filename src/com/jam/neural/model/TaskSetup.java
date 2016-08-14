@@ -2,6 +2,8 @@ package com.jam.neural.model;
 
 import java.awt.event.WindowListener;
 
+import javax.swing.JPanel;
+
 /**
  * Implement this interface to setup the neural task
  */
@@ -30,4 +32,9 @@ public interface TaskSetup {
 	 * @param scale Scale of the GUIs
 	 */
 	void attachGUI(Object[] objects, WindowListener listener, int width, int height, float scale);
+	
+	/**
+	 * @return A panel that will be placed in the GUI. It can be used to set task-specific settings
+	 */
+	JPanel getTaskPanel();
 }

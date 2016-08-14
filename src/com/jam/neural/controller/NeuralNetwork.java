@@ -26,7 +26,7 @@ public class NeuralNetwork {
 	private FitnessGraph fitnessGraph;
 
 	public NeuralNetwork(TaskSetup setup) {
-		mainFrame = new MainFrame();
+		mainFrame = new MainFrame(setup.getTaskPanel());
 		
 		mainFrame.setStartActionListener(new ActionListener() {
 			@Override
