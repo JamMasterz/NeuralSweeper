@@ -123,45 +123,15 @@ public class MainFrame extends JFrame {
 		SpringLayout sl_AcceleratedEvoPanel = new SpringLayout();
 		acceleratedEvoPanel.setLayout(sl_AcceleratedEvoPanel);
 		
-		JLabel lblThreadsSupportedBy = new JLabel("Threads supported by current machine: ");
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, lblThreadsSupportedBy, 10, SpringLayout.NORTH, acceleratedEvoPanel);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, lblThreadsSupportedBy, 10, SpringLayout.WEST, acceleratedEvoPanel);
-		acceleratedEvoPanel.add(lblThreadsSupportedBy);
-		
-		JLabel lblThreads = new JLabel(Integer.toString(Runtime.getRuntime().availableProcessors()));
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, lblThreads, 0, SpringLayout.NORTH, lblThreadsSupportedBy);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, lblThreads, 6, SpringLayout.EAST, lblThreadsSupportedBy);
-		acceleratedEvoPanel.add(lblThreads);
-		
-		JSeparator separator = new JSeparator();
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, separator, 6, SpringLayout.SOUTH, lblThreadsSupportedBy);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, separator, 0, SpringLayout.WEST, lblThreadsSupportedBy);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.SOUTH, separator, 8, SpringLayout.SOUTH, lblThreadsSupportedBy);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.EAST, separator, 296, SpringLayout.WEST, acceleratedEvoPanel);
-		acceleratedEvoPanel.add(separator);
-		
-		JLabel lblThreadsToUse = new JLabel("Threads to use :");
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, lblThreadsToUse, 0, SpringLayout.WEST, lblThreadsSupportedBy);
-		acceleratedEvoPanel.add(lblThreadsToUse);
-		
-		threadsSpinner = new JSpinner();
-		threadsSpinner.setModel(new SpinnerNumberModel(1, 1, Runtime.getRuntime().availableProcessors(), 1));
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, lblThreadsToUse, 3, SpringLayout.NORTH, threadsSpinner);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, threadsSpinner, 6, SpringLayout.SOUTH, separator);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, threadsSpinner, 0, SpringLayout.WEST, lblThreads);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.EAST, threadsSpinner, 0, SpringLayout.EAST, separator);
-		acceleratedEvoPanel.add(threadsSpinner);
-		
 		JLabel lblGenerationsToRun = new JLabel("Generations to run :");
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, lblGenerationsToRun, 10, SpringLayout.WEST, acceleratedEvoPanel);
 		acceleratedEvoPanel.add(lblGenerationsToRun);
 		
 		generationsSpinner = new JSpinner();
+		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, generationsSpinner, 102, SpringLayout.EAST, lblGenerationsToRun);
+		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.EAST, generationsSpinner, -10, SpringLayout.EAST, acceleratedEvoPanel);
 		generationsSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, lblGenerationsToRun, 3, SpringLayout.NORTH, generationsSpinner);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, generationsSpinner, 6, SpringLayout.SOUTH, threadsSpinner);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, generationsSpinner, 0, SpringLayout.WEST, lblThreads);
-		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.EAST, generationsSpinner, 0, SpringLayout.EAST, separator);
 		acceleratedEvoPanel.add(generationsSpinner);
 		
 		JRadioButton radioNormal = new JRadioButton("Normal Evolution");
@@ -244,6 +214,35 @@ public class MainFrame extends JFrame {
 		sl_panel.putConstraint(SpringLayout.NORTH, lblNumberOfSpecimens, 3, SpringLayout.NORTH, specimensSpinner);
 		sl_panel.putConstraint(SpringLayout.NORTH, specimensSpinner, 6, SpringLayout.SOUTH, nodesHiddenLayerSpinner);
 		panel.add(specimensSpinner);
+	
+		JSeparator separator_1 = new JSeparator();
+		sl_panel.putConstraint(SpringLayout.NORTH, separator_1, 12, SpringLayout.SOUTH, specimensSpinner);
+		sl_panel.putConstraint(SpringLayout.WEST, separator_1, 10, SpringLayout.WEST, panel);
+		sl_panel.putConstraint(SpringLayout.SOUTH, separator_1, 14, SpringLayout.SOUTH, specimensSpinner);
+		sl_panel.putConstraint(SpringLayout.EAST, separator_1, 296, SpringLayout.WEST, panel);
+		panel.add(separator_1);
+		
+		JLabel lblThreadsSupportedBy_1 = new JLabel("Threads supported by current machine:");
+		sl_panel.putConstraint(SpringLayout.NORTH, lblThreadsSupportedBy_1, 8, SpringLayout.SOUTH, separator_1);
+		sl_panel.putConstraint(SpringLayout.WEST, lblThreadsSupportedBy_1, 10, SpringLayout.WEST, panel);
+		panel.add(lblThreadsSupportedBy_1);
+		
+		JLabel lblThreads = new JLabel(Integer.toString(Runtime.getRuntime().availableProcessors()));
+		sl_panel.putConstraint(SpringLayout.WEST, lblThreads, 6, SpringLayout.EAST, lblThreadsSupportedBy_1);
+		sl_panel.putConstraint(SpringLayout.SOUTH, lblThreads, 0, SpringLayout.SOUTH, lblThreadsSupportedBy_1);
+		panel.add(lblThreads);
+		
+		JLabel lblThreadsToUse_1 = new JLabel("Threads to use");
+		sl_panel.putConstraint(SpringLayout.WEST, lblThreadsToUse_1, 0, SpringLayout.WEST, lblHiddenNeuralLayers);
+		panel.add(lblThreadsToUse_1);
+
+		threadsSpinner = new JSpinner();
+		sl_panel.putConstraint(SpringLayout.NORTH, lblThreadsToUse_1, 3, SpringLayout.NORTH, threadsSpinner);
+		sl_panel.putConstraint(SpringLayout.NORTH, threadsSpinner, 6, SpringLayout.SOUTH, lblThreads);
+		sl_panel.putConstraint(SpringLayout.WEST, threadsSpinner, 0, SpringLayout.WEST, hiddenLayersSpinner);
+		sl_panel.putConstraint(SpringLayout.EAST, threadsSpinner, 0, SpringLayout.EAST, hiddenLayersSpinner);
+		threadsSpinner.setModel(new SpinnerNumberModel(1, 1, Runtime.getRuntime().availableProcessors(), 1));
+		panel.add(threadsSpinner);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Controls", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -293,6 +292,7 @@ public class MainFrame extends JFrame {
 		
 		taskPanel.setBounds(338, 254, 646, 156);
 		getContentPane().add(taskPanel);
+		
 		setVisible(true);
 	}
 	
