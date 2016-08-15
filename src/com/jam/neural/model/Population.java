@@ -1,16 +1,26 @@
 package com.jam.neural.model;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.jam.neural.model.NeuralTask.TaskState;
 
 public class Population{
 	private Genome[] genomes;
 	private NeuralTask[] tasks;
 	
+	private ExecutorService service;
+	private ArrayList<Callable<Void>> tickTasks;
+	
 	private int generationNumber;
 	private int ticksLeft;
 	private final int maxTicksPerGen;
+	private boolean allowRepeating;
 	
-	public Population(NeuralTask[] tasks, int numGenomes, int maxTicksPerGen, int numHiddenLayers, int numNodesPerHiddenLayer){
+	public Population(NeuralTask[] tasks, int numGenomes, int maxTicksPerGen, int numHiddenLayers, int numNodesPerHiddenLayer, boolean allowRepeating){
 		if (numGenomes < 1) throw new IllegalArgumentException("The number of genomes must be greater than 1");
 		if (tasks.length != numGenomes) throw new IllegalArgumentException("The amount of NeuralTasks has to be the same as number of genomes");
 		
@@ -18,6 +28,7 @@ public class Population{
 		this.ticksLeft = maxTicksPerGen;
 		this.genomes = new Genome[numGenomes];
 		this.tasks = tasks;
+		this.allowRepeating = allowRepeating;
 		this.maxTicksPerGen = maxTicksPerGen;
 		
 		for (int i = 0; i < numGenomes; i++){
@@ -26,20 +37,33 @@ public class Population{
 	}
 	
 	/**
+	 * This initializes the internal threadpool. This can only be done once.
+	 * @param numThreads
+	 */
+	public void createThreadPool(int numThreads){
+		if (service == null){
+			service = Executors.newFixedThreadPool(numThreads);
+			
+			tickTasks = new ArrayList<Callable<Void>>();
+			for (int i = 0; i < genomes.length; i++) {
+				tickTasks.add(getTickGenomeCallable(i));
+			}
+		}
+	}
+	
+	/**
 	 * Uses the neural network to progress in the task 1 step
 	 * @return Whether this tick resulted in a repopulation
 	 */
-	public boolean tickGeneration(boolean allowRepeating){
+	public boolean tickGeneration(){
 		if (!isGenerationDone()){
 			int ticking = 0;
 			for (int i = 0; i < genomes.length; i++){
-				TaskState state = tasks[i].getTaskState();
-				if (state == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
+				if (tasks[i].getTaskState() == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
 					float[] outputs = genomes[i].evalutateNetwork(tasks[i].getInputs(), tasks[i].isBinary());
 
 					if (!allowRepeating && genomes[i].isRepeating()){
-						System.out.println("Killing braindead genome");
-						//Util.printFloatArr(outputs);
+						//System.out.println("Killing braindead genome");
 						tasks[i].setTaskState(TaskState.FAILED);
 						continue;
 					}
@@ -54,7 +78,27 @@ public class Population{
 			
 			return false;
 		} else {
-			System.out.println("Repopulating");
+			initNewGeneration();
+			
+			return true;
+		}
+	}
+	
+	/**
+	 * Uses the neural network to progress in the task 1 step. The neural network is evaluated using multiple threads.
+	 * @return Whether this tick resulted in a repopulation
+	 * @throws Exception If the threadPool hasnt been initialized. Call createThreadPool(...) to fix it
+	 */
+	public boolean tickGenerationMultiThreaded() throws Exception{
+		if (service == null) throw new Exception("The ExecutorService has not been initialized. Call createThreadPool(...)");
+		
+		if (!isGenerationDone()){
+			service.invokeAll(tickTasks); //Will block until all are done
+			
+			ticksLeft--;
+			
+			return false;
+		} else {
 			initNewGeneration();
 			
 			return true;
@@ -76,6 +120,7 @@ public class Population{
 		return true;
 	}
 	
+	//TODO: Maybe split this into threads too
 	public void initNewGeneration(){
 		generationNumber++;
 		ticksLeft = maxTicksPerGen;
@@ -89,9 +134,8 @@ public class Population{
 	private void populateWithChildren(){
 		Genome[] children = new Genome[genomes.length];
 		
-		int totalFitness = getTotalFitness();
-		System.out.println("fitness : " + totalFitness);
-		//TODO: For some reason fitness == 0 sometimes. The total fitness is then 0 and its ridic slow
+		//int totalFitness = getTotalFitness();
+		//System.out.println("fitness : " + totalFitness);
 		int[] probabilityArray = new int[getTotalFitness()];
 		Random r = new Random();
 		int nextIndex = 0;
@@ -107,6 +151,26 @@ public class Population{
 		}
 		
 		genomes = children;
+	}
+	
+	private Callable<Void> getTickGenomeCallable(int index){
+		return new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				if (tasks[index].getTaskState() == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
+					float[] outputs = genomes[index].evalutateNetwork(tasks[index].getInputs(), tasks[index].isBinary());
+					
+					if (!allowRepeating && genomes[index].isRepeating()){
+						//System.out.println("Killing braindead genome");
+						tasks[index].setTaskState(TaskState.FAILED);
+						return null;
+					}
+					
+					tasks[index].setOutputs(outputs);
+				}
+				return null;
+			}
+		};
 	}
 	
 	public int getTotalFitness(){
