@@ -28,6 +28,7 @@ public class MainFrame extends JFrame {
 	protected JSpinner gamesVertSpinner, gamesHorSpinner, gameScaleSpinner;
 	protected JButton attachGUIButton, startButton, stopButton, showGraphsButton;
 	protected JLabel indicatorLabel, generationLabel;
+	protected JRadioButton radioNormal, radioAccelerated;
 	protected JPanel taskPanel;
 
 	/**
@@ -134,7 +135,7 @@ public class MainFrame extends JFrame {
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, lblGenerationsToRun, 3, SpringLayout.NORTH, generationsSpinner);
 		acceleratedEvoPanel.add(generationsSpinner);
 		
-		JRadioButton radioNormal = new JRadioButton("Normal Evolution");
+		radioNormal = new JRadioButton("Normal Evolution");
 		radioNormal.setSelected(true);
 		radioNormal.setBounds(10, 7, 148, 23);
 		radioNormal.addItemListener(new ItemListener() {
@@ -149,7 +150,7 @@ public class MainFrame extends JFrame {
 				}
 			}
 		});
-		JRadioButton radioAccelerated = new JRadioButton("Accelerated Evolution");
+		radioAccelerated = new JRadioButton("Accelerated Evolution");
 		radioAccelerated.setBounds(160, 7, 168, 23);
 		radioAccelerated.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -314,6 +315,10 @@ public class MainFrame extends JFrame {
 	
 	public void setGenerationNumber(int generation){
 		generationLabel.setText(Integer.toString(generation));
+	}
+	
+	public boolean isEvolutionAccelerated(){
+		return radioAccelerated.isSelected();
 	}
 	
 	public void bumpGenerationNumber(){

@@ -6,6 +6,10 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.jam.neural.model.Population;
 import com.jam.neural.model.TaskSetup;
@@ -13,65 +17,105 @@ import com.jam.neural.view.FitnessGraph;
 import com.jam.neural.view.MainFrame;
 
 public class NeuralNetwork {
+	public enum Mode{
+		STOPPED, NORMAL, ACCELERATED;
+	}
+	
+	public static final int STOP_DELAY = 5000;
+	
 	private boolean initialized = false;
-	private boolean running = false;
+	private Mode running = Mode.STOPPED;
 	private boolean guiAttached = false;
 	private boolean graphing = false;
 	
 	private Population population;
-	private Timer timer;
 	private NeuralMinesweeper[] sweepers;
+	private Timer timer;
+	private ExecutorService executor;
+	private Future<Void> acceleratedFuture;
 	
 	private MainFrame mainFrame;
 	private FitnessGraph fitnessGraph;
 
 	public NeuralNetwork(TaskSetup setup) {
 		mainFrame = new MainFrame(setup.getTaskPanel());
+		executor = Executors.newSingleThreadExecutor();
 		
 		mainFrame.setStartActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!initialized){
 					sweepers = (NeuralMinesweeper[]) setup.createNeuralTasks(mainFrame.getNumSpecimens());
-					population = new Population(sweepers, mainFrame.getNumSpecimens(), setup.getTickCap(), mainFrame.getNumHiddenLayers(), mainFrame.getNodesPerLayer());
+					population = new Population(sweepers, mainFrame.getNumSpecimens(), setup.getTickCap(),
+							mainFrame.getNumHiddenLayers(), mainFrame.getNodesPerLayer(), setup.allowsRepeating());
+					population.createThreadPool(mainFrame.getNumThreads()); //TODO: Make the num of threads variable
 					
 					initialized = true;
 				}
-				if (!running){
+				if (running == Mode.STOPPED){
 					mainFrame.setRunningIndicator(true);
-					
-					int interval = (int) (1000.0f / mainFrame.getTPS());
-					timer = new Timer();
-					timer.scheduleAtFixedRate(new TimerTask() {
-						@Override
-						public void run() { 
-							if (population.tickGeneration(false)) mainFrame.bumpGenerationNumber();
-							if (graphing){
-								fitnessGraph.addFitness(population.getAverageFitness(), population.getBestFitness());
+					if (mainFrame.isEvolutionAccelerated()){
+						acceleratedFuture = executor.submit(new Callable<Void>() {
+							@Override
+							public Void call() throws Exception {
+								int genStart = population.getGeneration();
+								while(population.getGeneration() < genStart + mainFrame.getGensToRun() && !Thread.interrupted()){
+									try {
+										if (population.tickGenerationMultiThreaded()) mainFrame.bumpGenerationNumber();
+											if (graphing && population.isGenerationDone()){
+												fitnessGraph.addFitness(population.getAverageFitness(), population.getBestFitness());
+											}
+									} catch (Exception e1) {
+										e1.printStackTrace();
+									}
+								}
+								//After N generations have been run, it stops itself
+								mainFrame.setRunningIndicator(false);
+								running = Mode.STOPPED;
+								System.out.println("Finished accelerated evolution");
+								return null;
 							}
-						}
-					}, 0, interval);
-					
-					running = true;
+						});
+						running = Mode.ACCELERATED;
+					} else {
+						int interval = (int) (1000.0f / mainFrame.getTPS());
+						timer = new Timer();
+						timer.scheduleAtFixedRate(new TimerTask() {
+							@Override
+							public void run() {
+								try {
+									if (population.tickGenerationMultiThreaded()) mainFrame.bumpGenerationNumber();
+									if (graphing){
+										fitnessGraph.addFitness(population.getAverageFitness(), population.getBestFitness());
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}, 0, interval);
+						running = Mode.NORMAL;
+					}
 				}
 			}
 		});
 		mainFrame.setStopActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (running){
-					mainFrame.setRunningIndicator(false);
+				if (running == Mode.NORMAL){
 					timer.cancel();
 					timer.purge();
-					
-					running = false;
+				} else if (running == Mode.ACCELERATED){
+					acceleratedFuture.cancel(true);
 				}
+				mainFrame.setRunningIndicator(false);
+				
+				running = Mode.STOPPED;
 			}
 		});
 		mainFrame.setAttachActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!guiAttached && running){
+				if (!guiAttached && running == Mode.NORMAL){
 					WindowListener l = new WindowListener() {
 						@Override
 						public void windowOpened(WindowEvent e) {
@@ -99,7 +143,7 @@ public class NeuralNetwork {
 		mainFrame.setShowGraphsActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!graphing && running){
+				if (!graphing && running != Mode.STOPPED){
 					if (fitnessGraph == null){
 						fitnessGraph = new FitnessGraph();
 						fitnessGraph.addWindowListener(new WindowListener() {
