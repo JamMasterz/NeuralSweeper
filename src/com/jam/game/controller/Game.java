@@ -3,14 +3,17 @@ package com.jam.game.controller;
 import javax.swing.JPanel;
 
 import com.jam.game.model.Board;
+import com.jam.game.model.Board.GameState;
+import com.jam.game.model.Board.TagResult;
+import com.jam.game.model.Board.UncoverResult;
 import com.jam.game.model.Coord;
-import com.jam.game.model.GameState;
-import com.jam.game.model.TagResult;
-import com.jam.game.model.UncoverResult;
 import com.jam.game.view.MinesweeperGUI;
 
 //TODO: On defeat, show all the mines, color the killing mine red, put an X over bad flags
 public class Game {
+	public enum DefaultGamePreference {
+		NOOB, INTERMEDIATE, EXPERT;
+	}
 	public static final int NOOB_SIZE = 9;
 	public static final int INTERMEDIATE_SIZE = 16;
 	public static final int EXPERT_SIZE = 22;

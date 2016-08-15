@@ -19,9 +19,9 @@ import javax.swing.SwingConstants;
 
 import com.jam.game.controller.Game;
 import com.jam.game.model.Board;
+import com.jam.game.model.Board.UncoverResult;
 import com.jam.game.model.Coord;
 import com.jam.game.model.Field;
-import com.jam.game.model.UncoverResult;
 
 public class MinesweeperGUI {
 	public static final String RESET = "\u263A";
