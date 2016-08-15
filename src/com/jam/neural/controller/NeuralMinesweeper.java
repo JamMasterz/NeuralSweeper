@@ -2,14 +2,13 @@ package com.jam.neural.controller;
 
 import java.util.Random;
 
-import com.jam.game.controller.DefaultGamePreference;
 import com.jam.game.controller.Game;
+import com.jam.game.controller.Game.DefaultGamePreference;
 import com.jam.game.model.Board;
+import com.jam.game.model.Board.UncoverResult;
 import com.jam.game.model.Coord;
 import com.jam.game.model.Field;
-import com.jam.game.model.UncoverResult;
 import com.jam.neural.model.NeuralTask;
-import com.jam.neural.model.TaskState;
 
 public class NeuralMinesweeper implements NeuralTask{
 	private Game game;

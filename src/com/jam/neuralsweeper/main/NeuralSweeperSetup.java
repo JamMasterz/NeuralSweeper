@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 
-import com.jam.game.controller.DefaultGamePreference;
 import com.jam.game.controller.Game;
+import com.jam.game.controller.Game.DefaultGamePreference;
 import com.jam.neural.controller.NeuralMinesweeper;
 import com.jam.neural.model.TaskSetup;
 import com.jam.neural.view.GameArrayFrame;

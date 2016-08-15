@@ -2,6 +2,7 @@ package com.jam.game.controller;
 
 import java.util.Random;
 
+import com.jam.game.controller.Game.DefaultGamePreference;
 import com.jam.neural.view.GameArrayFrame;
 
 public class MainTest {

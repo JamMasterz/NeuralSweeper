@@ -6,6 +6,16 @@ import java.util.Random;
 import com.jam.util.Util;
 
 public class Board {
+	public enum GameState {
+		WIN, LOSE, PLAYING, FROZEN;
+	}
+	public enum TagResult {
+		TAGGED, UNTAGGED, FAILED;
+	}
+	public enum UncoverResult {
+		SUCCESS, MINE, FAILED, VICTORY;
+	}
+	
 	public static final int SECTOR_SIZE = 3;
 	
 	private static final int CORNER_NEIGHBOUR_COUNT = 4;

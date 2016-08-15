@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 
 import com.jam.game.controller.Game;
+import com.jam.game.model.Board.TagResult;
+import com.jam.game.model.Board.UncoverResult;
 import com.jam.game.model.Coord;
-import com.jam.game.model.TagResult;
-import com.jam.game.model.UncoverResult;
 
 public class MinefieldActionListener extends MouseAdapter{
 	private ArrayList<JMineField> fields = new ArrayList<JMineField>();
