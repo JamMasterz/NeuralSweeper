@@ -21,7 +21,7 @@ public class NeuralMinesweeper implements NeuralTask{
 	private long seed;
 	
 	private int fitness;
-	private static final int FITNESS_CLICK_INCREMENT = 4;
+	private static final int FITNESS_CLICK_INCREMENT = 10;
 	private static final int FITNESS_VICTORY_BONUS = 30;
 	
 	public NeuralMinesweeper(int visibleSquareSize, int xSpawn, int ySpawn, Long seed, DefaultGamePreference pref){
