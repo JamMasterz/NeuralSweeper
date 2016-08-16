@@ -18,7 +18,6 @@ import com.jam.neural.view.MainFrame;
 import com.jam.statistics.FitnessDatapoint;
 import com.jam.statistics.StatisticsManager;
 
-//TODO: Add window listener to this window and close the executor on exit
 public class NeuralNetwork {
 	public enum Mode{
 		STOPPED, NORMAL, ACCELERATED;
@@ -81,6 +80,25 @@ public class NeuralNetwork {
 			public void actionPerformed(ActionEvent e) {
 				startGraphWindow();
 			}
+		});
+		
+		mainFrame.addWindowListener(new WindowListener() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				stopRunning();
+			}
+			@Override
+			public void windowOpened(WindowEvent e) {}
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			@Override
+			public void windowClosed(WindowEvent e) {}
+			@Override
+			public void windowActivated(WindowEvent e) {}
 		});
 	}
 	
