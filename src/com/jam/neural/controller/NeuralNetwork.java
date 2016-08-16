@@ -15,7 +15,10 @@ import com.jam.neural.model.Population;
 import com.jam.neural.model.TaskSetup;
 import com.jam.neural.view.FitnessGraph;
 import com.jam.neural.view.MainFrame;
+import com.jam.statistics.FitnessDatapoint;
+import com.jam.statistics.StatisticsManager;
 
+//TODO: Add window listener to this window and close the executor on exit
 public class NeuralNetwork {
 	public enum Mode{
 		STOPPED, NORMAL, ACCELERATED;
@@ -34,12 +37,15 @@ public class NeuralNetwork {
 	private ExecutorService executor;
 	private Future<Void> acceleratedFuture;
 	
+	private StatisticsManager<FitnessDatapoint> stats;
+	
 	private MainFrame mainFrame;
 	private FitnessGraph fitnessGraph;
 
 	public NeuralNetwork(TaskSetup setup) {
 		mainFrame = new MainFrame(setup.getTaskPanel());
 		executor = Executors.newSingleThreadExecutor();
+		stats = new StatisticsManager<>(1000, 10);
 		
 		mainFrame.setStartActionListener(new ActionListener() {
 			@Override
@@ -55,6 +61,7 @@ public class NeuralNetwork {
 				if (running == Mode.STOPPED){
 					mainFrame.setRunningIndicator(true);
 					if (mainFrame.isEvolutionAccelerated()){
+						startGraphWindow();
 						acceleratedFuture = executor.submit(new Callable<Void>() {
 							@Override
 							public Void call() throws Exception {
@@ -63,6 +70,7 @@ public class NeuralNetwork {
 									try {
 										if (population.tickGenerationMultiThreaded()) mainFrame.bumpGenerationNumber();
 											if (graphing && population.isGenerationDone()){
+												stats.put(new FitnessDatapoint(population.getGeneration(), population.getAverageFitness(), population.getBestFitness()));
 												fitnessGraph.addFitness(population.getAverageFitness(), population.getBestFitness());
 											}
 									} catch (Exception e1) {
@@ -78,6 +86,7 @@ public class NeuralNetwork {
 						});
 						running = Mode.ACCELERATED;
 					} else {
+						startGraphWindow();
 						int interval = (int) (1000.0f / mainFrame.getTPS());
 						timer = new Timer();
 						timer.scheduleAtFixedRate(new TimerTask() {
@@ -86,6 +95,7 @@ public class NeuralNetwork {
 								try {
 									if (population.tickGenerationMultiThreaded()) mainFrame.bumpGenerationNumber();
 									if (graphing){
+										stats.put(new FitnessDatapoint(population.getGeneration(), population.getAverageFitness(), population.getBestFitness()));
 										fitnessGraph.addFitness(population.getAverageFitness(), population.getBestFitness());
 									}
 								} catch (Exception e) {
@@ -115,62 +125,70 @@ public class NeuralNetwork {
 		mainFrame.setAttachActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!guiAttached && running == Mode.NORMAL){
-					WindowListener l = new WindowListener() {
-						@Override
-						public void windowOpened(WindowEvent e) {
-							guiAttached = true;
-						}
-						@Override
-						public void windowClosed(WindowEvent e) {
-							guiAttached = false;
-						}
-						@Override
-						public void windowIconified(WindowEvent e) {}
-						@Override
-						public void windowDeiconified(WindowEvent e) {}
-						@Override
-						public void windowDeactivated(WindowEvent e) {}
-						@Override
-						public void windowClosing(WindowEvent e) {}
-						@Override
-						public void windowActivated(WindowEvent e) {}
-					};
-					setup.attachGUI(sweepers, l, mainFrame.getGamesHorizontally(), mainFrame.getGamesVertically(), mainFrame.getGamesScale());
-				}
+				startGameArrayWindow(setup);
 			}
 		});
 		mainFrame.setShowGraphsActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!graphing && running != Mode.STOPPED){
-					if (fitnessGraph == null){
-						fitnessGraph = new FitnessGraph();
-						fitnessGraph.addWindowListener(new WindowListener() {
-							@Override
-							public void windowOpened(WindowEvent e) {
-								graphing = true;
-							}
-							@Override
-							public void windowClosed(WindowEvent e) {
-								graphing = false;
-							}
-							@Override
-							public void windowIconified(WindowEvent e) {}
-							@Override
-							public void windowDeiconified(WindowEvent e) {}
-							@Override
-							public void windowDeactivated(WindowEvent e) {}
-							@Override
-							public void windowClosing(WindowEvent e) {}
-							@Override
-							public void windowActivated(WindowEvent e) {}
-						});
-					} else {
-						fitnessGraph.setVisible(true);
-					}
-				}
+				startGraphWindow();
 			}
 		});
+	}
+	
+	private void startGraphWindow(){
+		if (!graphing){
+			if (fitnessGraph == null){
+				fitnessGraph = new FitnessGraph();
+				fitnessGraph.addWindowListener(new WindowListener() {
+					@Override
+					public void windowOpened(WindowEvent e) {
+						graphing = true;
+					}
+					@Override
+					public void windowClosed(WindowEvent e) {
+						graphing = false;
+					}
+					@Override
+					public void windowIconified(WindowEvent e) {}
+					@Override
+					public void windowDeiconified(WindowEvent e) {}
+					@Override
+					public void windowDeactivated(WindowEvent e) {}
+					@Override
+					public void windowClosing(WindowEvent e) {}
+					@Override
+					public void windowActivated(WindowEvent e) {}
+				});
+			} else {
+				fitnessGraph.setVisible(true);
+			}
+		}
+	}
+	
+	private void startGameArrayWindow(TaskSetup setup){
+		if (!guiAttached && running == Mode.NORMAL){
+			WindowListener l = new WindowListener() {
+				@Override
+				public void windowOpened(WindowEvent e) {
+					guiAttached = true;
+				}
+				@Override
+				public void windowClosed(WindowEvent e) {
+					guiAttached = false;
+				}
+				@Override
+				public void windowIconified(WindowEvent e) {}
+				@Override
+				public void windowDeiconified(WindowEvent e) {}
+				@Override
+				public void windowDeactivated(WindowEvent e) {}
+				@Override
+				public void windowClosing(WindowEvent e) {}
+				@Override
+				public void windowActivated(WindowEvent e) {}
+			};
+			setup.attachGUI(sweepers, l, mainFrame.getGamesHorizontally(), mainFrame.getGamesVertically(), mainFrame.getGamesScale());
+		}
 	}
 }

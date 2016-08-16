@@ -15,6 +15,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+//TODO: When num of datapoints get bigger than smth, average the stuff. Can run avg on avgs.
 public class FitnessGraph extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
