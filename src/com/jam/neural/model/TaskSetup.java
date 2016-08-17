@@ -34,6 +34,11 @@ public interface TaskSetup {
 	void attachGUI(Object[] objects, WindowListener listener, int width, int height, float scale);
 	
 	/**
+	 * Used to detach a GUI;
+	 */
+	void detachGUI();
+	
+	/**
 	 * @return A panel that will be placed in the GUI. It can be used to set task-specific settings
 	 */
 	JPanel getTaskPanel();

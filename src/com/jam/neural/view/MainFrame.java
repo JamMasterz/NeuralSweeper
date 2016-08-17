@@ -26,7 +26,7 @@ public class MainFrame extends JFrame {
 	protected final ButtonGroup gameDifficultyRadios = new ButtonGroup();
 	protected JSpinner tpsSpinner, threadsSpinner, generationsSpinner, hiddenLayersSpinner, nodesHiddenLayerSpinner, specimensSpinner;
 	protected JSpinner gamesVertSpinner, gamesHorSpinner, gameScaleSpinner;
-	protected JButton attachGUIButton, startButton, stopButton, showGraphsButton;
+	protected JButton attachGUIButton, startButton, stopButton, showGraphsButton, tickButton;
 	protected JLabel indicatorLabel, generationLabel;
 	protected JRadioButton radioNormal, radioAccelerated;
 	protected JPanel taskPanel;
@@ -292,6 +292,12 @@ public class MainFrame extends JFrame {
 		sl_panel_1.putConstraint(SpringLayout.SOUTH, generationLabel, 0, SpringLayout.SOUTH, lblGeneration);
 		panel_1.add(generationLabel);
 		
+		tickButton = new JButton("Tick ( T )");
+		sl_panel_1.putConstraint(SpringLayout.NORTH, tickButton, 6, SpringLayout.SOUTH, showGraphsButton);
+		sl_panel_1.putConstraint(SpringLayout.WEST, tickButton, 0, SpringLayout.WEST, showGraphsButton);
+		sl_panel_1.putConstraint(SpringLayout.EAST, tickButton, 0, SpringLayout.EAST, showGraphsButton);
+		panel_1.add(tickButton);
+		
 		taskPanel.setBounds(338, 254, 646, 156);
 		getContentPane().add(taskPanel);
 		
@@ -299,7 +305,6 @@ public class MainFrame extends JFrame {
 	}
 	
 	private void setEnabledPanel(JPanel panel, boolean enabled){
-		//System.out.println("Setting " + ((TitledBorder) panel.getBorder()).getTitle() + ", " + enabled);
 		for (Component c : panel.getComponents()){
 			if (c instanceof JPanel){
 				JPanel cont = (JPanel) c;
@@ -376,5 +381,9 @@ public class MainFrame extends JFrame {
 	
 	public void setAttachActionListener(ActionListener listener){
 		attachGUIButton.addActionListener(listener);
+	}
+	
+	public void setTickActionListener(ActionListener listener){
+		tickButton.addActionListener(listener);
 	}
 }

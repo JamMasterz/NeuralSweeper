@@ -25,6 +25,8 @@ public class NeuralSweeperSetup implements TaskSetup{
 	private static JRadioButton radioEasy, radioMedium, radioHard;
 	private static ButtonGroup radioGroup;
 	
+	private GameArrayFrame gui;
+	
 	public NeuralSweeperSetup() {
 		panel = new JPanel();
 		panel.setBorder(new TitledBorder("Minesweeper Settings"));
@@ -77,7 +79,13 @@ public class NeuralSweeperSetup implements TaskSetup{
 			games[i] = ((NeuralMinesweeper) objects[i]).getGame();
 		}
 		
-		new GameArrayFrame(games, width, height, scale).setWindowListener(listener);;
+		gui = new GameArrayFrame(games, width, height, scale);
+		gui.setWindowListener(listener);;
+	}
+	
+	@Override
+	public void detachGUI() {
+		gui.closeWidnow();
 	}
 
 	@Override
