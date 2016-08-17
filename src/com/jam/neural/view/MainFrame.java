@@ -243,7 +243,7 @@ public class MainFrame extends JFrame {
 		sl_panel.putConstraint(SpringLayout.NORTH, threadsSpinner, 6, SpringLayout.SOUTH, lblThreads);
 		sl_panel.putConstraint(SpringLayout.WEST, threadsSpinner, 0, SpringLayout.WEST, hiddenLayersSpinner);
 		sl_panel.putConstraint(SpringLayout.EAST, threadsSpinner, 0, SpringLayout.EAST, hiddenLayersSpinner);
-		threadsSpinner.setModel(new SpinnerNumberModel(1, 1, Runtime.getRuntime().availableProcessors(), 1));
+		threadsSpinner.setModel(new SpinnerNumberModel(Runtime.getRuntime().availableProcessors(), 1, Runtime.getRuntime().availableProcessors(), 1));
 		panel.add(threadsSpinner);
 		
 		JPanel panel_1 = new JPanel();
