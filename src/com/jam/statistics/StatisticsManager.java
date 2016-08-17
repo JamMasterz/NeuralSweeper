@@ -12,6 +12,10 @@ import java.util.ArrayList;
 //TODO: Pool the DataPoint instances
 @SuppressWarnings("rawtypes")
 public class StatisticsManager<U extends AveragableDataPoint> {
+	public enum UpdateRequirement{
+		NO_UPDATE, UPDATE_ONE_POINT, UPDATE_EVERYTHING;
+	}
+	
 	private final ArrayList<U> points;
 	private final ArrayList<U> unprocessed;
 	
@@ -40,28 +44,28 @@ public class StatisticsManager<U extends AveragableDataPoint> {
 	 * since this class averages points. If there aren't enough points to calculate an average,
 	 * the addition will not be visible. The value however, is stored.
 	 */
-	public boolean put(U dataPoint){
-		boolean visibleChange = false;
+	public UpdateRequirement put(U dataPoint){
+		UpdateRequirement update = UpdateRequirement.NO_UPDATE;
 		if (currentAverage == 0){
 			//If its the first run, store it in the main list
 			points.add(dataPoint);
-			visibleChange = true;
+			update = UpdateRequirement.UPDATE_ONE_POINT;
 		} else {
 			unprocessed.add(dataPoint);
 			
 			if (unprocessed.size() == currentAverage){
 				//If we can compute a new average, do it
 				points.add(averageUnprocessed());
-				visibleChange = true;
+				update = UpdateRequirement.UPDATE_ONE_POINT;
 			}
 		}
 		
 		if (points.size() == maxPoints){
 			averageEverything();
-			visibleChange = true;
+			update = UpdateRequirement.UPDATE_EVERYTHING;
 		}
 		
-		return visibleChange;
+		return update;
 	}
 	
 	@SuppressWarnings("unchecked")

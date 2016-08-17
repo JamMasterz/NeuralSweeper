@@ -1,6 +1,7 @@
 package com.jam.neural.view;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,18 +16,28 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-//TODO: When num of datapoints get bigger than smth, average the stuff. Can run avg on avgs.
+import com.jam.statistics.FitnessDatapoint;
+import com.jam.statistics.StatisticsManager.UpdateRequirement;
+
 public class FitnessGraph extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
+	private ArrayList<FitnessDatapoint> data;
+	
 	private XYSeries avgSeries;
 	private XYSeries bestSeries;
-	private int gen = 0;
 
-	public FitnessGraph() {
+	public FitnessGraph(ArrayList<FitnessDatapoint> data) {
 		super("Fitness Graph");
+		if (data == null) throw new IllegalArgumentException("Data must not be null");
         this.avgSeries = new XYSeries("Average fitness", false);
         this.bestSeries = new XYSeries("Best fitness", false);
+        
+        this.data = data;
+        for (FitnessDatapoint p : data){
+        	addData(p);
+        }
+        
         final XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(avgSeries);
         dataset.addSeries(bestSeries);
@@ -57,8 +68,25 @@ public class FitnessGraph extends JFrame{
         return result;
     }
 	
-	public void addFitness(int avg, int best){
-		avgSeries.add(gen, avg);
-		bestSeries.add(gen++, best);
+	public void update(UpdateRequirement update){
+		switch (update){
+			case NO_UPDATE:
+				break;
+			case UPDATE_ONE_POINT:
+				addData(data.get(data.size() - 1));
+				break;
+			case UPDATE_EVERYTHING:
+				avgSeries.clear();
+				bestSeries.clear();
+				for (FitnessDatapoint p : data){
+					addData(p);
+				}
+				break;
+		}
+	}
+	
+	private void addData(FitnessDatapoint p){
+		avgSeries.add(p.getX(), p.getY(FitnessDatapoint.ID_AVERAGE));
+    	bestSeries.add(p.getX(), p.getY(FitnessDatapoint.ID_BEST));
 	}
 }
