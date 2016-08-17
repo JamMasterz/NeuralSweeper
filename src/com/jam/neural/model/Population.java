@@ -94,7 +94,7 @@ public class Population{
 		
 		if (!isGenerationDone()){
 			service.invokeAll(tickTasks); //Will block until all are done
-			
+			//TODO: InterruptedException when closing the window
 			ticksLeft--;
 			
 			return false;

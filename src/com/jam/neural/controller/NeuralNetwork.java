@@ -175,6 +175,7 @@ public class NeuralNetwork {
 	private void startGraphWindow(){
 		if (!graphing){
 			fitnessGraph = new FitnessGraph(stats.getData());
+			graphing = true;
 			fitnessGraph.addWindowListener(new WindowListener() {
 				@Override
 				public void windowOpened(WindowEvent e) {
