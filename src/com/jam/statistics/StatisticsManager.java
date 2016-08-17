@@ -89,7 +89,7 @@ public class StatisticsManager<U extends AveragableDataPoint> {
 		for (int i = 0; i < currentAverage - 1; i++) {
 			first.sumYValues(unprocessed.remove(0));
 		}
-		first.multiplyYValues(1 / (double) averageNum);
+		first.multiplyYValues(1 / (double) currentAverage);
 		
 		return first;
 	}
