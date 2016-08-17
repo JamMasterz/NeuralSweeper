@@ -86,7 +86,7 @@ public class StatisticsManager<U extends AveragableDataPoint> {
 	private U averageUnprocessed(){
 		//Add all the point values to the first point and divide by amount
 		U first = unprocessed.remove(0);
-		for (int i = 1; i < averageNum; i++) {
+		for (int i = 0; i < currentAverage - 1; i++) {
 			first.sumYValues(unprocessed.remove(0));
 		}
 		first.multiplyYValues(1 / (double) averageNum);
