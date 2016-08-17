@@ -1,6 +1,7 @@
 package com.jam.neural.view;
 
 import java.awt.GridLayout;
+import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
@@ -10,8 +11,10 @@ import com.jam.game.controller.Game;
 
 public class GameArrayFrame{
 	private JFrame frame;
+	private Game[] games;
 
 	public GameArrayFrame(Game[] games, int gridWidth, int gridHeight, float scale){
+		this.games = games;
 		frame = new JFrame("Game Boards");
 		frame.setLayout(new GridLayout(gridHeight, gridWidth));
 		frame.setResizable(false);
@@ -28,5 +31,12 @@ public class GameArrayFrame{
 	
 	public void setWindowListener(WindowListener list){
 		frame.addWindowListener(list);
+	}
+	
+	public void closeWidnow(){
+		for (Game g : games){
+			g.disconnectGUI();
+		}
+		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 	}
 }

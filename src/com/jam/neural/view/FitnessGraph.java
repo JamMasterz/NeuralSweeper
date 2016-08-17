@@ -26,6 +26,7 @@ public class FitnessGraph extends JFrame{
 	
 	private XYSeries avgSeries;
 	private XYSeries bestSeries;
+	private XYSeriesCollection dataset;
 
 	public FitnessGraph(ArrayList<FitnessDatapoint> data) {
 		super("Fitness Graph");
@@ -38,7 +39,7 @@ public class FitnessGraph extends JFrame{
         	addData(p);
         }
         
-        final XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset = new XYSeriesCollection();
         dataset.addSeries(avgSeries);
         dataset.addSeries(bestSeries);
         final JFreeChart chart = createChart(dataset);

@@ -45,7 +45,7 @@ public class NeuralNetwork {
 	public NeuralNetwork(TaskSetup setup) {
 		mainFrame = new MainFrame(setup.getTaskPanel());
 		executor = Executors.newSingleThreadExecutor();
-		stats = new StatisticsManager<>(1000, 10);
+		stats = new StatisticsManager<>(500, 10);
 		
 		mainFrame.setStartActionListener(new ActionListener() {
 			@Override
@@ -57,7 +57,7 @@ public class NeuralNetwork {
 					mainFrame.setRunningIndicator(true);
 					startGraphWindow();
 					if (mainFrame.isEvolutionAccelerated()){
-						runAccelerated(setup);
+						if (!guiAttached) runAccelerated(setup);
 					} else {
 						runNormal(setup);
 					}
@@ -80,6 +80,15 @@ public class NeuralNetwork {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				startGraphWindow();
+			}
+		});
+		mainFrame.setTickActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!initialized){
+					initialize(setup);
+				}
+				tickGeneration();
 			}
 		});
 		
@@ -115,26 +124,13 @@ public class NeuralNetwork {
 		running = Mode.STOPPED;
 	}
 	
-	private void handleGraphing(){
-		if (population.isGenerationDone()){
-			UpdateRequirement update = stats.put(new FitnessDatapoint(population.getGeneration(),
-					population.getAverageFitness(), population.getBestFitness()));
-			if (graphing) fitnessGraph.update(update);
-		}
-	}
-	
 	private void runNormal(TaskSetup setup){
 		int interval = (int) (1000.0f / mainFrame.getTPS());
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				try {
-					if (population.tickGenerationMultiThreaded()) mainFrame.bumpGenerationNumber();
-					handleGraphing();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				tickGeneration();
 			}
 		}, 0, interval);
 		running = Mode.NORMAL;
@@ -146,12 +142,7 @@ public class NeuralNetwork {
 			public Void call() throws Exception {
 				int genStart = population.getGeneration();
 				while(population.getGeneration() < genStart + mainFrame.getGensToRun() && !Thread.interrupted()){
-					try {
-						if (population.tickGenerationMultiThreaded()) mainFrame.bumpGenerationNumber();
-						handleGraphing();
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
+					tickGeneration();
 				}
 				//After N generations have been run, it stops itself
 				mainFrame.setRunningIndicator(false);
@@ -161,6 +152,19 @@ public class NeuralNetwork {
 			}
 		});
 		running = Mode.ACCELERATED;
+	}
+	
+	private void tickGeneration(){
+		try {
+			if (population.tickGenerationMultiThreaded()) mainFrame.bumpGenerationNumber();
+			if (population.isGenerationDone()){
+				UpdateRequirement update = stats.put(new FitnessDatapoint(population.getGeneration(),
+						population.getAverageFitness(), population.getBestFitness()));
+				if (graphing) fitnessGraph.update(update);
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	private void initialize(TaskSetup setup){
@@ -200,7 +204,7 @@ public class NeuralNetwork {
 	}
 	
 	private void startGameArrayWindow(TaskSetup setup){
-		if (!guiAttached && running == Mode.NORMAL){
+		if (!guiAttached && initialized && running != Mode.ACCELERATED){
 			WindowListener l = new WindowListener() {
 				@Override
 				public void windowOpened(WindowEvent e) {
