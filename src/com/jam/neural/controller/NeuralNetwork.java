@@ -17,6 +17,7 @@ import com.jam.neural.view.FitnessGraph;
 import com.jam.neural.view.MainFrame;
 import com.jam.statistics.FitnessDatapoint;
 import com.jam.statistics.StatisticsManager;
+import com.jam.statistics.StatisticsManager.UpdateRequirement;
 
 public class NeuralNetwork {
 	public enum Mode{
@@ -116,8 +117,9 @@ public class NeuralNetwork {
 	
 	private void handleGraphing(){
 		if (graphing && population.isGenerationDone()){
-			stats.put(new FitnessDatapoint(population.getGeneration(), population.getAverageFitness(), population.getBestFitness()));
-			fitnessGraph.addFitness(population.getAverageFitness(), population.getBestFitness());
+			UpdateRequirement update = stats.put(new FitnessDatapoint(population.getGeneration(),
+					population.getAverageFitness(), population.getBestFitness()));
+			fitnessGraph.update(update);
 		}
 	}
 	
@@ -172,31 +174,27 @@ public class NeuralNetwork {
 	
 	private void startGraphWindow(){
 		if (!graphing){
-			if (fitnessGraph == null){
-				fitnessGraph = new FitnessGraph();
-				fitnessGraph.addWindowListener(new WindowListener() {
-					@Override
-					public void windowOpened(WindowEvent e) {
-						graphing = true;
-					}
-					@Override
-					public void windowClosed(WindowEvent e) {
-						graphing = false;
-					}
-					@Override
-					public void windowIconified(WindowEvent e) {}
-					@Override
-					public void windowDeiconified(WindowEvent e) {}
-					@Override
-					public void windowDeactivated(WindowEvent e) {}
-					@Override
-					public void windowClosing(WindowEvent e) {}
-					@Override
-					public void windowActivated(WindowEvent e) {}
-				});
-			} else {
-				fitnessGraph.setVisible(true);
-			}
+			fitnessGraph = new FitnessGraph(stats.getData());
+			fitnessGraph.addWindowListener(new WindowListener() {
+				@Override
+				public void windowOpened(WindowEvent e) {
+					graphing = true;
+				}
+				@Override
+				public void windowClosed(WindowEvent e) {
+					graphing = false;
+				}
+				@Override
+				public void windowIconified(WindowEvent e) {}
+				@Override
+				public void windowDeiconified(WindowEvent e) {}
+				@Override
+				public void windowDeactivated(WindowEvent e) {}
+				@Override
+				public void windowClosing(WindowEvent e) {}
+				@Override
+				public void windowActivated(WindowEvent e) {}
+			});
 		}
 	}
 	
