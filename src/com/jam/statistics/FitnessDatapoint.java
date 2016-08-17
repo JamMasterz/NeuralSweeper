@@ -1,11 +1,11 @@
 package com.jam.statistics;
 
-public class FitnessDatapoint implements AveragableDataPoint<Integer, Integer>{
+public class FitnessDatapoint implements AveragableDataPoint<Integer, Double>{
 	public static final int ID_AVERAGE = 0;
 	public static final int ID_BEST = 1;
 	
 	protected int generation;
-	protected int average, best;
+	protected double average, best;
 	
 	public FitnessDatapoint(int x, int avg, int best){
 		this.generation = x;
@@ -19,7 +19,7 @@ public class FitnessDatapoint implements AveragableDataPoint<Integer, Integer>{
 	}
 
 	@Override
-	public Integer getY(int id) {
+	public Double getY(int id) {
 		if (id == ID_AVERAGE){
 			return average;
 		} else if (id == ID_BEST){
@@ -34,21 +34,8 @@ public class FitnessDatapoint implements AveragableDataPoint<Integer, Integer>{
 		return 2; //Average and best
 	}
 
-	/*
 	@Override
-	public void setY(int id, Integer value) {
-		if (id == ID_AVERAGE){
-			average = value.intValue();
-		} else if (id == ID_BEST){
-			best = value.intValue();
-		} else {
-			throw new ArrayIndexOutOfBoundsException("No Y-value with id: " + id);
-		}
-	}
-	*/
-
-	@Override
-	public AveragableDataPoint<Integer, Integer> sumYValues(AveragableDataPoint<Integer, Integer> p) {
+	public AveragableDataPoint<Integer, Double> sumYValues(AveragableDataPoint<Integer, Double> p) {
 		FitnessDatapoint p1 = (FitnessDatapoint) p;
 		this.average += p1.average;
 		this.best += p1.best;
@@ -57,9 +44,9 @@ public class FitnessDatapoint implements AveragableDataPoint<Integer, Integer>{
 	}
 
 	@Override
-	public AveragableDataPoint<Integer, Integer> multiplyYValues(double factor) {
-		this.average = (int) (this.average * factor);
-		this.best = (int) (this.best * factor);
+	public AveragableDataPoint<Integer, Double> multiplyYValues(double factor) {
+		this.average = this.average * factor;
+		this.best = this.best * factor;
 		
 		return this;
 	}
