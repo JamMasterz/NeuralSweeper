@@ -116,9 +116,9 @@ public class NeuralNetwork {
 	}
 	
 	private void handleGraphing(){
+		UpdateRequirement update = stats.put(new FitnessDatapoint(population.getGeneration(),
+				population.getAverageFitness(), population.getBestFitness()));
 		if (graphing && population.isGenerationDone()){
-			UpdateRequirement update = stats.put(new FitnessDatapoint(population.getGeneration(),
-					population.getAverageFitness(), population.getBestFitness()));
 			fitnessGraph.update(update);
 		}
 	}
