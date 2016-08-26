@@ -9,11 +9,13 @@ public class TimerThread extends Thread{
 
 	@Override
 	public void run() {
-		while (true){
+		while (!Thread.interrupted()){
 			gui.updateTime();
 			try {
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+				return;
+			}
 		}
 	}
 }

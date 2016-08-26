@@ -248,6 +248,7 @@ public class NeuralNetwork {
 				@Override
 				public void windowClosed(WindowEvent e) {
 					guiAttached = false;
+					setup.detachGUI();
 				}
 				@Override
 				public void windowIconified(WindowEvent e) {}
