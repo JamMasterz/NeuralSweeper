@@ -19,6 +19,7 @@ import com.jam.statistics.FitnessDatapoint;
 import com.jam.statistics.StatisticsManager;
 import com.jam.statistics.StatisticsManager.UpdateRequirement;
 
+//TODO: Genomes have very similiar reactions at the start, this shouldnt be. Also, they are getting too inbred
 public class NeuralNetwork {
 	public enum Mode{
 		STOPPED, NORMAL, ACCELERATED;
@@ -88,9 +89,10 @@ public class NeuralNetwork {
 				if (!initialized){
 					initialize(setup);
 				}
-				tickGeneration();
+				if (tickGeneration()) tickGeneration(); //If this tick resulted in repopulation, tick it again
 			}
 		});
+		//TODO: Add hotkey for single ticks so it can be done while watching the setup
 		
 		mainFrame.addWindowListener(new WindowListener() {
 			@Override
@@ -154,9 +156,13 @@ public class NeuralNetwork {
 		running = Mode.ACCELERATED;
 	}
 	
-	private void tickGeneration(){
+	private boolean tickGeneration(){
+		boolean repopulated = false;
 		try {
-			if (population.tickGenerationMultiThreaded()) mainFrame.bumpGenerationNumber();
+			if (population.tickGenerationMultiThreaded()){
+				mainFrame.bumpGenerationNumber();
+				repopulated = true;
+			}
 			if (population.isGenerationDone()){
 				UpdateRequirement update = stats.put(new FitnessDatapoint(population.getGeneration(),
 						population.getAverageFitness(), population.getBestFitness()));
@@ -165,6 +171,8 @@ public class NeuralNetwork {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+		
+		return repopulated;
 	}
 	
 	private void initialize(TaskSetup setup){
@@ -204,7 +212,10 @@ public class NeuralNetwork {
 	}
 	
 	private void startGameArrayWindow(TaskSetup setup){
-		if (!guiAttached && initialized && running != Mode.ACCELERATED){
+		if (!initialized){
+			initialize(setup);
+		}
+		if (!guiAttached && running != Mode.ACCELERATED){
 			WindowListener l = new WindowListener() {
 				@Override
 				public void windowOpened(WindowEvent e) {
