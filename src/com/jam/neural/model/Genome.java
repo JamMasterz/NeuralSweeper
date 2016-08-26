@@ -125,6 +125,8 @@ public class Genome {
 		for (int i = 0; i < chromosome.length; i++) {
 			if (Util.randomDecision(NetworkSettings.MUTATION_RATE, r)){
 				chromosome[i] += Util.getRandomFloat(r, -NetworkSettings.MAX_BASE_PAIR_CHANGE, NetworkSettings.MAX_BASE_PAIR_CHANGE);
+				if (chromosome[i] > NetworkSettings.MAX_WEIGHT) chromosome[i] = NetworkSettings.MAX_WEIGHT;
+				if (chromosome[i] < -NetworkSettings.MAX_WEIGHT) chromosome[i] = -NetworkSettings.MAX_WEIGHT;
 			}
 		}
 	}
