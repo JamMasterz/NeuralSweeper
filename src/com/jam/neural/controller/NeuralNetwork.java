@@ -89,7 +89,7 @@ public class NeuralNetwork {
 				if (!initialized){
 					initialize(setup);
 				}
-				if (tickGeneration()) tickGeneration(); //If this tick resulted in repopulation, tick it again
+				tickGeneration();
 			}
 		});
 		//TODO: Add hotkey for single ticks so it can be done while watching the setup
