@@ -68,6 +68,8 @@ public class MinesweeperGUI {
 			panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		}
 		
+		updateBoard(); //In case something has been done on the board before getGUI is called
+		
 		return panel;
 	}
 	
