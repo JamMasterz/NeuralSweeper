@@ -1,7 +1,10 @@
 package com.jam.neural.controller;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Timer;
@@ -10,6 +13,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import javax.swing.KeyStroke;
 
 import com.jam.neural.model.Population;
 import com.jam.neural.model.TaskSetup;
@@ -86,13 +91,23 @@ public class NeuralNetwork {
 		mainFrame.setTickActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!initialized){
-					initialize(setup);
-				}
-				tickGeneration();
+				runSingleTick(setup);
 			}
 		});
-		//TODO: Add hotkey for single ticks so it can be done while watching the setup
+		
+		KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		KeyStroke tickKey = KeyStroke.getKeyStroke('t');
+		focusManager.addKeyEventDispatcher(new KeyEventDispatcher() {
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				if (KeyStroke.getKeyStrokeForEvent(e).equals(tickKey)){
+					runSingleTick(setup);
+					
+					return true;
+				}
+				return false;
+			}
+		});
 		
 		mainFrame.addWindowListener(new WindowListener() {
 			@Override
@@ -154,6 +169,15 @@ public class NeuralNetwork {
 			}
 		});
 		running = Mode.ACCELERATED;
+	}
+	
+	private void runSingleTick(TaskSetup setup){
+		if (running == Mode.STOPPED){
+			if (!initialized){
+				initialize(setup);
+			}
+			tickGeneration();
+		}
 	}
 	
 	private boolean tickGeneration(){
