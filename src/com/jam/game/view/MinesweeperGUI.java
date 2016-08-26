@@ -174,6 +174,10 @@ public class MinesweeperGUI {
 		}
 	}
 	
+	public void disconnect(){
+		stopTimerThread();
+	}
+	
 	protected void restartTimerThread(){
 		if (timer.isInterrupted()){
 			timer = new TimerThread(this);

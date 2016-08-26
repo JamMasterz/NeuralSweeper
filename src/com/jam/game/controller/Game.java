@@ -81,6 +81,7 @@ public class Game {
 	 * Removes GUI for this game
 	 */
 	public void disconnectGUI(){
+		gui.disconnect();
 		gui = null;
 	}
 	
