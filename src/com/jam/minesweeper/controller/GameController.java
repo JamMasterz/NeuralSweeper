@@ -1,16 +1,18 @@
-package com.jam.game.controller;
+package com.jam.minesweeper.controller;
 
 import javax.swing.JPanel;
 
-import com.jam.game.model.Board;
-import com.jam.game.model.Board.GameState;
-import com.jam.game.model.Board.TagResult;
-import com.jam.game.model.Board.UncoverResult;
-import com.jam.game.model.Coord;
-import com.jam.game.view.MinesweeperGUI;
+import com.jam.minesweeper.model.Board;
+import com.jam.minesweeper.model.Board.GameState;
+import com.jam.minesweeper.model.Board.TagResult;
+import com.jam.minesweeper.model.Board.UncoverResult;
+import com.jam.minesweeper.model.Coord;
+import com.jam.minesweeper.view.MinesweeperGUI;
+
+import java.util.Observable;
 
 //TODO: On defeat, show all the mines, color the killing mine red, put an X over bad flags
-public class Game {
+public class GameController extends Observable {
 	public enum DefaultGamePreference {
 		NOOB, INTERMEDIATE, EXPERT;
 	}
@@ -33,7 +35,7 @@ public class Game {
 	 * @param seed Seed to use when generating the board. Can be used to generate identical boards
 	 * @param controllable Whether the GUI is responsive to user actions
 	 */
-	public Game(int size, int bombs, Long seed, boolean controllable){
+	public GameController(int size, int bombs, Long seed, boolean controllable){
 		constructor(size, bombs, seed, controllable);
 	}
 	
@@ -42,7 +44,7 @@ public class Game {
 	 * @param seed Seed to use when generating the board. Can be used to generate identical boards
 	 * @param controllable Whether the GUI is responsive to user actions
 	 */
-	public Game(DefaultGamePreference pref, Long seed, boolean controllable){
+	public GameController(DefaultGamePreference pref, Long seed, boolean controllable){
 		switch (pref){
 			case NOOB:
 				constructor(NOOB_SIZE, NOOB_BOMBS, seed, controllable);
@@ -93,10 +95,12 @@ public class Game {
 	public UncoverResult leftClickField(Coord coord){
 		UncoverResult r = board.uncoverSingle(coord);
 		
-		if (!controllable && gui != null){
-			gui.updateBoard();
-		}
-		
+//		if (!controllable && gui != null){
+//			gui.updateGUI(0);
+//		}
+
+		notifyObservers();
+
 		return r;
 	}
 	
@@ -108,9 +112,11 @@ public class Game {
 	public TagResult rightClickField(Coord coord){
 		TagResult r = board.tagSingleField(coord);
 		
-		if (!controllable && gui != null){
-			gui.updateBoard();
-		}
+//		if (!controllable && gui != null){
+//			gui.updateGUI(0);
+//		}
+
+		notifyObservers();
 		
 		return r;
 	}
@@ -150,8 +156,9 @@ public class Game {
 	public void resetGame(Long seed){
 		board.restartGame(seed);
 		if (gui != null){
-			gui.updateBoard();
+//			gui.updateGUI(0);
 			gui.updateTime();
 		}
+		notifyObservers();
 	}
 }

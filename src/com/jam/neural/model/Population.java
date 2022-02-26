@@ -44,7 +44,7 @@ public class Population{
 		if (service == null){
 			service = Executors.newFixedThreadPool(numThreads);
 			
-			tickTasks = new ArrayList<Callable<Void>>();
+			tickTasks = new ArrayList<>();
 			for (int i = 0; i < genomes.length; i++) {
 				tickTasks.add(getTickGenomeCallable(i));
 			}
@@ -55,42 +55,45 @@ public class Population{
 	 * Uses the neural network to progress in the task 1 step
 	 * @return Whether this tick resulted in a repopulation
 	 */
-	public boolean tickGeneration(){
-		if (!isGenerationDone()){
-			int ticking = 0;
-			for (int i = 0; i < genomes.length; i++){
-				if (tasks[i].getTaskState() == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
-					float[] outputs = genomes[i].evalutateNetwork(tasks[i].getInputs(), tasks[i].isBinary());
-
-					if (!allowRepeating && genomes[i].isRepeating()){
-						//System.out.println("Killing braindead genome");
-						tasks[i].setTaskState(TaskState.FAILED);
-						continue;
-					}
-
-					ticking++;
-					tasks[i].setOutputs(outputs);
-				}
-			}
-			ticksLeft--;
-			
-			System.out.println("Still ticking: " + ticking);
-			
-			return false;
-		} else {
-			initNewGeneration();
-			
-			return true;
-		}
-	}
+//	public boolean tickGeneration(){
+//		if (!isGenerationDone()){
+//			int ticking = 0;
+//			for (int i = 0; i < genomes.length; i++){
+//				if (tasks[i].getTaskState() == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
+//					float[] outputs = genomes[i].evalutateNetwork(tasks[i].getInputs(), tasks[i].isBinary());
+//
+//					if (!allowRepeating && genomes[i].isRepeating()){
+//						//System.out.println("Killing braindead genome");
+//						tasks[i].setTaskState(TaskState.FAILED);
+//						continue;
+//					}
+//
+//					ticking++;
+//					tasks[i].setOutputs(outputs);
+//				}
+//			}
+//
+//
+//
+//			ticksLeft--;
+//
+//			System.out.println("Still ticking: " + ticking);
+//
+//			return false;
+//		} else {
+//			initNewGeneration();
+//
+//			return true;
+//		}
+//	}
 	
 	/**
 	 * Uses the neural network to progress in the task 1 step. The neural network is evaluated using multiple threads.
 	 * @return Whether this tick resulted in a repopulation
 	 * @throws Exception If the threadPool hasnt been initialized. Call createThreadPool(...) to fix it
 	 */
-	public boolean tickGenerationMultiThreaded() throws Exception{
-		if (service == null) throw new Exception("The ExecutorService has not been initialized. Call createThreadPool(...)");
+	public boolean tickGenerationMultiThreaded() throws InterruptedException {
+		if (service == null) throw new RuntimeException("The ExecutorService has not been initialized. Call createThreadPool(...)");
 		
 		if (!isGenerationDone()){
 			service.invokeAll(tickTasks); //Will block until all are done
@@ -154,22 +157,20 @@ public class Population{
 	}
 	
 	private Callable<Void> getTickGenomeCallable(int index){
-		return new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				if (tasks[index].getTaskState() == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
-					float[] outputs = genomes[index].evalutateNetwork(tasks[index].getInputs(), tasks[index].isBinary());
-					
-					if (!allowRepeating && genomes[index].isRepeating()){
-						//System.out.println("Killing braindead genome");
-						tasks[index].setTaskState(TaskState.FAILED);
-						return null;
-					}
-					
-					tasks[index].setOutputs(outputs);
+		return () -> {
+			if (tasks[index].getTaskState() == TaskState.PROCESSING){ //tick it only if it hasnt lost or won
+				float[] outputs = genomes[index].evalutateNetwork(tasks[index].getInputs(), tasks[index].isBinary());
+
+				if (!allowRepeating && genomes[index].isRepeating()){
+					//System.out.println("Killing braindead genome");
+					tasks[index].setTaskState(TaskState.FAILED);
+					return null;
 				}
-				return null;
+
+				tasks[index].setOutputs(outputs);
 			}
+
+			return null;
 		};
 	}
 	

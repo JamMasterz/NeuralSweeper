@@ -1,17 +1,17 @@
 package com.jam.neural.controller;
 
-import java.util.Random;
-
-import com.jam.game.controller.Game;
-import com.jam.game.controller.Game.DefaultGamePreference;
-import com.jam.game.model.Board;
-import com.jam.game.model.Board.UncoverResult;
-import com.jam.game.model.Coord;
-import com.jam.game.model.Field;
+import com.jam.minesweeper.controller.GameController;
+import com.jam.minesweeper.controller.GameController.DefaultGamePreference;
+import com.jam.minesweeper.model.Board;
+import com.jam.minesweeper.model.Board.UncoverResult;
+import com.jam.minesweeper.model.Coord;
+import com.jam.minesweeper.model.Field;
 import com.jam.neural.model.NeuralTask;
 
-public class NeuralMinesweeper implements NeuralTask{
-	private Game game;
+import java.util.Random;
+
+public class NeuralMinesweeper implements NeuralTask {
+	private GameController game;
 	private final int visibleSquareSize;
 	private Coord pos;
 	private Coord spawnPos;
@@ -25,12 +25,12 @@ public class NeuralMinesweeper implements NeuralTask{
 	private static final int FITNESS_VICTORY_BONUS = 30;
 	
 	public NeuralMinesweeper(int visibleSquareSize, int xSpawn, int ySpawn, Long seed, DefaultGamePreference pref){
-		this.game = new Game(pref, seed, false);
+		this.game = new GameController(pref, seed, false);
 		this.visibleSquareSize = visibleSquareSize;
 		this.spawnPos = new Coord(xSpawn, ySpawn);
 		this.seed = seed;
 		this.fieldsToUncoverInitial = game.getSize() * game.getSize() - game.getBombsInitial();
-		
+
 		reset();
 	}
 
@@ -200,7 +200,7 @@ public class NeuralMinesweeper implements NeuralTask{
 		this.state = state;
 	}
 	
-	public Game getGame(){
+	public GameController getGame(){
 		return game;
 	}
 }

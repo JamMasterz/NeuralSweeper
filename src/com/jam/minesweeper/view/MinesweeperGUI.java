@@ -1,12 +1,10 @@
-package com.jam.game.view;
+package com.jam.minesweeper.view;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -17,20 +15,22 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import com.jam.game.controller.Game;
-import com.jam.game.model.Board;
-import com.jam.game.model.Board.UncoverResult;
-import com.jam.game.model.Coord;
-import com.jam.game.model.Field;
+import com.jam.minesweeper.controller.GameController;
+import com.jam.minesweeper.model.Board;
+import com.jam.minesweeper.model.Board.UncoverResult;
+import com.jam.minesweeper.model.Coord;
+import com.jam.minesweeper.model.Field;
+import com.jam.neural.view.Timable;
+import com.jam.neural.view.Updatable;
 
-public class MinesweeperGUI {
+public class MinesweeperGUI implements Timable, Updatable {
 	public static final String RESET = "\u263A";
 	private static final int DISPLAY_HEIGHT = 20;
 	private static final int DISPLAY_WIDTH = 50;
 	private static final int RESET_SIZE = 40;
 	private static final int FONT_SIZE = 30;
 	
-	private Game game;
+	private GameController game;
 	private JPanel panel;
 	private ArrayList<JMineField> fields;
 	private MinefieldActionListener listener;
@@ -44,9 +44,9 @@ public class MinesweeperGUI {
 	private boolean controllable;
 	private double scale;
 	
-	public MinesweeperGUI(Game game, double scale, boolean controllable){
+	public MinesweeperGUI(GameController game, double scale, boolean controllable){
 		this.game = game;
-		this.fields = new ArrayList<JMineField>();
+		this.fields = new ArrayList<>();
 		this.scale = scale;
 		this.controllable = controllable;
 		this.timer = new TimerThread(this);
@@ -67,8 +67,6 @@ public class MinesweeperGUI {
 			panel.add(getGridPanel());
 			panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		}
-		
-		updateBoard(); //In case something has been done on the board before getGUI is called
 		
 		return panel;
 	}
@@ -103,13 +101,10 @@ public class MinesweeperGUI {
 		resetButton.setHorizontalAlignment(SwingConstants.CENTER);
 		resetButton.setVerticalTextPosition(SwingConstants.CENTER);
 		if (controllable){
-			resetButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					game.getBoard().restartGame(null);
-					restartTimerThread();
-					updateBoard();
-				}
+			resetButton.addActionListener(e -> {
+				game.getBoard().restartGame(null);
+				restartTimerThread();
+				updateGUI(0);
 			});
 		}
 		
@@ -138,22 +133,6 @@ public class MinesweeperGUI {
 		return grid;
 	}
 	
-	public void updateBoard(){
-		Field field;
-		Board board = game.getBoard();
-		
-		for (int i = 0; i < fields.size(); i++){
-			field = board.getField(Coord.getCoord(i, game.getSize()));
-			if (!fields.get(i).equals(field)){
-				fields.get(i).setFieldType(field);
-			}
-		}
-		panel.repaint();
-		panel.revalidate();
-		
-		bombsLeft.setText(Integer.toString(game.getBoard().getBombsLeft()));
-	}
-	
 	public void displayGameState(UncoverResult res){
 		if (res == UncoverResult.MINE){
 			JOptionPane.showMessageDialog(panel, "You lost!");
@@ -161,7 +140,8 @@ public class MinesweeperGUI {
 			JOptionPane.showMessageDialog(panel, "You won!");
 		}
 	}
-	
+
+	@Override
 	public void updateTime(){
 		if (elapsedTime != null){
 			elapsedTime.setText(Integer.toString(game.getBoard().getSecondsElapsed()));
@@ -183,5 +163,22 @@ public class MinesweeperGUI {
 			timer = new TimerThread(this);
 			timer.start();
 		}
+	}
+
+	@Override
+	public void updateGUI(int index) {
+		Field field;
+		Board board = game.getBoard();
+
+		for (int i = 0; i < fields.size(); i++){
+			field = board.getField(Coord.getCoord(i, game.getSize()));
+			if (!fields.get(i).equals(field)){
+				fields.get(i).setFieldType(field);
+			}
+		}
+		panel.repaint();
+		panel.revalidate();
+
+		bombsLeft.setText(Integer.toString(game.getBoard().getBombsLeft()));
 	}
 }

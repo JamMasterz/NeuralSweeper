@@ -2,7 +2,7 @@ package com.jam.util;
 
 import java.util.Random;
 
-import com.jam.game.model.Coord;
+import com.jam.minesweeper.model.Coord;
 
 public class Util {
 	public static boolean contains(Coord[] array, Coord coord){

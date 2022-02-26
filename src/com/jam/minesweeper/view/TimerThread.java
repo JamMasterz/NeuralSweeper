@@ -1,9 +1,11 @@
-package com.jam.game.view;
+package com.jam.minesweeper.view;
+
+import com.jam.neural.view.Timable;
 
 public class TimerThread extends Thread{
-	private MinesweeperGUI gui;
+	private Timable gui;
 
-	public TimerThread(MinesweeperGUI gui) {
+	public TimerThread(Timable gui) {
 		this.gui = gui;
 	}
 

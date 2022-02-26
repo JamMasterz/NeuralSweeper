@@ -1,4 +1,4 @@
-package com.jam.game.model;
+package com.jam.minesweeper.model;
 
 import java.util.ArrayList;
 import java.util.Random;

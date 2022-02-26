@@ -3,17 +3,19 @@ package com.jam.neural.view;
 import java.awt.GridLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import com.jam.game.controller.Game;
+import com.jam.minesweeper.controller.GameController;
 
-public class GameArrayFrame{
+public class GameArrayFrame extends Observable implements Observer {
 	private JFrame frame;
-	private Game[] games;
+	private GameController[] games;
 
-	public GameArrayFrame(Game[] games, int gridWidth, int gridHeight, float scale){
+	public GameArrayFrame(GameController[] games, int gridWidth, int gridHeight, float scale){
 		this.games = games;
 		frame = new JFrame("Game Boards");
 		frame.setLayout(new GridLayout(gridHeight, gridWidth));
@@ -22,6 +24,10 @@ public class GameArrayFrame{
 		for (int i = 0; i < gridWidth * gridHeight; i++) {
 			if (i >= games.length) break;
 			frame.add(games[i].getGUI(scale));
+		}
+
+		for (GameController g : games) {
+			g.addObserver(this);
 		}
 		
 		frame.pack();
@@ -34,9 +40,14 @@ public class GameArrayFrame{
 	}
 	
 	public void closeWidnow(){
-		for (Game g : games){
+		for (GameController g : games){
 			g.disconnectGUI();
 		}
 		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		notifyObservers();
 	}
 }

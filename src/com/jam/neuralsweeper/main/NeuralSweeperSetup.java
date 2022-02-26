@@ -1,6 +1,8 @@
 package com.jam.neuralsweeper.main;
 
 import java.awt.event.WindowListener;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 import javax.swing.BoxLayout;
@@ -9,13 +11,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 
-import com.jam.game.controller.Game;
-import com.jam.game.controller.Game.DefaultGamePreference;
+import com.jam.minesweeper.controller.GameController;
+import com.jam.minesweeper.controller.GameController.DefaultGamePreference;
 import com.jam.neural.controller.NeuralMinesweeper;
+import com.jam.neural.model.NeuralTask;
 import com.jam.neural.model.TaskSetup;
 import com.jam.neural.view.GameArrayFrame;
+import com.jam.neural.view.Updatable;
 
-public class NeuralSweeperSetup implements TaskSetup{
+public class NeuralSweeperSetup implements TaskSetup, Observer {
 	public static final int MAX_MOVES_TO_SOLVE_EASY = 200;
 	public static final int VISIBLE_SQUARE_SIZE = 7;
 	public static final int SPAWN_X = 4;
@@ -58,7 +62,9 @@ public class NeuralSweeperSetup implements TaskSetup{
 		for (int i = 0; i < sweepers.length; i++) {
 			sweepers[i] = new NeuralMinesweeper(VISIBLE_SQUARE_SIZE, SPAWN_X, SPAWN_Y, seed, getDifficulty());
 		}
-		
+
+		gui.addObserver(this);
+
 		return sweepers;
 	}
 
@@ -73,8 +79,8 @@ public class NeuralSweeperSetup implements TaskSetup{
 	}
 
 	@Override
-	public void attachGUI(Object[] objects, WindowListener listener, int width, int height, float scale) {
-		Game[] games = new Game[objects.length];
+	public void attachGUI(NeuralTask[] objects, WindowListener listener, int width, int height, float scale) {
+		GameController[] games = new GameController[objects.length];
 		for (int i = 0; i < objects.length; i++) {
 			games[i] = ((NeuralMinesweeper) objects[i]).getGame();
 		}
@@ -103,5 +109,10 @@ public class NeuralSweeperSetup implements TaskSetup{
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		((Updatable) gui).updateGUI(0);
 	}
 }

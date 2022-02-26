@@ -1,24 +1,11 @@
-package com.jam.neural.view;
+package com.jam.runner.view;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SpringLayout;
-import javax.swing.border.TitledBorder;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = -2928806346426112279L;
@@ -26,7 +13,7 @@ public class MainFrame extends JFrame {
 	protected final ButtonGroup gameDifficultyRadios = new ButtonGroup();
 	protected JSpinner tpsSpinner, threadsSpinner, generationsSpinner, hiddenLayersSpinner, nodesHiddenLayerSpinner, specimensSpinner;
 	protected JSpinner gamesVertSpinner, gamesHorSpinner, gameScaleSpinner;
-	protected JButton attachGUIButton, startButton, stopButton, showGraphsButton, tickButton, acceptChangesButton;
+	protected JButton attachGUIButton, startButton, stopButton, showGraphsButton, tickButton;
 	protected JLabel indicatorLabel, generationLabel;
 	protected JRadioButton radioNormal, radioAccelerated;
 	protected JPanel taskPanel;
@@ -53,7 +40,7 @@ public class MainFrame extends JFrame {
 		normalEvoPanel.add(lblTickssecond);
 		
 		tpsSpinner = new JSpinner();
-		tpsSpinner.setModel(new SpinnerNumberModel(1000, 1, 1000, 1));
+		tpsSpinner.setModel(new SpinnerNumberModel(2, 1, 10, 1));
 		sl_normalEvoPanel.putConstraint(SpringLayout.NORTH, tpsSpinner, 10, SpringLayout.NORTH, normalEvoPanel);
 		sl_normalEvoPanel.putConstraint(SpringLayout.NORTH, lblTickssecond, 3, SpringLayout.NORTH, tpsSpinner);
 		sl_normalEvoPanel.putConstraint(SpringLayout.WEST, tpsSpinner, -86, SpringLayout.EAST, normalEvoPanel);
@@ -132,7 +119,7 @@ public class MainFrame extends JFrame {
 		generationsSpinner = new JSpinner();
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, generationsSpinner, 102, SpringLayout.EAST, lblGenerationsToRun);
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.EAST, generationsSpinner, -10, SpringLayout.EAST, acceleratedEvoPanel);
-		generationsSpinner.setModel(new SpinnerNumberModel(new Integer(10_000), new Integer(1), null, new Integer(1)));
+		generationsSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, lblGenerationsToRun, 3, SpringLayout.NORTH, generationsSpinner);
 		acceleratedEvoPanel.add(generationsSpinner);
 		
@@ -212,7 +199,7 @@ public class MainFrame extends JFrame {
 		specimensSpinner = new JSpinner();
 		sl_panel.putConstraint(SpringLayout.WEST, specimensSpinner, 105, SpringLayout.EAST, lblNumberOfSpecimens);
 		sl_panel.putConstraint(SpringLayout.EAST, specimensSpinner, -10, SpringLayout.EAST, panel);
-		specimensSpinner.setModel(new SpinnerNumberModel(200, 2, 400, 1));
+		specimensSpinner.setModel(new SpinnerNumberModel(20, 2, 100, 1));
 		sl_panel.putConstraint(SpringLayout.NORTH, lblNumberOfSpecimens, 3, SpringLayout.NORTH, specimensSpinner);
 		sl_panel.putConstraint(SpringLayout.NORTH, specimensSpinner, 6, SpringLayout.SOUTH, nodesHiddenLayerSpinner);
 		panel.add(specimensSpinner);
@@ -245,12 +232,6 @@ public class MainFrame extends JFrame {
 		sl_panel.putConstraint(SpringLayout.EAST, threadsSpinner, 0, SpringLayout.EAST, hiddenLayersSpinner);
 		threadsSpinner.setModel(new SpinnerNumberModel(Runtime.getRuntime().availableProcessors(), 1, Runtime.getRuntime().availableProcessors(), 1));
 		panel.add(threadsSpinner);
-
-		acceptChangesButton = new JButton("Accept changes");
-		sl_panel.putConstraint(SpringLayout.EAST, acceptChangesButton, 6, SpringLayout.WEST, threadsSpinner);
-		sl_panel.putConstraint(SpringLayout.NORTH, acceptChangesButton, 6, SpringLayout.SOUTH, lblThreadsToUse_1);
-		panel.add(acceptChangesButton);
-
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Controls", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -387,10 +368,6 @@ public class MainFrame extends JFrame {
 	
 	public void setAttachActionListener(ActionListener listener){
 		attachGUIButton.addActionListener(listener);
-	}
-
-	public void setAcceptChangesActionListener(ActionListener listener) {
-		acceptChangesButton.addActionListener(listener);
 	}
 	
 	public void setTickActionListener(ActionListener listener){

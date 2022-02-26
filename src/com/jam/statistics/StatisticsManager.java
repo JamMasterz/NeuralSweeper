@@ -37,6 +37,11 @@ public class StatisticsManager<U extends AveragableDataPoint> {
 		this.points = new ArrayList<U>();
 		this.unprocessed = new ArrayList<U>(averageNum);
 	}
+
+	public void reset() {
+		this.points.clear();
+		this.unprocessed.clear();
+	}
 	
 	/**
 	 * @param dataPoint Data point to add

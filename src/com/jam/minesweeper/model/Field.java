@@ -1,4 +1,4 @@
-package com.jam.game.model;
+package com.jam.minesweeper.model;
 
 public enum Field {
 	EMPTY(""),

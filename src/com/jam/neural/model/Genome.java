@@ -143,14 +143,14 @@ public class Genome {
 	}
 	
 	private void setChromosome(float[] chromosome){
-		int outputLayerIndex = 0;
+		int nextIndex = 0;
 		for (int i = 0; i < hiddenLayers.length; i++) {
 			int geneLayerSize = hiddenLayers[i].getGenesSize();
-			hiddenLayers[i].setLayerGenes(chromosome, i * geneLayerSize);
-			outputLayerIndex += geneLayerSize;
+			hiddenLayers[i].setLayerGenes(chromosome, nextIndex);
+			nextIndex += geneLayerSize;
 		}
 		
-		outputLayer.setLayerGenes(chromosome, outputLayerIndex);
+		outputLayer.setLayerGenes(chromosome, nextIndex);
 	}
 	
 	private int getChromosomeSize(){

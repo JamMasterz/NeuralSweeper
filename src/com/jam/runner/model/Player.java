@@ -1,21 +1,25 @@
-package com.jam.game.model;
+package com.jam.runner.model;
 
-public class Coord {
+import java.awt.*;
+
+public class Player {
 	private int x, y;
+	private Color color;
 	
-	public Coord(int x, int y){
+	public Player(int x, int y, Color color){
 		this.x = x;
 		this.y = y;
+		this.color = color;
 	}
 	
-	public Coord(){
+	public Player(){
 		this.x = 0;
 		this.y = 0;
 	}
 	
-	public Coord(Coord coord){
-		this.x = coord.x;
-		this.y = coord.y;
+	public Player(Player player){
+		this.x = player.x;
+		this.y = player.y;
 	}
 	
 	public void set(int x, int y){
@@ -23,9 +27,9 @@ public class Coord {
 		this.y = y;
 	}
 	
-	public void set(Coord coord){
-		this.x = coord.x;
-		this.y = coord.y;
+	public void set(Player player){
+		this.x = player.x;
+		this.y = player.y;
 	}
 	
 	public void add(int dx, int dy){
@@ -48,17 +52,15 @@ public class Coord {
 	public void setY(int y) {
 		this.y = y;
 	}
-	
-	public static Coord getCoord(int index1D, int size){
-		int col = index1D % size;
-		int row = index1D / size;
-		return new Coord(row, col);
+
+	public Color getColor() {
+		return this.color;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Coord){
-			Coord c = (Coord) obj;
+		if (obj instanceof Player){
+			Player c = (Player) obj;
 			return c.x == this.x && c.y == this.y;
 		}
 		return false;

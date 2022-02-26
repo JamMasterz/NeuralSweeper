@@ -1,4 +1,4 @@
-package com.jam.game.view;
+package com.jam.minesweeper.view;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -6,7 +6,7 @@ import java.awt.Insets;
 
 import javax.swing.JButton;
 
-import com.jam.game.model.Field;
+import com.jam.minesweeper.model.Field;
 
 public class JMineField extends JButton{
 	private static final long serialVersionUID = -9053196072545355717L;

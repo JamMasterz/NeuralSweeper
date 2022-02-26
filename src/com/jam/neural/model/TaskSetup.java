@@ -25,13 +25,13 @@ public interface TaskSetup {
 	
 	/**
 	 * Implement this to allow GUI attaching. GUI can be attached at any moment
-	 * @param objects Objects that are going to be represented on the GUI
+	 * @param tasks Objects that are going to be represented on the GUI
 	 * @param listener A window listener for the new window. Null if not used
 	 * @param width How many GUIs will be places horizontally
 	 * @param height How many GUIs will be placed vertically
 	 * @param scale Scale of the GUIs
 	 */
-	void attachGUI(Object[] objects, WindowListener listener, int width, int height, float scale);
+	void attachGUI(NeuralTask[] tasks, WindowListener listener, int width, int height, float scale);
 	
 	/**
 	 * Used to detach a GUI;

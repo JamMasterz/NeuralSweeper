@@ -4,7 +4,7 @@ package com.jam.neural.model;
  *	The task that the neural network is going to be processing, has to implement this
  */
 public interface NeuralTask {
-	public enum TaskState {
+	enum TaskState {
 		FAILED, SUCCEEDED, PROCESSING;
 	}
 	float[] getInputs();
