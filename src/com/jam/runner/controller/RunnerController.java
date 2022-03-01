@@ -1,32 +1,37 @@
 package com.jam.runner.controller;
 
 import com.jam.runner.model.Board;
+import com.jam.runner.model.Wall;
 import com.jam.runner.view.RunnerGameGUI;
 
 import javax.swing.*;
-import java.util.Observable;
 
-public class Game extends Observable {
+public class RunnerController {
 	private Board board;
 	private RunnerGameGUI gui;
+
 	private boolean debug = false;
 
-	public Game(int width, int height, Long seed, int numPlayers){
-		this.board = new Board(width, height, seed, numPlayers);
+	public RunnerController(int width, int height, Long seed, int numPlayers){
+		this.board = new Board(width, height, seed, numPlayers, 20, 19 * width / 20);
 		board.setDebug(debug);
 	}
 
-	public JPanel getGUI(double scale){
-		if (gui == null) gui = new RunnerGameGUI(this);
+	public RunnerGameGUI getGUI(double scale){
+		if (gui == null) {
+			gui = new RunnerGameGUI(this);
+			board.addObserver(gui);
+		}
 		gui.setDebug(debug);
 		
-		return gui.getGUI();
+		return gui;
 	}
 	
 	/**
 	 * Removes GUI for this game
 	 */
-	public void disconnectGUI(){
+	public void disconnectGUI() {
+		board.deleteObserver(gui);
 		gui.disconnect();
 		gui = null;
 	}
@@ -34,15 +39,11 @@ public class Game extends Observable {
 	public boolean moveX(int playerNumber, boolean left) {
 		boolean moveSuccess = board.moveX(playerNumber, left);
 
-		notifyObservers(playerNumber);
-
 		return moveSuccess;
 	}
 
 	public boolean moveY(int playerNumber, boolean up) {
 		boolean moveSuccess = board.moveY(playerNumber, up);
-
-		notifyObservers(playerNumber);
 
 		return moveSuccess;
 	}
@@ -61,9 +62,7 @@ public class Game extends Observable {
 	public void resetGame(Long seed){
 		board.restartGame(seed);
 		if (gui != null){
-			gui.updateGUI(getBoard().getNumPlayers() - 1);
 			gui.updateTime();
 		}
-		notifyObservers(board.getNumPlayers() - 1);
 	}
 }

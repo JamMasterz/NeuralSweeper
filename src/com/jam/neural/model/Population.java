@@ -140,13 +140,14 @@ public class Population{
 		//int totalFitness = getTotalFitness();
 		//System.out.println("fitness : " + totalFitness);
 		int[] probabilityArray = new int[getTotalFitness()];
-		Random r = new Random();
 		int nextIndex = 0;
 		for (int i = 0; i < tasks.length; i++) {
 			for (int j = 0; j < tasks[i].getFitness(); j++) {
 				probabilityArray[nextIndex++] = i;
 			}
 		}
+
+		Random r = new Random();
 		for (int i = 0; i < children.length; i++) {
 			Genome parent1 = genomes[probabilityArray[r.nextInt(probabilityArray.length)]];
 			Genome parent2 = genomes[probabilityArray[r.nextInt(probabilityArray.length)]];

@@ -132,7 +132,7 @@ public class MainFrame extends JFrame {
 		generationsSpinner = new JSpinner();
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.WEST, generationsSpinner, 102, SpringLayout.EAST, lblGenerationsToRun);
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.EAST, generationsSpinner, -10, SpringLayout.EAST, acceleratedEvoPanel);
-		generationsSpinner.setModel(new SpinnerNumberModel(new Integer(10_000), new Integer(1), null, new Integer(1)));
+		generationsSpinner.setModel(new SpinnerNumberModel(10_000, 1, null, 1));
 		sl_AcceleratedEvoPanel.putConstraint(SpringLayout.NORTH, lblGenerationsToRun, 3, SpringLayout.NORTH, generationsSpinner);
 		acceleratedEvoPanel.add(generationsSpinner);
 		
@@ -189,7 +189,7 @@ public class MainFrame extends JFrame {
 		sl_panel.putConstraint(SpringLayout.NORTH, hiddenLayersSpinner, 10, SpringLayout.NORTH, panel);
 		sl_panel.putConstraint(SpringLayout.WEST, hiddenLayersSpinner, 98, SpringLayout.EAST, lblHiddenNeuralLayers);
 		sl_panel.putConstraint(SpringLayout.EAST, hiddenLayersSpinner, -10, SpringLayout.EAST, panel);
-		hiddenLayersSpinner.setModel(new SpinnerNumberModel(5, 0, 150, 1));
+		hiddenLayersSpinner.setModel(new SpinnerNumberModel(1, 0, 150, 1));
 		sl_panel.putConstraint(SpringLayout.NORTH, lblHiddenNeuralLayers, 3, SpringLayout.NORTH, hiddenLayersSpinner);
 		panel.add(hiddenLayersSpinner);
 		
@@ -200,7 +200,7 @@ public class MainFrame extends JFrame {
 		nodesHiddenLayerSpinner = new JSpinner();
 		sl_panel.putConstraint(SpringLayout.WEST, nodesHiddenLayerSpinner, 51, SpringLayout.EAST, lblNodesPerHidden);
 		sl_panel.putConstraint(SpringLayout.EAST, nodesHiddenLayerSpinner, -10, SpringLayout.EAST, panel);
-		nodesHiddenLayerSpinner.setModel(new SpinnerNumberModel(10, 1, 150, 1));
+		nodesHiddenLayerSpinner.setModel(new SpinnerNumberModel(5, 1, 150, 1));
 		sl_panel.putConstraint(SpringLayout.NORTH, lblNodesPerHidden, 3, SpringLayout.NORTH, nodesHiddenLayerSpinner);
 		sl_panel.putConstraint(SpringLayout.NORTH, nodesHiddenLayerSpinner, 6, SpringLayout.SOUTH, hiddenLayersSpinner);
 		panel.add(nodesHiddenLayerSpinner);
@@ -212,7 +212,7 @@ public class MainFrame extends JFrame {
 		specimensSpinner = new JSpinner();
 		sl_panel.putConstraint(SpringLayout.WEST, specimensSpinner, 105, SpringLayout.EAST, lblNumberOfSpecimens);
 		sl_panel.putConstraint(SpringLayout.EAST, specimensSpinner, -10, SpringLayout.EAST, panel);
-		specimensSpinner.setModel(new SpinnerNumberModel(200, 2, 400, 1));
+		specimensSpinner.setModel(new SpinnerNumberModel(100, 2, 400, 1));
 		sl_panel.putConstraint(SpringLayout.NORTH, lblNumberOfSpecimens, 3, SpringLayout.NORTH, specimensSpinner);
 		sl_panel.putConstraint(SpringLayout.NORTH, specimensSpinner, 6, SpringLayout.SOUTH, nodesHiddenLayerSpinner);
 		panel.add(specimensSpinner);

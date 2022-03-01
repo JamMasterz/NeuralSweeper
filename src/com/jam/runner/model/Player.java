@@ -4,6 +4,8 @@ import java.awt.*;
 
 public class Player {
 	private int x, y;
+
+	private int distanceTraveled;
 	private Color color;
 	
 	public Player(int x, int y, Color color){
@@ -35,6 +37,12 @@ public class Player {
 	public void add(int dx, int dy){
 		this.x += dx;
 		this.y += dy;
+		this.distanceTraveled += dx;
+		this.distanceTraveled += dy;
+	}
+
+	public int getDistanceTraveled() {
+		return distanceTraveled;
 	}
 	
 	public int getX() {

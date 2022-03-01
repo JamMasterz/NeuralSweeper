@@ -1,56 +1,61 @@
 package com.jam.runner.view;
 
 import com.jam.minesweeper.view.TimerThread;
-import com.jam.runner.controller.Game;
+import com.jam.neural.view.Timable;
+import com.jam.runner.controller.RunnerController;
 import com.jam.runner.model.Board;
 import com.jam.runner.model.Player;
-import com.jam.neural.view.Timable;
-import com.jam.neural.view.Updatable;
+import com.jam.runner.model.Wall;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class RunnerGameGUI implements Timable, Updatable {
-	private Game game;
-	private JPanel panel;
-	private Canvas canvas;
+public class RunnerGameGUI extends JPanel implements Timable, Observer {
+	private RunnerController game;
 	private TimerThread timer;
 
 	@SuppressWarnings("unused")
 	private boolean debug = false;
 
-	public RunnerGameGUI(Game game){
+	public RunnerGameGUI(RunnerController game){
 		this.game = game;
 		this.timer = new TimerThread(this);
+
+
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setPreferredSize(new Dimension(game.getBoard().getWidth(), game.getBoard().getHeight()));
+		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
 		timer.start();
 	}
-	
-	public JPanel getGUI(){
-		if (panel == null){
-			canvas = new Canvas() {
-				@Override
-				public void paint(Graphics g) {
-					super.paint(g);
-					canvas.setBackground(Color.WHITE);
 
-					Board board = game.getBoard();
-					for (int i = 0; i < board.getNumPlayers(); i++){
-						Player player = board.getPlayer(i);
-						g.setColor(player.getColor());
-						g.fillRect(player.getX(), player.getY(), 4, 4);
-					}
-				}
-			};
-			canvas.setBackground(Color.WHITE);
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
-			panel = new JPanel();
-			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-			panel.add(canvas);
-			panel.setPreferredSize(new Dimension(game.getBoard().getWidth(), game.getBoard().getHeight()));
-			panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		Board board = game.getBoard();
+		int width = game.getBoard().getWidth();
+		int height = game.getBoard().getHeight();
+
+		for (int i = 0; i < board.getNumPlayers(); i++){
+			Player player = board.getPlayer(i);
+			if (player == null) {
+				//Probably some multithreading issue
+				player = board.getPlayer(i);
+			}
+			g.setColor(player.getColor());
+			g.fillRect(player.getX(), player.getY(), 4, 4);
 		}
 
-		return panel;
+		for (Wall w : board.getWalls()) {
+			g.setColor(Color.RED);
+			g.fillRect(w.getStartX(), w.getStartY(), 2, w.getLength());
+		}
+
+		g.setColor(Color.BLACK);
+		g.fillRect(board.getDeathWall(), 0, 2, height);
 	}
 	
 	public void setDebug(boolean debug){
@@ -78,14 +83,12 @@ public class RunnerGameGUI implements Timable, Updatable {
 		}
 	}
 
+	public void updateGUI() {
+		repaint();
+	}
+
 	@Override
-	public void updateGUI(int index) {
-		System.out.println("Updating ui " + index + " numm players " + game.getBoard().getNumPlayers());
-		if (index == game.getBoard().getNumPlayers() - 1) {
-//		panel.repaint();
-//		panel.revalidate();
-			canvas.repaint();
-//		canvas.revalidate();
-		}
+	public void update(Observable o, Object arg) {
+		updateGUI();
 	}
 }

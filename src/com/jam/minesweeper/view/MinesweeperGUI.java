@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,23 +17,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import com.jam.minesweeper.controller.GameController;
+import com.jam.minesweeper.controller.MinesweeperController;
 import com.jam.minesweeper.model.Board;
 import com.jam.minesweeper.model.Board.UncoverResult;
 import com.jam.minesweeper.model.Coord;
 import com.jam.minesweeper.model.Field;
 import com.jam.neural.view.Timable;
-import com.jam.neural.view.Updatable;
 
-public class MinesweeperGUI implements Timable, Updatable {
+public class MinesweeperGUI extends JPanel implements Timable, Observer {
 	public static final String RESET = "\u263A";
 	private static final int DISPLAY_HEIGHT = 20;
 	private static final int DISPLAY_WIDTH = 50;
 	private static final int RESET_SIZE = 40;
 	private static final int FONT_SIZE = 30;
 	
-	private GameController game;
-	private JPanel panel;
+	private MinesweeperController game;
 	private ArrayList<JMineField> fields;
 	private MinefieldActionListener listener;
 	private TimerThread timer;
@@ -44,31 +44,25 @@ public class MinesweeperGUI implements Timable, Updatable {
 	private boolean controllable;
 	private double scale;
 	
-	public MinesweeperGUI(GameController game, double scale, boolean controllable){
+	public MinesweeperGUI(MinesweeperController game, double scale, boolean controllable){
 		this.game = game;
 		this.fields = new ArrayList<>();
 		this.scale = scale;
 		this.controllable = controllable;
 		this.timer = new TimerThread(this);
-		timer.start();
-	}
-	
-	public JPanel getGUI(){
-		if (panel == null){
-			if (controllable){
-				listener = new MinefieldActionListener(fields, game, this);
-			} else {
-				listener = null;
-			}
-			
-			panel = new JPanel();
-			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-			panel.add(getTopPanel());
-			panel.add(getGridPanel());
-			panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+		if (controllable){
+			listener = new MinefieldActionListener(fields, game, this);
+		} else {
+			listener = null;
 		}
-		
-		return panel;
+
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(getTopPanel());
+		add(getGridPanel());
+		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+		timer.start();
 	}
 	
 	public void setDebug(boolean debug){
@@ -104,7 +98,7 @@ public class MinesweeperGUI implements Timable, Updatable {
 			resetButton.addActionListener(e -> {
 				game.getBoard().restartGame(null);
 				restartTimerThread();
-				updateGUI(0);
+				updateGUI();
 			});
 		}
 		
@@ -135,9 +129,9 @@ public class MinesweeperGUI implements Timable, Updatable {
 	
 	public void displayGameState(UncoverResult res){
 		if (res == UncoverResult.MINE){
-			JOptionPane.showMessageDialog(panel, "You lost!");
+			JOptionPane.showMessageDialog(this, "You lost!");
 		} else if (res == UncoverResult.VICTORY){
-			JOptionPane.showMessageDialog(panel, "You won!");
+			JOptionPane.showMessageDialog(this, "You won!");
 		}
 	}
 
@@ -165,8 +159,7 @@ public class MinesweeperGUI implements Timable, Updatable {
 		}
 	}
 
-	@Override
-	public void updateGUI(int index) {
+	public void updateGUI() {
 		Field field;
 		Board board = game.getBoard();
 
@@ -176,9 +169,14 @@ public class MinesweeperGUI implements Timable, Updatable {
 				fields.get(i).setFieldType(field);
 			}
 		}
-		panel.repaint();
-		panel.revalidate();
+		repaint();
+		revalidate();
 
 		bombsLeft.setText(Integer.toString(game.getBoard().getBombsLeft()));
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		updateGUI();
 	}
 }

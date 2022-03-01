@@ -1,7 +1,5 @@
 package com.jam.minesweeper.controller;
 
-import javax.swing.JPanel;
-
 import com.jam.minesweeper.model.Board;
 import com.jam.minesweeper.model.Board.GameState;
 import com.jam.minesweeper.model.Board.TagResult;
@@ -9,10 +7,8 @@ import com.jam.minesweeper.model.Board.UncoverResult;
 import com.jam.minesweeper.model.Coord;
 import com.jam.minesweeper.view.MinesweeperGUI;
 
-import java.util.Observable;
-
 //TODO: On defeat, show all the mines, color the killing mine red, put an X over bad flags
-public class GameController extends Observable {
+public class MinesweeperController {
 	public enum DefaultGamePreference {
 		NOOB, INTERMEDIATE, EXPERT;
 	}
@@ -35,7 +31,7 @@ public class GameController extends Observable {
 	 * @param seed Seed to use when generating the board. Can be used to generate identical boards
 	 * @param controllable Whether the GUI is responsive to user actions
 	 */
-	public GameController(int size, int bombs, Long seed, boolean controllable){
+	public MinesweeperController(int size, int bombs, Long seed, boolean controllable){
 		constructor(size, bombs, seed, controllable);
 	}
 	
@@ -44,7 +40,7 @@ public class GameController extends Observable {
 	 * @param seed Seed to use when generating the board. Can be used to generate identical boards
 	 * @param controllable Whether the GUI is responsive to user actions
 	 */
-	public GameController(DefaultGamePreference pref, Long seed, boolean controllable){
+	public MinesweeperController(DefaultGamePreference pref, Long seed, boolean controllable){
 		switch (pref){
 			case NOOB:
 				constructor(NOOB_SIZE, NOOB_BOMBS, seed, controllable);
@@ -59,7 +55,7 @@ public class GameController extends Observable {
 	}
 	
 	/**
-	 * Because java is stiupid
+	 * Because java is stupid
 	 */
 	private void constructor(int size, int bombs, Long seed, boolean controllable){
 		this.board = new Board(size, bombs, seed);
@@ -72,17 +68,21 @@ public class GameController extends Observable {
 	 * @param scale Scale of the GUI
 	 * @return Panel containing the GUI of the game. Can be used to stack multiple games in one window
 	 */
-	public JPanel getGUI(double scale){
-		if (gui == null) gui = new MinesweeperGUI(this, scale, controllable);
+	public MinesweeperGUI getGUI(double scale){
+		if (gui == null) {
+			gui = new MinesweeperGUI(this, scale, controllable);
+			board.addObserver(gui);
+		}
 		gui.setDebug(debug);
 		
-		return gui.getGUI();
+		return gui;
 	}
 	
 	/**
 	 * Removes GUI for this game
 	 */
 	public void disconnectGUI(){
+		board.deleteObserver(gui);
 		gui.disconnect();
 		gui = null;
 	}
@@ -95,12 +95,6 @@ public class GameController extends Observable {
 	public UncoverResult leftClickField(Coord coord){
 		UncoverResult r = board.uncoverSingle(coord);
 		
-//		if (!controllable && gui != null){
-//			gui.updateGUI(0);
-//		}
-
-		notifyObservers();
-
 		return r;
 	}
 	
@@ -111,12 +105,6 @@ public class GameController extends Observable {
 	 */
 	public TagResult rightClickField(Coord coord){
 		TagResult r = board.tagSingleField(coord);
-		
-//		if (!controllable && gui != null){
-//			gui.updateGUI(0);
-//		}
-
-		notifyObservers();
 		
 		return r;
 	}
@@ -156,9 +144,7 @@ public class GameController extends Observable {
 	public void resetGame(Long seed){
 		board.restartGame(seed);
 		if (gui != null){
-//			gui.updateGUI(0);
 			gui.updateTime();
 		}
-		notifyObservers();
 	}
 }

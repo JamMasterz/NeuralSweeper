@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-import com.jam.minesweeper.controller.GameController;
+import com.jam.minesweeper.controller.MinesweeperController;
 import com.jam.minesweeper.model.Board.TagResult;
 import com.jam.minesweeper.model.Board.UncoverResult;
 import com.jam.minesweeper.model.Coord;
@@ -14,9 +14,9 @@ import com.jam.minesweeper.model.Coord;
 public class MinefieldActionListener extends MouseAdapter{
 	private ArrayList<JMineField> fields = new ArrayList<JMineField>();
 	private MinesweeperGUI gui;
-	private GameController game;
+	private MinesweeperController game;
 	
-	public MinefieldActionListener(ArrayList<JMineField> fields, GameController game, MinesweeperGUI gui) {
+	public MinefieldActionListener(ArrayList<JMineField> fields, MinesweeperController game, MinesweeperGUI gui) {
 		this.fields = fields;
 		this.game = game;
 		this.gui = gui;
@@ -48,9 +48,9 @@ public class MinefieldActionListener extends MouseAdapter{
 		
 		if (SwingUtilities.isLeftMouseButton(e)){
 			UncoverResult result = game.leftClickField(coord);
-			if (result != UncoverResult.FAILED){
-				gui.updateGUI(0);
-			} 
+//			if (result != UncoverResult.FAILED){
+//				gui.updateGUI(0);
+//			}
 			if (result == UncoverResult.VICTORY || result == UncoverResult.MINE){
 				gui.displayGameState(result);
 				gui.stopTimerThread();
@@ -59,8 +59,8 @@ public class MinefieldActionListener extends MouseAdapter{
 			TagResult result = game.rightClickField(coord);
 			if (result == TagResult.FAILED){
 				return;
-			} else {
-				gui.updateGUI(0);
+//			} else {
+//				gui.updateGUI(0);
 			}
 		}
 	}

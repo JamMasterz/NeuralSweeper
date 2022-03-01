@@ -1,41 +1,32 @@
 package com.jam.neural.view;
 
-import com.jam.runner.controller.Game;
+import com.jam.runner.view.RunnerGameGUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Observable;
-import java.util.Observer;
 
-public class RunnerGameFrame extends Observable implements Observer {
+public class RunnerGameFrame {
 	private JFrame frame;
-	private Game game;
+	private RunnerGameGUI gui;
 
-	public RunnerGameFrame(Game game, float scale){
-		this.game = game;
+	public RunnerGameFrame(RunnerGameGUI gui, int width, int height){
+		this.gui = gui;
 		frame = new JFrame("Game Boards");
 		frame.setResizable(false);
-		frame.add(game.getGUI(scale));
+		frame.add(gui);
 		frame.setVisible(true);
-		frame.setSize(new Dimension(game.getBoard().getWidth(), game.getBoard().getHeight()));
+		frame.setSize(new Dimension(width, height));
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-		game.addObserver(this);
 	}
-	
+
 	public void setWindowListener(WindowListener list){
 		frame.addWindowListener(list);
 	}
 	
-	public void closeWidnow(){
-		game.disconnectGUI();
+	public void closeWindow(){
+		gui.disconnect();
 		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		notifyObservers(arg);
 	}
 }

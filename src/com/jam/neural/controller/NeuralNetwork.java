@@ -108,7 +108,6 @@ public class NeuralNetwork {
 	}
 	
 	private void stopRunning(){
-		System.out.println("Here1");
 		if (running == Mode.NORMAL){
 			timer.cancel();
 			timer.purge();
@@ -126,7 +125,7 @@ public class NeuralNetwork {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				tickGeneration();
+				tickGeneration(setup);
 			}
 		}, 0, interval);
 		running = Mode.NORMAL;
@@ -136,8 +135,9 @@ public class NeuralNetwork {
 		acceleratedFuture = executor.submit(() -> {
 			int genStart = population.getGeneration();
 			while(population.getGeneration() < genStart + mainFrame.getGensToRun() && !acceleratedFuture.isCancelled()){
-				tickGeneration();
+				tickGeneration(setup);
 			}
+
 			//After N generations have been run, it stops itself
 			mainFrame.setRunningIndicator(false);
 			running = Mode.STOPPED;
@@ -152,16 +152,19 @@ public class NeuralNetwork {
 			if (!initialized){
 				initialize(setup);
 			}
-			tickGeneration();
+			tickGeneration(setup);
 		}
 	}
 	
-	private boolean tickGeneration(){
+	private boolean tickGeneration(TaskSetup setup){
 		boolean repopulated = false;
 		try {
 			if (population.tickGenerationMultiThreaded()){
 				mainFrame.bumpGenerationNumber();
 				repopulated = true;
+			}
+			if (setup.getTickUpdater() != null) {
+				setup.getTickUpdater().run();
 			}
 			if (population.isGenerationDone()){
 				UpdateRequirement update = stats.put(new FitnessDatapoint(population.getGeneration(),

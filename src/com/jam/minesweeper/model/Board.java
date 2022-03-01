@@ -1,11 +1,13 @@
 package com.jam.minesweeper.model;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 
+import com.jam.neural.model.Updatable;
 import com.jam.util.Util;
 
-public class Board {
+public class Board extends Observable implements Updatable {
 	public enum GameState {
 		WIN, LOSE, PLAYING, FROZEN;
 	}
@@ -69,7 +71,7 @@ public class Board {
 		this.board = new Field[size][size];
 		this.leftToUncover = amountFields - amountBombs;
 
-		initEmptyBoardArray();
+		initEmptyBoardArray(); //Notifies observers
 	}
 	
 	private void initDebugBoardArray(int index){
@@ -90,6 +92,9 @@ public class Board {
 				board[i][j] = Field.COVERED_EMPTY;
 			}
 		}
+
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -104,18 +109,26 @@ public class Board {
 		switch (getField(coord)){
 			case COVERED_EMPTY:
 				setField(coord, Field.TAGGED_EMPTY);
+				setChanged();
+				notifyObservers();
 				bombsToTag--;
 				return TagResult.TAGGED;
 			case COVERED_MINE:
 				setField(coord, Field.TAGGED_MINE);
+				setChanged();
+				notifyObservers();
 				bombsToTag--;
 				return TagResult.TAGGED;
 			case TAGGED_EMPTY:
 				setField(coord, Field.COVERED_EMPTY);
+				setChanged();
+				notifyObservers();
 				bombsToTag++;
 				return TagResult.UNTAGGED;
 			case TAGGED_MINE:
 				setField(coord, Field.COVERED_MINE);
+				setChanged();
+				notifyObservers();
 				bombsToTag++;
 				return TagResult.UNTAGGED;
 			case EMPTY:
@@ -152,6 +165,8 @@ public class Board {
 		switch (getField(coord)){
 			case COVERED_EMPTY:
 				uncoverRecursively(coord);
+				setChanged();
+				notifyObservers();
 				
 				if (isVictory()){
 					state = GameState.WIN;
@@ -162,6 +177,8 @@ public class Board {
 				setField(coord, Field.MINE);
 				state = GameState.LOSE;
 				timeEnded = System.currentTimeMillis();
+				setChanged();
+				notifyObservers();
 				return UncoverResult.MINE;
 			case ONE:
 			case TWO:
@@ -171,7 +188,10 @@ public class Board {
 			case SIX:
 			case SEVEN:
 			case EIGHT:
-				return uncoverSector(coord);
+				UncoverResult res = uncoverSector(coord);
+				setChanged();
+				notifyObservers();
+				return res;
 			case EMPTY:
 			case TAGGED_EMPTY:
 			case TAGGED_MINE:
@@ -207,7 +227,7 @@ public class Board {
 				}
 			}
 		}
-		
+
 		return result;
 	}
 	
@@ -269,6 +289,9 @@ public class Board {
 		
 		state = GameState.PLAYING;
 		timeStarted = System.currentTimeMillis();
+
+		setChanged();
+		notifyObservers();
 	}
 	
 	private int countBombsSector(Coord[] coords){
@@ -313,7 +336,6 @@ public class Board {
 	}
 	
 	/**
-	 * @param Coord Coordinate
 	 * @return Array containing Coords of fields in a 3x3 area centered on coord. Handles cases when there arent fields in some spots
 	 */
 	private Coord[] getSectorCoords(Coord coord){
@@ -441,5 +463,11 @@ public class Board {
 		}
 		
 		return builder.toString();
+	}
+
+	@Override
+	public void update() {
+		setChanged();
+		notifyObservers();
 	}
 }

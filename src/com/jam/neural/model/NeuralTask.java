@@ -16,4 +16,5 @@ public interface NeuralTask {
 	TaskState getTaskState();
 	void setTaskState(TaskState state);
 	boolean isBinary();
+	void updateAll();
 }

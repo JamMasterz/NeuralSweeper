@@ -1,6 +1,7 @@
 package com.jam.neural.model;
 
 import java.awt.event.WindowListener;
+import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
@@ -42,4 +43,10 @@ public interface TaskSetup {
 	 * @return A panel that will be placed in the GUI. It can be used to set task-specific settings
 	 */
 	JPanel getTaskPanel();
+
+	/**
+	 * If this is not null, the neural net will call this after a generation has been ticked
+	 * @return
+	 */
+	Runnable getTickUpdater();
 }
