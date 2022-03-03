@@ -48,6 +48,7 @@ public class ArrayMinesweeperController {
             MinesweeperGUI[] guis = new MinesweeperGUI[games.length];
             for (int i = 0; i < games.length; i++) {
                 guis[i] = games[i].getGUI(scale);
+                games[i].getBoard().update();
             }
             gui = new ArrayMinesweeperGUI(guis, 7, 3);
         }
